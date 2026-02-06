@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>DASHMIN - Bootstrap Admin Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+        rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+</head>
+
+<body>
+    <div class="container-fluid position-relative bg-white d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner"
+            class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        {% include 'menu.html' %}
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            {% include 'navbar.html' %}
+            <!-- Navbar End -->
+
+
+            <!-- Blank Start -->
+            <form method="POST" action="/upload-docs" enctype="multipart/form-data">
+                <div class="container-fluid pt-4 px-4">
+                    <div class="row pt-4 pb-4 bg-light rounded align-items-center justify-content-center mx-0">
+
+                        <center>
+                            <h2 class="mb-4">Upload Documents</h2>
+                        </center>
+
+                        <div class="col-sm-6 col-xl-6">
+                            <div class="pb-4">
+                                <label class="form-label">Aadhar Document</label>
+<input type="file" class="form-control form-control-lg"
+       id="aadhar_doc"
+       name="aadhar_doc"
+       accept="image/*,.pdf"
+       onchange="uploadDoc(this, 'aadhar')">
+
+                            </div>
+                            <div class="pb-4">
+                                <label class="form-label">GST Certificate</label>
+<input type="file" class="form-control form-control-lg"
+       id="gst_doc"
+       name="gst_doc"
+       accept="image/*,.pdf"
+       onchange="uploadDoc(this, 'gst')">
+
+                            </div>
+                            <div class="pb-4">
+                                <label class="form-label">Owner PAN</label>
+<input type="file" class="form-control form-control-lg"
+       id="pan_doc"
+       name="pan_doc"
+       accept="image/*,.pdf"
+       onchange="uploadDoc(this, 'pan')">
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-xl-6">
+                            <div class="pb-4">
+                                <label class="form-label">Import / Export Doc</label>
+<input type="file" class="form-control form-control-lg"
+       id="iec_doc"
+       name="iec_doc"
+       accept="image/*,.pdf"
+       onchange="uploadDoc(this, 'iec')">
+
+                            </div>
+                            <div class="pb-4">
+                                <label class="form-label">MSME Certificate</label>
+<input type="file" class="form-control form-control-lg"
+       id="msme_doc"
+       name="msme_doc"
+       accept="image/*,.pdf"
+       onchange="uploadDoc(this, 'msme')">
+
+                            </div>
+                            <div class="pb-4">
+                                <label class="form-label">Visiting Card</label>
+<input type="file" class="form-control form-control-lg"
+       id="visiting_card_doc"
+       name="visiting_card_doc"
+       accept="image/*,.pdf"
+       onchange="uploadDoc(this, 'visiting_card')">
+
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <center>
+                            <h2 class="mb-4">Personal Information</h2>
+                        </center>
+
+                        <div class="col-sm-6 col-xl-6 pb-4">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="fullName" name="full_name" placeholder="Full Name">
+                                <label>Full Name</label>
+                            </div>
+
+
+<div class="form-floating mb-3">
+    <input type="text" class="form-control" id="company_name" name="company_name"
+        placeholder="Company Name">
+    <label>Company Name</label>
+</div>
+<div class="form-floating mb-3">
+    <input type="text" class="form-control" id="mobile" name="mobile">
+    <label>Mobile Number</label>
+</div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="alt_phone" name="alt_phone"
+                                    placeholder="Alternate Phone">
+                                <label>Alternate Phone</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-xl-6 pb-4">
+
+
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="office_phone" name="office_phone"
+                                    placeholder="Office Phone">
+                                <label>Office Phone</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="Landline" name="landline"
+                                    placeholder="Landline">
+                                <label for="">Landline</label>
+                            </div>
+<div class="form-floating mb-3">
+    <input type="email" class="form-control" id="email" name="email">
+    <label>Email</label>
+</div>
+
+
+<div class="form-floating mb-3">
+    <textarea class="form-control" id="address" name="address" style="height:100px"></textarea>
+    <label>Address</label>
+</div>
+                        </div>
+
+
+
+                        <hr>
+
+                        <center>
+                            <h2 class="mb-4">Business Information</h2>
+                        </center>
+
+                        <div class="col-sm-6 col-xl-6">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="gst_number" name="gst_number" placeholder="GST">
+                                <label>GST Number</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="company_pan" name="company_pan"
+                                    placeholder="Company PAN">
+                                <label for="floatingPassword">Company PAN</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="panNumber" name="pan_number" placeholder="PAN">
+                                <label>PAN Number</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="aadharNumber" name="aadhar_number" placeholder="Aadhar">
+                                <label>Aadhar Number</label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-xl-6">
+<div class="form-floating mb-3">
+    <input type="text" class="form-control" id="msme" name="msme_registration"
+        placeholder="MSME Registration">
+    <label>MSME Registration</label>
+</div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="dwlm" name="diamond_weight_lazer_marking" 
+                                    placeholder="dwlm">
+                                <label for="floatingPassword">Diamond Weight Lazer Marking</label>
+                            </div>
+<div class="form-floating mb-3">
+    <input type="text" class="form-control" id="iec_code" name="iec_code" placeholder="IEC Code">
+    <label>IEC Code</label>
+</div>
+                        </div>
+                        <center><button class="btn btn-outline-primary w-50 m-2" type="submit">Submit</button></center>
+                    </form>
+                    </div>
+                </div>
+                <!-- Blank End -->
+
+
+                <!-- Footer Start -->
+                {% include 'footer.html' %}
+                <!-- Footer End -->
+        </div>
+        <!-- Content End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- JavaScript Libraries -->
+
+<script>
+function uploadDoc(fileInput, docType) {
+
+    if (!fileInput.files || !fileInput.files.length) return;
+
+    const file = fileInput.files[0]; // ✅ ADD
+    let formData = new FormData();
+    formData.append("file", file);
+    formData.append("doc_type", docType);
+
+    // ✅ ADD: detect pdf
+    const isPdf = file.type === "application/pdf";
+
+    // ✅ ADD: choose correct API
+    const apiUrl = isPdf ? "/upload-pdf-doc" : "/upload-doc";
+
+    fetch(apiUrl, {   // ✅ CHANGED
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        // ---------- AADHAR ----------
+        if (data.aadhar_number && document.getElementById("aadharNumber")) {
+            document.getElementById("aadharNumber").value = data.aadhar_number;
+        }
+
+        // ---------- PAN ----------
+        if (data.pan_number && document.getElementById("panNumber")) {
+            document.getElementById("panNumber").value = data.pan_number;
+        }
+
+        if (data.full_name && document.getElementById("fullName")) {
+            document.getElementById("fullName").value = data.full_name;
+        }
+
+        // ---------- VISITING CARD ----------
+        if (data.mobile && document.getElementById("mobile")) {
+            document.getElementById("mobile").value = data.mobile;
+        }
+
+        if (data.email && document.getElementById("email")) {
+            document.getElementById("email").value = data.email;
+        }
+
+        if (data.address && document.getElementById("address")) {
+            document.getElementById("address").value = data.address;
+        }
+
+        // ---------- MSME / UDYAM ----------
+        if (data.udyam_number && document.getElementById("msme")) {
+            document.getElementById("msme").value = data.udyam_number;
+        }
+
+        if (data.enterprise_name && document.getElementById("company_name")) {
+            document.getElementById("company_name").value = data.enterprise_name;
+        }
+
+        // ---------- IEC ----------
+        if (data.iec_code && document.getElementById("iec_code")) {
+            document.getElementById("iec_code").value = data.iec_code;
+        }
+
+        // ---------- GST ----------
+        if (data.gst_number && document.getElementById("gst_number")) {
+            document.getElementById("gst_number").value = data.gst_number;
+        }
+
+        console.log("OCR RESPONSE:", data);
+    })
+    .catch(err => console.error("Upload error:", err));
+}
+</script>
+
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+
+</html>
