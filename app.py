@@ -6,6 +6,7 @@ import numpy as np
 import os
 import tempfile
 import pytesseract
+from pytesseract import Output
 from PIL import Image
 import fitz
 from io import BytesIO
@@ -14,8 +15,9 @@ import base64
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy.dialects.mysql import LONGBLOB, JSON
-from sqlalchemy import LargeBinary, func
+from sqlalchemy import LargeBinary, func, and_
 import math
+from datetime import datetime
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
@@ -32,6 +34,11 @@ migrate = Migrate(app, db)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+OLLAMA_URL = "http://localhost:11434/api/generate"
+OLLAMA_MODEL = "llama3"
+
+
+
 
 class ClientKYC(db.Model):
     __tablename__ = "client_kyc"
@@ -41,7 +48,7 @@ class ClientKYC(db.Model):
     # =====================
     # PERSONAL INFORMATION
     # =====================
-    full_name = db.Column(db.String(150))
+    full_name = db.Column(db.String(150), nullable=False)
     company_name = db.Column(db.String(200))
     mobile = db.Column(db.String(20))
     alt_phone = db.Column(db.String(20))
@@ -49,7 +56,6 @@ class ClientKYC(db.Model):
     landline = db.Column(db.String(20))
     email = db.Column(db.String(150))
     address = db.Column(db.Text)
-
     # =====================
     # BUSINESS INFORMATION
     # =====================
@@ -60,7 +66,6 @@ class ClientKYC(db.Model):
     msme_registration = db.Column(db.String(50))
     diamond_weight_lazer_marking = db.Column(db.String(50))
     iec_code = db.Column(db.String(30))
-
     # =====================
     # DOCUMENTS (LONGBLOB)
     # =====================
@@ -75,14 +80,10 @@ class StyleImage(db.Model):
     __tablename__ = "style_images"
 
     id = db.Column(db.Integer, primary_key=True)
-
     style_no = db.Column(db.String(100), nullable=False, index=True)
-
     image = db.Column(LONGBLOB, nullable=False)
-
     # 🔹 NEW FIELDS
-    gold_wt = db.Column(db.Float, nullable=True)          # 1.800
-    total_gem_count = db.Column(db.Integer, nullable=True)  # 14
+    gold_wt = db.Column(db.Float, nullable=True)          # 1.800 
     round_details = db.Column(JSON, nullable=True)        # list of rounds
 
 class DiamondSieveMaster(db.Model):
@@ -95,6 +96,35 @@ class DiamondSieveMaster(db.Model):
     mm_size = db.Column(db.Float, nullable=False)
     no_of_stones = db.Column(db.Integer, nullable=False)
     ct_weight_per_piece = db.Column(db.Float, nullable=False)
+
+class ProductionOrder(db.Model):
+    __tablename__ = "production_orders"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    client_id = db.Column(db.Integer, db.ForeignKey("client_kyc.id"), nullable=False)
+    client = db.relationship("ClientKYC", backref="production_orders")
+
+    order_datetime = db.Column(db.DateTime, nullable=False)
+    delivery_datetime = db.Column(db.DateTime)
+
+    style_no = db.Column(db.String(100), nullable=False)
+
+    diamond_clarity = db.Column(db.String(20))
+    gold_color = db.Column(db.String(30))
+    diamond_color = db.Column(db.String(20))
+
+    gold_purity = db.Column(db.String(20))
+    gold_purity_factor = db.Column(db.Float)
+
+    total_amount = db.Column(db.Float, default=0)
+    remark = db.Column(db.Text)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+    
+
 
 
 
@@ -519,33 +549,47 @@ def blur_gems(img):
 
 # ---------------- extract_gold_wt ----------------
 
+
 def extract_gold_wt(img):
-    h, w, _ = img.shape
-
-    # ✅ correct crop
-    crop = img[
-        int(h * 0.148):int(h * 0.176),
-        int(w * 0.56):int(w * 0.98)
-    ]
-
-    # preprocess (text is small → must enlarge)
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    gray = cv2.resize(gray, None, fx=4, fy=4, interpolation=cv2.INTER_CUBIC)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
     gray = cv2.GaussianBlur(gray, (3, 3), 0)
-    gray = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
+    thr = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
 
- #   cv2.imwrite("DEBUG_GOLD_crop.jpg", crop)
- #   cv2.imwrite("DEBUG_GOLD_ready.jpg", gray)
+    data = pytesseract.image_to_data(thr, output_type=Output.DICT, config="--psm 6")
 
-    text = pytesseract.image_to_string(
-        gray,
-        config="--psm 7 -c tessedit_char_whitelist=0123456789."
-    )
+    # group words by (block, par, line) so we can read whole line
+    lines = {}
+    n = len(data["text"])
+    for i in range(n):
+        word = (data["text"][i] or "").strip()
+        if not word:
+            continue
+        key = (data["block_num"][i], data["par_num"][i], data["line_num"][i])
+        lines.setdefault(key, []).append((data["left"][i], word))
 
-    print("GOLD WT OCR TEXT >>>", repr(text))
+    # search each line for GM/gm and take number before it
+    for key, words in lines.items():
+        words.sort(key=lambda x: x[0])
+        line = " ".join(w for _, w in words)
+        low = line.lower().replace(" ", "")
 
-    match = re.search(r"(\d+\.\d+)", text)
-    return float(match.group(1)) if match else None
+        if "gm" not in low:
+            continue
+
+        # extract number in that line (prefer the one closest to gm)
+        # examples: "GOLD WT = 3.000 GM"
+        nums = re.findall(r"\d+\.\d+", low)
+        if not nums:
+            continue
+
+        val = float(nums[-1])  # usually last float on that line is weight
+        # sanity: gold wt typically 1..30 gm
+        if 0.5 <= val <= 30:
+            return round(val, 3)
+
+    return None
+
 
 
 
@@ -558,130 +602,89 @@ def crop_cad_panel(img):
 
 
 
-# ---------------- extract_total_gem_count ----------------
 
+def normalize_size_token(tok):
+    t = str(tok).strip().replace(",", ".")
+    t = re.sub(r"[^0-9.]", "", t)
+    if not t: return 0.0
+    if t.startswith("."): t = "0" + t
+    # Handle OCR missing decimal: "90" -> 0.90
+    if t.isdigit() and len(t) == 2: return float(t) / 100.0
+    try: return float(t)
+    except: return 0.0
 
-def extract_total_gem_count(img, debug=True):
-    """
-    Extracts Total Gem Count from CAD panel using HSV cyan mask.
-    Returns: int or None
-    Saves debug: DEBUG_GEM_crop.jpg, DEBUG_GEM_ready_FIXED.jpg (if debug=True)
-    """
+def ocr_rows_with_alignment(img_bin, y_threshold=20):
+    # Use image_to_data to get bounding box coordinates
+    data = pytesseract.image_to_data(img_bin, output_type=Output.DICT, config="--psm 6")
+    tokens = []
+    
+    for i in range(len(data["text"])):
+        text = (data["text"][i] or "").strip()
+        try:
+            conf = int(float(data["conf"][i]))
+        except:
+            conf = -1
+            
+        if text and conf > 30:
+            # Calculate the vertical center of the text token
+            tokens.append({
+                "text": text,
+                "y": data["top"][i] + (data["height"][i] / 2),
+                "x": data["left"][i]
+            })
 
-    h, w, _ = img.shape
+    if not tokens: return []
 
-    # ✅ 1) CAD panel (keep same)
-    cad = img[
-        int(h * 0.35):int(h * 0.56),
-        int(w * 0.12):int(w * 0.38)
-    ]
+    # Sort tokens from top to bottom
+    tokens.sort(key=lambda t: t['y'])
+    
+    merged_lines = []
+    current_row = [tokens[0]]
 
-    ch, cw, _ = cad.shape
-
-    # ✅ 2) GEM COUNT bar crop (keep same)
-    crop = cad[
-        int(ch * 0.00):int(ch * 0.24),
-        int(cw * 0.22):int(cw * 1.00)
-    ]
-
-    if debug:
-        cv2.imwrite("DEBUG_GEM_crop.jpg", crop)
-
-    # ✅ 3) HSV to isolate cyan/teal digits
-    hsv = cv2.cvtColor(crop, cv2.COLOR_BGR2HSV)
-
-    # (works for your images)
-    lower_cyan = np.array([80, 100, 100])
-    upper_cyan = np.array([100, 255, 255])
-
-    mask = cv2.inRange(hsv, lower_cyan, upper_cyan)
-
-    # ✅ 4) Make OCR-ready
-    ready = cv2.resize(mask, None, fx=7, fy=7, interpolation=cv2.INTER_CUBIC)
-    ready = cv2.GaussianBlur(ready, (3, 3), 0)
-
-    # Invert -> black digits on white (Tesseract friendly)
-    ready = cv2.bitwise_not(ready)
-
-    if debug:
-        cv2.imwrite("DEBUG_GEM_ready_FIXED.jpg", ready)
-
-    # ✅ 5) OCR digits
-    text = pytesseract.image_to_string(
-        ready,
-        config="--psm 6 -c tessedit_char_whitelist=0123456789"
-    )
-
-    print("GEM COUNT OCR TEXT >>>", repr(text))
-
-    m = re.search(r"\d+", text)
-    return int(m.group()) if m else None
-
-
-
-
-
-
-# ---------------- extract_round_details ----------------
-
+    # Group tokens that share a similar Y-coordinate
+    for i in range(1, len(tokens)):
+        if abs(tokens[i]['y'] - current_row[-1]['y']) <= y_threshold:
+            current_row.append(tokens[i])
+        else:
+            # Sort the completed row from Left to Right (X-axis)
+            current_row.sort(key=lambda t: t['x'])
+            merged_lines.append(" ".join([t['text'] for t in current_row]))
+            current_row = [tokens[i]]
+    
+    current_row.sort(key=lambda t: t['x'])
+    merged_lines.append(" ".join([t['text'] for t in current_row]))
+    return merged_lines
 
 def extract_round_details(img):
-    """
-    Extracts round stone details by using high-contrast thresholding 
-    to handle dark backgrounds and cyan text.
-    """
-    # 1️⃣ Crop CAD panel
+    # 1. Crop to the CAD panel table area
     cad = crop_cad_panel(img)
     ch, cw, _ = cad.shape
+    crop = cad[int(ch * 0.05):int(ch * 0.95), int(cw * 0.16):int(cw * 0.80)]
 
-    # 2️⃣ Crop numeric columns 
-    # Starts at 0.12 to skip the colored icons on the left
-    crop = cad[
-        int(ch * 0.22):int(ch * 1.00), 
-        int(cw * 0.12):int(cw * 0.90)  
-    ]
-
-    # 3️⃣ High-Contrast Preprocessing
+    # 2. Pre-process for thin white/green text on dark background
     gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    ready = cv2.resize(gray, None, fx=8, fy=8, interpolation=cv2.INTER_CUBIC)
+    gray = cv2.resize(gray, None, fx=5, fy=5, interpolation=cv2.INTER_CUBIC)
+    _, th = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
     
-    # Binary Threshold to isolate text
-    _, ready = cv2.threshold(ready, 125, 255, cv2.THRESH_BINARY_INV)
+    # 3. OCR with Y-Alignment to catch the PCS counts (5, 17, etc.)
+    ocr_lines = ocr_rows_with_alignment(th)
     
-    # Dilation makes thin cyan text bolder
-    kernel = np.ones((2,2), np.uint8)
-    ready = cv2.dilate(ready, kernel, iterations=1)
-
-    cv2.imwrite("DEBUG_ROUND_ready.jpg", ready)
-
-    # 4️⃣ OCR
-    text = pytesseract.image_to_string(ready, config="--psm 6")
-    print("RAW OCR TEXT >>>\n", repr(text))
-
+    # 4. Final Extraction Logic
     rounds = []
-    # --- INDENTATION FIXED BELOW ---
-    for line in text.splitlines():
-        # 1. Clean common OCR noise
-        line = line.replace('×', 'x').replace('X', 'x').replace('|', ' ').replace('=', ' ')
-        line = line.lower().strip()
-
-        # 2. Relaxed Regex: Handles symbols like @, |, or = between numbers
-        # (\d+\.\d+) -> size 1
-        # \D+        -> any non-digit (skip the 'x' and symbols)
-        # (\d+\.\d+) -> size 2
-        # \D+        -> skip symbols/spaces
-        # (\d+)      -> pcs
-        # \D+        -> skip symbols/spaces
-        # (\d+\.\d+) -> weight
-        match = re.search(r"(\d+\.\d+)\D+(\d+\.\d+)\D+(\d+)\D+(\d+\.\d+)", line)
-
-        if match:
-            rounds.append({
-                "shape": "Round",
-                "size": f"{match.group(1)} x {match.group(2)}",
-                "pcs": int(match.group(3)),
-                "ct": float(match.group(4))
-            })
+    for line in ocr_lines:
+        line = line.replace('X', 'x').replace('x', ' x ')
+        # Find: [Size1] x [Size2] followed by any characters then [PCS]
+        m = re.search(r"(\d?\.?\d+)\s*x\s*(\d?\.?\d+)(.*)", line)
+        if m:
+            s1, s2, tail = m.groups()
+            size_str = f"{normalize_size_token(s1):.2f} x {normalize_size_token(s2):.2f}"
+            
+            # Find the PCS: first integer in the tail
+            pcs_match = re.search(r"(\d+)", tail)
+            pcs = int(pcs_match.group(1)) if pcs_match else 0
+            
+            if size_str != "0.00 x 0.00":
+                rounds.append({"shape": "Round", "size": size_str, "pcs": pcs})
 
     return rounds
 
@@ -729,13 +732,12 @@ def upload_folder():
                 continue
 
             gold_wt = extract_gold_wt(img)
-            total_gem_count = extract_total_gem_count(img)
+            
             round_details = extract_round_details(img)
             
             print("FINAL VALUES >>>")
             print("STYLE:", style_no)
-            print("GOLD WT:", gold_wt)
-            print("GEM COUNT:", total_gem_count)
+            print("GOLD WT:", gold_wt) 
             print("ROUNDS:", round_details)
 
             # ✅ debug only first few
@@ -760,8 +762,7 @@ def upload_folder():
             record = StyleImage(
                 style_no=style_no,
                 image=buffer.tobytes(),
-                gold_wt=gold_wt,
-                total_gem_count=total_gem_count,
+                gold_wt=gold_wt,               
                 round_details=round_details
             )
 
@@ -797,13 +798,6 @@ def draw_cad_debug_boxes(img, out_path="DEBUG_CAD_BOXES.jpg"):
     cv2.putText(debug, "CAD PANEL", (cx1 + 5, max(30, cy1 - 10)),
                 cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 255), 2)
 
-    # 🟢 GEM COUNT (top black bar - right side)
-    gx1, gy1 = int(w * 0.10), int(h * 0.35)
-    gx2, gy2 = int(w * 0.46), int(h * 0.40)
-
-    cv2.rectangle(debug, (gx1, gy1), (gx2, gy2), (0, 255, 0), 3)
-    cv2.putText(debug, "GEM COUNT", (gx1 + 5, max(30, gy1 - 10)),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
     # 🔵 ROUND ROWS (3 rows area)
     rx1, ry1 = int(w * 0.04), int(h * 0.40)
@@ -834,7 +828,7 @@ def api_get_style(style_no):
         "style_no": row.style_no,
         "image_url": img_url,
         "gold_wt": row.gold_wt,
-        "total_gem_count": row.total_gem_count,
+        
         "round_details": row.round_details  # JSON field
     })
 
@@ -919,34 +913,137 @@ def api_clients():
 #    return render_template("upload_sieve.html")
 @app.route("/api/sieve-lookup-batch", methods=["POST"])
 def sieve_lookup_batch():
+
     payload = request.get_json(silent=True) or {}
     mm_list = payload.get("mm_list", [])
 
-    out = {}
-
+    # --- normalize mm list (round to 1 decimal)
+    norm_mm = []
     for mm in mm_list:
         try:
-            mm = float(mm)
+            mm = round(float(mm), 1)
+            norm_mm.append(mm)
         except:
-            out[str(mm)] = None
+            pass
+
+    if not norm_mm:
+        return jsonify({})
+
+    # --- tolerance (important for float safety)
+    TOL = 0.05
+
+    # --- fetch all possible rows in ONE query
+    rows = (
+        DiamondSieveMaster.query
+        .filter(
+            and_(
+                DiamondSieveMaster.mm_size >= min(norm_mm) - TOL,
+                DiamondSieveMaster.mm_size <= max(norm_mm) + TOL
+            )
+        )
+        .all()
+    )
+
+    # --- map mm_size -> row
+    sieve_map = {
+        round(row.mm_size, 1): row
+        for row in rows
+    }
+
+    # --- build response
+    out = {}
+
+    for raw_mm in mm_list:
+        try:
+            mm = round(float(raw_mm), 1)
+        except:
+            out[str(raw_mm)] = None
             continue
 
-        mm_key = math.floor(mm * 10) / 10.0  # 1.75 -> 1.7
+        row = sieve_map.get(mm)
 
-        row = (DiamondSieveMaster.query
-               .filter(func.round(DiamondSieveMaster.mm_size, 1) == mm_key)
-               .first())
-
-        out[str(mm)] = None
+        out[str(raw_mm)] = None
         if row:
-            out[str(mm)] = {
-                "mm_key": mm_key,
+            out[str(raw_mm)] = {
+                "mm_key": mm,
                 "sieve_range": row.sieve_range,
                 "sieve_size": row.sieve_size,
                 "ct_weight_per_piece": float(row.ct_weight_per_piece),
             }
 
     return jsonify(out)
+
+def parse_dt(s):
+    if not s:
+        return None
+    return datetime.fromisoformat(s)  # expects "YYYY-MM-DDTHH:MM"
+
+
+
+@app.route("/production-board")
+def production_board():
+    orders = ProductionOrder.query.order_by(ProductionOrder.id.desc()).all()
+    return render_template("production_board.html", orders=orders)
+
+
+
+
+def parse_dt(s):
+    if not s:
+        return None
+    # "YYYY-MM-DDTHH:MM"
+    return datetime.fromisoformat(s)
+
+@app.route("/api/create-order", methods=["POST"])
+def api_create_order():
+    data = request.get_json(silent=True) or {}
+
+    client_id = int(data.get("client_id") or 0)
+    style_no = (data.get("style_no") or "").strip()
+    order_dt = parse_dt(data.get("order_datetime"))
+    delivery_dt = parse_dt(data.get("delivery_datetime"))
+
+    if not client_id:
+        return jsonify({"ok": False, "error": "client_id required"}), 400
+    if not order_dt:
+        return jsonify({"ok": False, "error": "order_datetime required"}), 400
+    if not style_no:
+        return jsonify({"ok": False, "error": "style_no required"}), 400
+
+    gold_purity_factor = data.get("gold_purity_factor")
+    gold_purity_factor = float(gold_purity_factor) if gold_purity_factor not in (None, "", "null") else None
+
+    row = ProductionOrder(
+        client_id=client_id,
+        order_datetime=order_dt,
+        delivery_datetime=delivery_dt,
+        style_no=style_no,
+
+        diamond_clarity=data.get("diamond_clarity") or None,
+        gold_color=data.get("gold_color") or None,
+        diamond_color=data.get("diamond_color") or None,
+
+        gold_purity=data.get("gold_purity") or None,
+        gold_purity_factor=gold_purity_factor,
+
+        total_amount=float(data.get("total_amount") or 0),
+        remark=(data.get("remark") or "").strip()
+    )
+
+    db.session.add(row)
+    db.session.commit()
+
+    return jsonify({"ok": True, "order_id": row.id}), 201
+
+@app.route("/production-board")
+def production_board_page():
+    rows = db.session.query(
+        ProductionOrder,
+        Client.full_name
+    ).join(Client, Client.id == ProductionOrder.client_id)\
+     .order_by(ProductionOrder.id.desc()).all()
+
+    return render_template("production_board.html", rows=rows)
 
 
 
