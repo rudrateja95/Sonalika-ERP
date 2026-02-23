@@ -49,7 +49,7 @@ body {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #757575;
+    color: #851717;
     background-color: #F3F6F9;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
@@ -2198,6 +2198,7 @@ progress {
 
 .form-label {
     margin-bottom: .5rem
+    
 }
 
 .col-form-label {
@@ -2223,7 +2224,7 @@ progress {
 .form-text {
     margin-top: .25rem;
     font-size: .875em;
-    color: #6c757d
+    color: #150629
 }
 
 .form-control {
@@ -2236,7 +2237,7 @@ progress {
     color: hsl(253, 83%, 35%);
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #ced4da;
+    border: 1px solid #100e6d;
     appearance: none;
     border-radius: 5px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out
@@ -2430,7 +2431,7 @@ textarea.form-control-lg {
     background-repeat: no-repeat;
     background-position: right .75rem center;
     background-size: 16px 12px;
-    border: 1px solid #ced4da;
+    border: 1px solid #0f1170;
     border-radius: 5px;
     appearance: none
 }

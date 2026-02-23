@@ -83,19 +83,20 @@
 
                   <td>{{ o.remark or "-" }}</td>
 
-                  <td class="text-center">
-                    <button class="btn btn-sm btn-primary" type="button"
+<td class="text-center">
+         <button class="btn btn-sm btn-primary" type="button"
                       onclick="openStyleDetails('{{ o.style_no }}')">
                       View
                     </button>
-                  </td>
-                 <td class="text-center">
+
+
+</td>
+<td class="text-center">
 <button class="btn btn-sm btn-primary"
 onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_color }}','{{ o.gold_purity }}')">
   Update
 </button>
-
-                 </td>
+</td>
 
                 </tr>
                 {% else %}
@@ -228,12 +229,22 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
           </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabFiling" type="button">
-              Filing
+              Pre-Filing
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabEp" type="button">
-              EP
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPre-Ep" type="button">
+              Pre-EP
+            </button>
+          </li>
+                    <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPostFiling" type="button">
+              Post-Filing
+            </button>
+          </li>
+                    <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPost-Ep" type="button">
+              Post-EP
             </button>
           </li>
           <li class="nav-item" role="presentation">
@@ -276,14 +287,19 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
               DWT
             </button>
           </li>
+                    <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabRepair" type="button">
+              Repair
+            </button>
+          </li>
           <li class="nav-item" role="presentation">
             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabFinalQC" type="button">
               FinalQC
             </button>
           </li>
           <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabRepair" type="button">
-              Repair
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabTagPrint" type="button">
+              Tag Print
             </button>
           </li>
         </ul>
@@ -291,64 +307,114 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
         <!-- Tab Content -->
         <div class="tab-content pt-3">
 
-          <!-- ============ CASTING ============ -->
-          <div class="tab-pane fade show active" id="tabCasting">
-            <div class="row g-3">
+<!-- ============ CASTING ============ -->
+<div class="tab-pane fade show active" id="tabCasting">
+  <div class="row g-3">
 
+    <!-- Date -->
+    <div class="col-md-3">
+      <label class="form-label">Date</label>
+      <input type="date" class="form-control" id="casting_date">
+    </div>
+
+    <!-- Employee Name -->
 <div class="col-md-3">
-  <label class="form-label">Date</label>
-  <input type="date" class="form-control" id="casting_date">
+  <label class="form-label">Employee Name</label>
+  <select class="form-select" id="casting_employee_name">
+    <option value="">Loading...</option>
+  </select>
 </div>
 
 
-            <div class="col-md-3">
-  <label class="form-label">Purity</label>
-  <input type="text" class="form-control" id="casting_purity" placeholder="e.g. 916">
+
+    <!-- Employee ID -->
+    <div class="col-md-3">
+      <label class="form-label">Employee ID</label>
+      <input type="text" class="form-control" id="casting_employee_id" placeholder="Enter Employee ID">
+    </div>
+
+    <!-- Purity -->
+    <div class="col-md-3">
+      <label class="form-label">Purity</label>
+      <input type="text" class="form-control" id="casting_purity" placeholder="auto_fill e.g. 9kt">
+    </div>
+
+    <!-- Colour -->
+    <div class="col-md-3">
+      <label class="form-label">Colour</label>
+      <input type="text" class="form-control" id="casting_colour" placeholder="Yellow/White/Rose">
+    </div>
+
+    <!-- Wax -->
+    <div class="col-md-3">
+      <label class="form-label">Wax</label>
+      <input type="text" class="form-control" id="casting_wax">
+    </div>
+
+    <!-- Karat -->
+<div class="col-md-3">
+  <label class="form-label">Gold Karat</label>
+  <select class="form-select" id="casting_karat">
+    <option value="">Select Karat</option>
+    <option value="9">9 KT</option>
+    <option value="14">14 KT</option>
+    <option value="18">18 KT</option>
+    <option value="22">22 KT</option>
+     <option value="24">24 KT</option>
+  </select>
 </div>
 
+    <!-- Gold/gm -->
+    <div class="col-md-3">
+      <label class="form-label">Gold/gm</label>
+      <input type="number" step="0.001" class="form-control" id="casting_pure_gold">
+    </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Colour</label>
-                <input type="text" class="form-control" id="casting_colour" placeholder="Yellow/White/Rose">
-              </div>
+    <!-- Alloy -->
+    <div class="col-md-3">
+      <label class="form-label">Alloy</label>
+      <input type="number" step="0.001" class="form-control" id="casting_alloy">
+    </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Wax</label>
-                <input type="text" class="form-control" id="casting_wax">
-              </div>
+    <!-- Net -->
+    <div class="col-md-3">
+      <label class="form-label">Net</label>
+      <input type="number" step="0.001" class="form-control" id="casting_net">
+    </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Pure Gold</label>
-                <input type="number" step="0.001" class="form-control" id="casting_pure_gold">
-              </div>
+    <!-- Wastage -->
+    <div class="col-md-3">
+      <label class="form-label">Wastage</label>
+      <input type="number" step="0.001" class="form-control" id="casting_wastage">
+    </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Alloy</label>
-                <input type="number" step="0.001" class="form-control" id="casting_alloy">
-              </div>
+    <!-- Receive Finish -->
+    <div class="col-md-3">
+      <label class="form-label">Receive Finish</label>
+      <input type="number" step="0.001" class="form-control" id="casting_finish">
+    </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Net</label>
-                <input type="number" step="0.001" class="form-control" id="casting_net">
-              </div>
+    <!-- Receive Extra -->
+    <div class="col-md-3">
+      <label class="form-label">Receive Extra</label>
+      <input type="number" step="0.001" class="form-control" id="casting_extra">
+    </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="casting_wastage">
-              </div>
+    <div class="col-md-3">
+      <label class="form-label">Receive PC</label>
+      <input type="number" class="form-control" id="casting_receive_pc">
+    </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Receive Finish</label>
-                <input type="number" step="0.001" class="form-control" id="casting_finish">
-              </div>
+    <!-- Casting Remark -->
+<div class="col-md-6">
+  <label class="form-label">Remark</label>
+  <textarea class="form-control" id="casting_remark" rows="2"
+    placeholder="Enter casting remark..."></textarea>
+</div>
 
-              <div class="col-md-3">
-                <label class="form-label">Receive Extra</label>
-                <input type="number" step="0.001" class="form-control" id="casting_extra">
-              </div>
+  </div>
+</div>
 
-            </div>
-          </div>
 
           <!-- ============ Filing ============ -->
           <div class="tab-pane fade" id="tabFiling">
@@ -382,6 +448,16 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
               <div class="col-md-3">
                 <label class="form-label">Dust PC</label>
                 <input type="number" class="form-control" id="filing_dust_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
               </div>
 
               <div class="col-md-6">
@@ -423,6 +499,16 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
               <div class="col-md-3">
                 <label class="form-label">Dust PC</label>
                 <input type="number" class="form-control" id="filing_dust_pc">
+              </div>
+
+                            <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
               </div>
 
               <div class="col-md-6">
@@ -434,7 +520,7 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
           </div>
 
           <!-- ============ EP ============ -->
-          <div class="tab-pane fade" id="tabEp">
+          <div class="tab-pane fade" id="tabPre-Ep">
             <div class="row g-3">
 
               <div class="col-md-3">
@@ -465,6 +551,118 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
               <div class="col-md-3">
                 <label class="form-label">Dust PC</label>
                 <input type="number" class="form-control" id="fp_dust_pc">
+              </div>
+
+                            <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Remark</label>
+                <input type="text" class="form-control" id="fp_remark">
+              </div>
+
+            </div>
+          </div>
+                    <!-- ============ Filing ============ -->
+          <div class="tab-pane fade" id="tabPostFiling">
+            <div class="row g-3">
+
+              <div class="col-md-3">
+                <label class="form-label">Issue Weight</label>
+                <input type="number" step="0.001" class="form-control" id="filing_issue_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Issue PC</label>
+                <input type="number" class="form-control" id="filing_issue_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Receive Weight</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Receive PC</label>
+                <input type="number" class="form-control" id="filing_receive_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Dust Weight</label>
+                <input type="number" step="0.001" class="form-control" id="filing_dust_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Dust PC</label>
+                <input type="number" class="form-control" id="filing_dust_pc">
+              </div>
+
+                            <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Remark</label>
+                <input type="text" class="form-control" id="filing_remark">
+              </div>
+
+            </div>
+          </div>
+                    <!-- ============ EP ============ -->
+          <div class="tab-pane fade" id="tabPost-Ep">
+            <div class="row g-3">
+
+              <div class="col-md-3">
+                <label class="form-label">Issue Weight</label>
+                <input type="number" step="0.001" class="form-control" id="fp_issue_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Issue PC</label>
+                <input type="number" class="form-control" id="fp_issue_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Receive Weight</label>
+                <input type="number" step="0.001" class="form-control" id="fp_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Receive PC</label>
+                <input type="number" class="form-control" id="fp_receive_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Dust Weight</label>
+                <input type="number" step="0.001" class="form-control" id="fp_dust_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Dust PC</label>
+                <input type="number" class="form-control" id="fp_dust_pc">
+              </div>
+
+                            <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
               </div>
 
               <div class="col-md-6">
@@ -506,6 +704,16 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
               <div class="col-md-3">
                 <label class="form-label">Dust PC</label>
                 <input type="number" class="form-control" id="fp_dust_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
               </div>
 
               <div class="col-md-6">
@@ -560,50 +768,121 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
                 <input type="number" class="form-control" id="st_receive_pc">
               </div>
 
+                            <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Remark</label>
+                <input type="text" class="form-control" id="fp_remark">
+              </div>
+
             </div>
           </div>
           <!-- ============ ASSEMBLY ============ -->
           <div class="tab-pane fade" id="tabAssembly">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Dia PC</label>
-                <input type="number" class="form-control" id="st_dia_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dia CT</label>
-                <input type="number" step="0.001" class="form-control" id="st_dia_ct">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dia GM</label>
-                <input type="number" step="0.001" class="form-control" id="st_dia_gm">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Wt</label>
-                <input type="number" step="0.001" class="form-control" id="st_dust_wt">
-              </div>
+    <div class="row g-3">
 
               <div class="col-md-3">
                 <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="st_issue_weight">
+                <input type="number" step="0.001" class="form-control" id="fp_issue_weight">
               </div>
 
               <div class="col-md-3">
                 <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="st_issue_pc">
+                <input type="number" class="form-control" id="fp_issue_pc">
               </div>
 
               <div class="col-md-3">
                 <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="st_receive_weight">
+                <input type="number" step="0.001" class="form-control" id="fp_receive_weight">
               </div>
 
               <div class="col-md-3">
                 <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="st_receive_pc">
+                <input type="number" class="form-control" id="fp_receive_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Dust Weight</label>
+                <input type="number" step="0.001" class="form-control" id="fp_dust_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Dust PC</label>
+                <input type="number" class="form-control" id="fp_dust_pc">
+              </div>
+
+                            <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Remark</label>
+                <input type="text" class="form-control" id="fp_remark">
+              </div>
+
+            </div>
+          </div>
+          <!-- ============ FP ============ -->
+          <div class="tab-pane fade" id="tabFP">
+    <div class="row g-3">
+
+              <div class="col-md-3">
+                <label class="form-label">Issue Weight</label>
+                <input type="number" step="0.001" class="form-control" id="fp_issue_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Issue PC</label>
+                <input type="number" class="form-control" id="fp_issue_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Receive Weight</label>
+                <input type="number" step="0.001" class="form-control" id="fp_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Receive PC</label>
+                <input type="number" class="form-control" id="fp_receive_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Dust Weight</label>
+                <input type="number" step="0.001" class="form-control" id="fp_dust_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Dust PC</label>
+                <input type="number" class="form-control" id="fp_dust_pc">
+              </div>
+
+                            <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Wastage</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Remark</label>
+                <input type="text" class="form-control" id="fp_remark">
               </div>
 
             </div>
@@ -633,37 +912,26 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
                 <input type="number" class="form-control" id="qc_receive_pc">
               </div>
 
+
+                            <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
               <div class="col-md-3">
                 <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="qc_wastage">
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
               </div>
 
-              <div class="col-md-3">
-                <label class="form-label">IGI Cert</label>
-                <select class="form-select" id="qc_igi_cert">
-                  <option value="">-</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
-              </div>
 
-              <div class="col-md-3">
-                <label class="form-label">HUID Stamp</label>
-                <select class="form-select" id="qc_huid_stamp">
-                  <option value="">-</option>
-                  <option value="DONE">DONE</option>
-                  <option value="PENDING">PENDING</option>
-                </select>
-              </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Final QC</label>
-                <select class="form-select" id="qc_final_status">
-                  <option value="">-</option>
-                  <option value="PASS">PASS</option>
-                  <option value="HOLD">HOLD</option>
-                  <option value="REWORK">REWORK</option>
-                </select>
+
+
+
+              
+              <div class="col-md-6">
+                <label class="form-label">Remark</label>
+                <input type="text" class="form-control" id="fp_remark">
               </div>
 
             </div>
@@ -697,33 +965,21 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
                 <input type="number" step="0.001" class="form-control" id="qc_wastage">
               </div>
 
-              <div class="col-md-3">
-                <label class="form-label">IGI Cert</label>
-                <select class="form-select" id="qc_igi_cert">
-                  <option value="">-</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
+                            <div class="col-md-3">
+                <label class="form-label">Diamond wt</label>
+                <input type="number" class="form-control" id="qc_receive_pc">
               </div>
 
               <div class="col-md-3">
-                <label class="form-label">HUID Stamp</label>
-                <select class="form-select" id="qc_huid_stamp">
-                  <option value="">-</option>
-                  <option value="DONE">DONE</option>
-                  <option value="PENDING">PENDING</option>
-                </select>
+                <label class="form-label">Diamond PCs</label>
+                <input type="number" class="form-control" id="qc_receive_pc">
               </div>
 
-              <div class="col-md-3">
-                <label class="form-label">Final QC</label>
-                <select class="form-select" id="qc_final_status">
-                  <option value="">-</option>
-                  <option value="PASS">PASS</option>
-                  <option value="HOLD">HOLD</option>
-                  <option value="REWORK">REWORK</option>
-                </select>
-              </div>
+           
+
+
+              
+              
 
             </div>
           </div>
@@ -752,37 +1008,35 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
               </div>
 
               <div class="col-md-3">
+                <label class="form-label">Diamond wt</label>
+                <input type="number" class="form-control" id="qc_receive_pc">
+              </div>
+
+              <div class="col-md-3">
+                <label class="form-label">Diamond PCs</label>
+                <input type="number" class="form-control" id="qc_receive_pc">
+              </div>
+
+
+
+  
+
+ 
+
+
+
+              
+              <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+              <div class="col-md-3">
                 <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="qc_wastage">
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
               </div>
 
-              <div class="col-md-3">
-                <label class="form-label">IGI Cert</label>
-                <select class="form-select" id="qc_igi_cert">
-                  <option value="">-</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">HUID Stamp</label>
-                <select class="form-select" id="qc_huid_stamp">
-                  <option value="">-</option>
-                  <option value="DONE">DONE</option>
-                  <option value="PENDING">PENDING</option>
-                </select>
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Final QC</label>
-                <select class="form-select" id="qc_final_status">
-                  <option value="">-</option>
-                  <option value="PASS">PASS</option>
-                  <option value="HOLD">HOLD</option>
-                  <option value="REWORK">REWORK</option>
-                </select>
-              </div>
+              
 
             </div>
           </div>
@@ -810,37 +1064,29 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
                 <input type="number" class="form-control" id="qc_receive_pc">
               </div>
 
+
+
+
+ 
+              
+               <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
               <div class="col-md-3">
                 <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="qc_wastage">
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
+              </div>
+
+                            <div class="col-md-3">
+                <label class="form-label">Diamond wt</label>
+                <input type="number" class="form-control" id="qc_receive_pc">
               </div>
 
               <div class="col-md-3">
-                <label class="form-label">IGI Cert</label>
-                <select class="form-select" id="qc_igi_cert">
-                  <option value="">-</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">HUID Stamp</label>
-                <select class="form-select" id="qc_huid_stamp">
-                  <option value="">-</option>
-                  <option value="DONE">DONE</option>
-                  <option value="PENDING">PENDING</option>
-                </select>
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Final QC</label>
-                <select class="form-select" id="qc_final_status">
-                  <option value="">-</option>
-                  <option value="PASS">PASS</option>
-                  <option value="HOLD">HOLD</option>
-                  <option value="REWORK">REWORK</option>
-                </select>
+                <label class="form-label">Diamond PCs</label>
+                <input type="number" class="form-control" id="qc_receive_pc">
               </div>
 
             </div>
@@ -933,36 +1179,132 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
                 <input type="number" step="0.001" class="form-control" id="qc_wastage">
               </div>
 
+
               <div class="col-md-3">
-                <label class="form-label">IGI Cert</label>
-                <select class="form-select" id="qc_igi_cert">
-                  <option value="">-</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
+                <label class="form-label">Diamond wt</label>
+                <input type="number" class="form-control" id="qc_receive_pc">
               </div>
 
               <div class="col-md-3">
-                <label class="form-label">HUID Stamp</label>
-                <select class="form-select" id="qc_huid_stamp">
-                  <option value="">-</option>
-                  <option value="DONE">DONE</option>
-                  <option value="PENDING">PENDING</option>
-                </select>
+                <label class="form-label">Diamond PCs</label>
+                <input type="number" class="form-control" id="qc_receive_pc">
               </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Final QC</label>
-                <select class="form-select" id="qc_final_status">
-                  <option value="">-</option>
-                  <option value="PASS">PASS</option>
-                  <option value="HOLD">HOLD</option>
-                  <option value="REWORK">REWORK</option>
-                </select>
+                            
+               <div class="col-md-3">
+                <label class="form-label">Extra Metal Recieved</label>
+                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
               </div>
 
             </div>
           </div>
+
+          <!-- ============ TAG PRINT ============ -->
+<div class="tab-pane fade" id="tabTagPrint">
+
+  <div class="row g-3">
+
+    <!-- Left: Tag Preview -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+          <div>
+            <strong>Tag Preview</strong><br>
+            <small class="text-muted">Ready to print</small>
+          </div>
+          <button type="button" class="btn btn-sm btn-primary" onclick="printTag()">
+            <i class="bi bi-printer"></i> Print
+          </button>
+        </div>
+
+        <div class="card-body">
+          <!-- Tag Box -->
+          <div id="tagPrintArea" class="border rounded p-3" style="width: 320px;">
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="fw-bold" id="tag_style_no">STYLE: -</div>
+                <div class="small text-muted" id="tag_order_id">ORDER: -</div>
+              </div>
+              <div class="text-end">
+                <div class="badge bg-dark" id="tag_purity">-</div>
+                <div class="small" id="tag_colour">-</div>
+              </div>
+            </div>
+
+            <hr class="my-2">
+
+            <div class="d-flex justify-content-between small">
+              <div>Issue Kt: <span id="tag_issue_kt">-</span></div>
+              <div>Net: <span id="tag_net">-</span> gm</div>
+            </div>
+
+            <div class="mt-3 text-center">
+              <!-- Barcode SVG -->
+              <svg id="tagBarcode"></svg>
+              <div class="small text-muted mt-1" id="tag_barcode_text">-</div>
+            </div>
+          </div>
+
+          <small class="text-muted d-block mt-2">
+            Tip: Barcode value uses Order ID + Style No.
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Inputs -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <strong>Tag Details</strong>
+        </div>
+
+        <div class="card-body">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Barcode Value</label>
+              <input type="text" class="form-control" id="tag_barcode_value"
+                     placeholder="Auto" readonly>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Net (gm)</label>
+              <input type="text" class="form-control" id="tag_net_input"
+                     placeholder="Auto" readonly>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Purity</label>
+              <input type="text" class="form-control" id="tag_purity_input"
+                     placeholder="Auto" readonly>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Colour</label>
+              <input type="text" class="form-control" id="tag_colour_input"
+                     placeholder="Auto" readonly>
+            </div>
+
+            <div class="col-md-12">
+              <label class="form-label">Notes (optional)</label>
+              <textarea class="form-control" id="tag_notes" rows="2"
+                        placeholder="Any note to show on tag (optional)"></textarea>
+            </div>
+
+            <div class="col-md-12">
+              <button type="button" class="btn btn-outline-primary w-100" onclick="generateTagBarcode()">
+                <i class="bi bi-upc-scan"></i> Refresh Barcode
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 
         </div>
       </div>
@@ -982,131 +1324,11 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
   </div>
 
   <!-- JS Libraries -->
-<script>
-let puModal = null;
 
-document.addEventListener("DOMContentLoaded", () => {
-  const el = document.getElementById("productionUpdateModal");
-  if (el) puModal = new bootstrap.Modal(el);
-});
 
-// Open modal from table
-function openProductionUpdateModal(orderId, styleNo, goldColor, goldPurity) {
 
-  document.getElementById("pu_order_id").innerText = orderId || "-";
-  document.getElementById("pu_style_no").innerText = styleNo || "-";
 
-  clearProductionModal();
 
-  // ✅ Auto fill casting form
-  const castingPurity = document.getElementById("casting_purity");
-  const castingColour = document.getElementById("casting_colour");
-
-  if (castingPurity) castingPurity.value = goldPurity || "";
-  if (castingColour) castingColour.value = goldColor || "";
-
-  puModal.show();
-}
-
-// Clear modal fields
-function clearProductionModal() {
-  const ids = [
-    "casting_date","casting_purity","casting_colour","casting_wax","casting_pure_gold","casting_alloy","casting_net","casting_wastage","casting_finish","casting_extra",
-    "filing_issue_weight","filing_issue_pc","filing_receive_weight","filing_receive_pc","filing_dust_weight","filing_dust_pc","filing_remark",
-    "fp_issue_weight","fp_issue_pc","fp_receive_weight","fp_receive_pc","fp_dust_weight","fp_dust_pc","fp_remark",
-    "st_dia_pc","st_dia_ct","st_dia_gm","st_dust_wt","st_issue_weight","st_issue_pc","st_receive_weight","st_receive_pc",
-    "qc_issue_weight","qc_issue_pc","qc_receive_weight","qc_receive_pc","qc_wastage","qc_igi_cert","qc_huid_stamp","qc_final_status"
-  ];
-
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
-}
-
-// Collect modal data & send to backend
-function saveProductionUpdate() {
-  const orderId = document.getElementById("pu_order_id").innerText;
-
-  const payload = {
-    order_id: orderId,
-
-    casting: {
-      date: document.getElementById("casting_date").value,
-      purity: document.getElementById("casting_purity").value,
-      colour: document.getElementById("casting_colour").value,
-      wax: document.getElementById("casting_wax").value,
-      pure_gold: document.getElementById("casting_pure_gold").value,
-      alloy: document.getElementById("casting_alloy").value,
-      net: document.getElementById("casting_net").value,
-      wastage: document.getElementById("casting_wastage").value,
-      finish: document.getElementById("casting_finish").value,
-      extra: document.getElementById("casting_extra").value
-    },
-
-    filing: {
-      issue_weight: document.getElementById("filing_issue_weight").value,
-      issue_pc: document.getElementById("filing_issue_pc").value,
-      receive_weight: document.getElementById("filing_receive_weight").value,
-      receive_pc: document.getElementById("filing_receive_pc").value,
-      dust_weight: document.getElementById("filing_dust_weight").value,
-      dust_pc: document.getElementById("filing_dust_pc").value,
-      remark: document.getElementById("filing_remark").value
-    },
-
-    fp: {
-      issue_weight: document.getElementById("fp_issue_weight").value,
-      issue_pc: document.getElementById("fp_issue_pc").value,
-      receive_weight: document.getElementById("fp_receive_weight").value,
-      receive_pc: document.getElementById("fp_receive_pc").value,
-      dust_weight: document.getElementById("fp_dust_weight").value,
-      dust_pc: document.getElementById("fp_dust_pc").value,
-      remark: document.getElementById("fp_remark").value
-    },
-
-    setting: {
-      dia_pc: document.getElementById("st_dia_pc").value,
-      dia_ct: document.getElementById("st_dia_ct").value,
-      dia_gm: document.getElementById("st_dia_gm").value,
-      dust_wt: document.getElementById("st_dust_wt").value,
-      issue_weight: document.getElementById("st_issue_weight").value,
-      issue_pc: document.getElementById("st_issue_pc").value,
-      receive_weight: document.getElementById("st_receive_weight").value,
-      receive_pc: document.getElementById("st_receive_pc").value
-    },
-
-    qc: {
-      issue_weight: document.getElementById("qc_issue_weight").value,
-      issue_pc: document.getElementById("qc_issue_pc").value,
-      receive_weight: document.getElementById("qc_receive_weight").value,
-      receive_pc: document.getElementById("qc_receive_pc").value,
-      wastage: document.getElementById("qc_wastage").value,
-      igi_cert: document.getElementById("qc_igi_cert").value,
-      huid_stamp: document.getElementById("qc_huid_stamp").value,
-      final_status: document.getElementById("qc_final_status").value
-    }
-  };
-
-  fetch("/api/production/update", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(r => r.json())
-  .then(res => {
-    if (res.ok) {
-      alert("Saved Successfully ✅");
-      puModal.hide();
-    } else {
-      alert(res.error || "Save failed ❌");
-    }
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Server error ❌");
-  });
-}
-</script>
 
 
 
@@ -1123,6 +1345,8 @@ function saveProductionUpdate() {
   <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
   <!-- ✅ Production Board getting round details JS -->
   <script>
@@ -1283,30 +1507,232 @@ function saveProductionUpdate() {
     }
   </script>
 
-  <script>
-    function openProductionUpdateModal(orderId, styleNo, goldColor, goldPurity) {
 
+
+
+
+
+
+<script>
+/* =========================================================
+   PRODUCTION UPDATE MODAL - TOTAL SCRIPT (ISSUE KT -> TARGET KT)
+   Your requirement (final):
+   - casting_purity = TARGET KT (style purity auto-filled: 9kt/14kt/18kt/22kt/24kt) (readonly recommended)
+   - casting_karat  = ISSUE KT (user selects: 9/14/18/22/24)
+   - casting_pure_gold = ISSUE GOLD gm (user enters)
+   - Auto-calc to CONVERT issue KT gold into target KT:
+        pure_gold_content = issue_gm * fineness(issueKT)
+        net_required      = pure_gold_content / fineness(targetKT)
+        alloy_to_add      = net_required - pure_gold_content
+   - Show:
+        casting_alloy = alloy_to_add
+        casting_net   = net_required
+   - Works for: 9,14,18,22,24
+========================================================= */
+
+var puModal = null;
+
+// KT → fineness
+const KT_FINENESS = {
+  9:  0.375,
+  14: 0.585,
+  18: 0.750,
+  22: 0.916,
+  24: 1.000
+};
+
+document.addEventListener("DOMContentLoaded", function () {
+  const modalEl = document.getElementById("productionUpdateModal");
+  if (modalEl) puModal = new bootstrap.Modal(modalEl);
+
+  setupIssueToTargetCalc();
+});
+
+/* ---------------------------
+   Helpers
+--------------------------- */
+function parseKt(val) {
+  // supports: "22kt", "22 KT", "22K", "14kt", "24", etc.
+  const t = String(val || "").toUpperCase().replace(/\s+/g, "");
+  const m = t.match(/(\d+)/);
+  if (!m) return null;
+  const k = parseInt(m[1], 10);
+  return (k === 9 || k === 14 || k === 18 || k === 22 || k === 24) ? k : null;
+}
+
+function toNum(val) {
+  const n = parseFloat(val);
+  return Number.isFinite(n) ? n : null;
+}
+
+function set3(el, n) {
+  el.value = Number.isFinite(n) ? n.toFixed(3) : "";
+}
+
+/* ---------------------------
+   MAIN CALC: Issue KT -> Target KT
+--------------------------- */
+function setupIssueToTargetCalc() {
+  const targetPurityEl = document.getElementById("casting_purity");     // TARGET KT (style)
+  const issueKaratEl   = document.getElementById("casting_karat");      // ISSUE KT (selected)
+  const issueGmEl      = document.getElementById("casting_pure_gold");  // ISSUE GOLD gm
+  const alloyEl        = document.getElementById("casting_alloy");      // Alloy to add
+  const netEl          = document.getElementById("casting_net");        // Final net
+
+  if (!targetPurityEl || !issueKaratEl || !issueGmEl || !alloyEl || !netEl) return;
+
+  function calc() {
+    const targetKt = parseKt(targetPurityEl.value);   // style purity
+    const issueKt  = parseKt(issueKaratEl.value);     // issuing kt
+    const issueGm  = toNum(issueGmEl.value);
+
+    // Debug (optional)
+    // console.log({ targetKt, issueKt, issueGm });
+
+    if (!targetKt || !issueKt || issueGm === null) {
+      alloyEl.value = "";
+      netEl.value = "";
+      return;
+    }
+
+    const fIssue  = KT_FINENESS[issueKt];
+    const fTarget = KT_FINENESS[targetKt];
+
+    if (!fIssue || !fTarget || fTarget === 0) {
+      alloyEl.value = "";
+      netEl.value = "";
+      return;
+    }
+
+    // Pure gold content in issued metal
+    const pureGoldContent = issueGm * fIssue;
+
+    // Final net weight needed for target KT
+    const netRequired = pureGoldContent / fTarget;
+
+    // Alloy to add
+    const alloyToAdd = netRequired - pureGoldContent;
+
+    set3(alloyEl, alloyToAdd);
+    set3(netEl, netRequired);
+  }
+
+  issueKaratEl.addEventListener("change", calc);
+  issueGmEl.addEventListener("input", calc);
+
+  // If target purity changes by autofill, still recalc
+  targetPurityEl.addEventListener("input", calc);
+}
+
+/* ---------------------------
+   OPEN MODAL
+   orderId, styleNo, goldColor, goldPurity (style purity) from table
+--------------------------- */
+function openProductionUpdateModal(orderId, styleNo, goldColor, goldPurity) {
   document.getElementById("pu_order_id").innerText = orderId || "-";
   document.getElementById("pu_style_no").innerText = styleNo || "-";
 
   clearProductionModal();
 
-  // ✅ Auto fill purity & colour
-  const castingPurity = document.getElementById("casting_purity");
-  const castingColour = document.getElementById("casting_colour");
+  // Date = today (optional)
+  const dateEl = document.getElementById("casting_date");
+  if (dateEl) dateEl.value = new Date().toISOString().split("T")[0];
 
-  if (castingPurity) castingPurity.value = goldPurity || "";
-  if (castingColour) castingColour.value = goldColor || "";
+  // Colour autofill
+  const colourEl = document.getElementById("casting_colour");
+  if (colourEl) colourEl.value = goldColor || "";
 
-  // ✅ Auto fill today's date
-  const today = new Date().toISOString().split("T")[0];
-  const castingDate = document.getElementById("casting_date");
-  if (castingDate) castingDate.value = today;
+  // TARGET purity autofill (style purity)
+  const targetEl = document.getElementById("casting_purity");
+  if (targetEl) targetEl.value = goldPurity || "";
+
+  // Default ISSUE KT = 24 (common use-case) OR match style purity if you want:
+  // Option A: default issue to 24
+  const issueKaratEl = document.getElementById("casting_karat");
+  if (issueKaratEl) issueKaratEl.value = "24";
+
+  // Trigger calc if issue gm already present
+  const issueGmEl = document.getElementById("casting_pure_gold");
+  if (issueGmEl) issueGmEl.dispatchEvent(new Event("input"));
 
   puModal.show();
 }
 
-  </script>
+/* ---------------------------
+   CLEAR MODAL
+--------------------------- */
+function clearProductionModal() {
+  const ids = [
+    // casting
+    "casting_date","casting_karat","casting_purity","casting_colour","casting_wax",
+    "casting_pure_gold","casting_alloy","casting_net","casting_wastage","casting_finish","casting_extra",
+    // filing
+    "filing_issue_weight","filing_issue_pc","filing_receive_weight","filing_receive_pc","filing_dust_weight","filing_dust_pc","filing_remark",
+    // fp
+    "fp_issue_weight","fp_issue_pc","fp_receive_weight","fp_receive_pc","fp_dust_weight","fp_dust_pc","fp_remark",
+    // setting
+    "st_dia_pc","st_dia_ct","st_dia_gm","st_dust_wt","st_issue_weight","st_issue_pc","st_receive_weight","st_receive_pc",
+    // qc
+    "qc_issue_weight","qc_issue_pc","qc_receive_weight","qc_receive_pc","qc_wastage","qc_igi_cert","qc_huid_stamp","qc_final_status"
+  ];
+
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+}
+
+/* ---------------------------
+   SAVE (your original payload pattern)
+--------------------------- */
+function saveProductionUpdate() {
+  const orderId = document.getElementById("pu_order_id").innerText;
+
+  const payload = {
+    order_id: orderId,
+
+    casting: {
+      date: document.getElementById("casting_date")?.value || "",
+      target_purity: document.getElementById("casting_purity")?.value || "", // style KT
+      issue_karat: document.getElementById("casting_karat")?.value || "",    // issued KT
+      colour: document.getElementById("casting_colour")?.value || "",
+      wax: document.getElementById("casting_wax")?.value || "",
+      issue_gold_gm: document.getElementById("casting_pure_gold")?.value || "",
+      alloy_to_add: document.getElementById("casting_alloy")?.value || "",
+      net_required: document.getElementById("casting_net")?.value || "",
+      wastage: document.getElementById("casting_wastage")?.value || "",
+      finish: document.getElementById("casting_finish")?.value || "",
+      extra: document.getElementById("casting_extra")?.value || ""
+    }
+
+    // If you still need other sections (filing/fp/setting/qc) add them here,
+    // or merge with your old payload structure.
+  };
+
+  fetch("/api/production/update", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.ok) {
+      alert("Saved Successfully ✅");
+      puModal.hide();
+    } else {
+      alert(res.error || "Save failed ❌");
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("Server error ❌");
+  });
+}
+</script>
+
+
+
+
 
 </body>
 </html>

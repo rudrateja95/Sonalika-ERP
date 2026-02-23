@@ -166,7 +166,6 @@
       <tr>
         <th>Size</th>
         <th>Pcs</th>
-        <th>Shape</th>
         <th>Sieve Range</th>
         <th>Sieve Size</th>
         <th>Ct / Pc</th>
@@ -179,7 +178,7 @@
 </div>
 
 
-                <label class="form-label fw-semibold">Diamond Clarity</label>
+<label class="form-label fw-semibold">Diamond Clarity</label>
 <select class="form-select shadow-sm mb-3" id="diamond_clarity">
   <option value="">Diamond Clarity</option>
   <option value="VVS">VVS</option>
@@ -224,6 +223,15 @@
   <option value="0.76">18 KT</option>
   <option value="0.96">22 KT</option>
 </select>
+
+  <!-- ✅ Quantity Field -->
+  <input 
+    type="number"
+    class="form-control shadow-sm mb-3"
+    id="quantity"
+    placeholder="Enter Quantity"
+    min="1"
+  >
 
               </div>
 
@@ -492,7 +500,6 @@ document.addEventListener("DOMContentLoaded", () => {
           <tr ${mmAttr}>
             <td>${r.size ?? ""}</td>
             <td>${pcs}</td>
-            <td>${r.shape ?? ""}</td>
             <td class="sieve-range text-muted">...</td>
             <td class="sieve-size text-muted">...</td>
             <td class="ct-per-pc text-muted">...</td>

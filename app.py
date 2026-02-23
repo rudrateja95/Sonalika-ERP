@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response, flash
+from flask import Flask, render_template, request, jsonify, Response, flash, session, url_for, redirect
 import re
 import cv2
 import pandas as pd
@@ -14,16 +14,19 @@ from werkzeug.datastructures import FileStorage
 import base64
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from werkzeug.utils import secure_filename
 from sqlalchemy.dialects.mysql import LONGBLOB, JSON
 from sqlalchemy import LargeBinary, func, and_
 import math
 from datetime import datetime
+import openpyxl
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 
 
 app = Flask(__name__)
+app.secret_key='7527488f33cd3a731909c7d6e8aa8194d85e893f02a7d8548cb4b16aec47f64f'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/sonalika'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -34,8 +37,6 @@ migrate = Migrate(app, db)
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-OLLAMA_URL = "http://localhost:11434/api/generate"
-OLLAMA_MODEL = "llama3"
 
 
 
@@ -76,15 +77,23 @@ class ClientKYC(db.Model):
     iec_doc = db.Column(LONGBLOB)
     visiting_card_doc = db.Column(LONGBLOB)
 
-class StyleImage(db.Model):
-    __tablename__ = "style_images"
+class StyleNo(db.Model):
+    __tablename__ = "style_no"
+
+    id = db.Column(db.Integer, primary_key=True)
+    style_no = db.Column(db.String(100), nullable=False, index=True)
+    gold_wt = db.Column(db.Float, nullable=True)
+    size = db.Column(db.String(50), nullable=True)
+    pcs = db.Column(db.Integer, nullable=True)
+
+
+class ImageCrop(db.Model):
+    __tablename__ = "image_crop"
 
     id = db.Column(db.Integer, primary_key=True)
     style_no = db.Column(db.String(100), nullable=False, index=True)
     image = db.Column(LONGBLOB, nullable=False)
-    # 🔹 NEW FIELDS
-    gold_wt = db.Column(db.Float, nullable=True)          # 1.800 
-    round_details = db.Column(JSON, nullable=True)        # list of rounds
+
 
 class DiamondSieveMaster(db.Model):
     __tablename__ = "diamond_sieve_master"
@@ -122,16 +131,302 @@ class ProductionOrder(db.Model):
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+class User(db.Model):
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(50), nullable=False)
+
 
     
-
-
-
-
 
 # -----------------------------
 # MAIN ROUTES
 # -----------------------------
+@app.route("/api/styles", methods=["GET"])
+def api_styles():
+    rows = (
+        db.session.query(StyleNo.style_no)
+        .group_by(StyleNo.style_no)
+        .order_by(db.func.max(StyleNo.id).desc())
+        .all()
+    )
+
+    styles = [r[0] for r in rows if r[0]]
+    return jsonify(styles)
+
+@app.route("/api/style/<style_no>", methods=["GET"])
+def api_style(style_no):
+    # 1) rows for this style (many rows = many sizes)
+    rows = (
+        StyleNo.query
+        .filter(StyleNo.style_no == style_no)
+        .order_by(StyleNo.id.asc())
+        .all()
+    )
+
+    if not rows:
+        return jsonify({"ok": False, "message": "Style not found"}), 404
+
+    # 2) gold weight (take first non-null)
+    gold_wt = None
+    for r in rows:
+        if r.gold_wt is not None:
+            gold_wt = float(r.gold_wt)
+            break
+
+    # 3) round_details from StyleNo table (size + pcs)
+    # Your JS expects: [{size:"0.9", pcs:12}, ...]
+    round_details = []
+    for r in rows:
+        if r.size and r.pcs is not None:
+            round_details.append({
+                "size": r.size,
+                "pcs": int(r.pcs)
+            })
+
+    # 4) image URL (served by another endpoint)
+    image_url = f"/api/style-image/{style_no}"
+
+    return jsonify({
+        "ok": True,
+        "style_no": style_no,
+        "gold_wt": gold_wt,
+        "round_details": round_details,
+        "image_url": image_url
+    })
+
+
+@app.route("/api/style-image/<style_no>", methods=["GET"])
+def api_style_image(style_no):
+    row = (
+        ImageCrop.query
+        .filter(ImageCrop.style_no == style_no)
+        .order_by(ImageCrop.id.desc())
+        .first()
+    )
+
+    if not row or not row.image:
+        return ("", 404)
+
+    img_bytes = row.image
+
+    # If you always store JPEG, keep image/jpeg
+    # If you store PNG, change to image/png
+    return Response(img_bytes, mimetype="image/jpeg")
+
+
+@app.route("/api/sieve-lookup-batch", methods=["POST"])
+def sieve_lookup_batch():
+    payload = request.get_json(silent=True) or {}
+    mm_list = payload.get("mm_list", [])
+
+    if not isinstance(mm_list, list) or not mm_list:
+        return jsonify({})
+
+    out = {}
+
+    for raw_mm in mm_list:
+        key = str(raw_mm)
+
+        # ---- parse input mm
+        try:
+            mm = float(raw_mm)
+        except Exception:
+            out[key] = None
+            continue
+
+        # ---- FLOOR lookup + tie-break for duplicate mm_size
+        # 1) pick closest mm_size below input
+        # 2) if same mm_size exists multiple rows, pick the FIRST (lowest id)
+        row = (
+            DiamondSieveMaster.query
+            .filter(DiamondSieveMaster.mm_size <= mm)
+            .order_by(
+                DiamondSieveMaster.mm_size.desc(),  # closest <= mm
+                DiamondSieveMaster.id.asc()         # ✅ duplicates: first row only
+            )
+            .first()
+        )
+
+        if not row:
+            out[key] = None
+            continue
+
+        out[key] = {
+            "mm_input": mm,
+            "mm_size": float(row.mm_size),
+            "sieve_range": row.sieve_range,
+            "sieve_size": row.sieve_size,
+            "ct_weight_per_piece": float(row.ct_weight_per_piece),
+            "picked_id": int(row.id),
+        }
+
+    return jsonify(out)
+
+
+
+@app.route("/api/style-excel-upload", methods=["POST"])
+def style_excel_upload():
+    auth = require_admin_json()
+    if auth:
+        return auth
+
+    f = request.files.get("file")
+    clear_first = request.form.get("clear_first") == "1"
+
+    if not f:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    filename = secure_filename(f.filename or "")
+    if not filename.lower().endswith((".xlsx", ".xls")):
+        return jsonify({"error": "Upload only .xlsx or .xls"}), 400
+
+    try:
+        df = pd.read_excel(f)
+    except Exception as e:
+        return jsonify({"error": f"Excel read failed: {str(e)}"}), 400
+
+    df.columns = [str(c).strip().lower() for c in df.columns]
+
+    required = ["style_no", "gold_wt", "size", "pcs"]
+    missing = [c for c in required if c not in df.columns]
+    if missing:
+        return jsonify({"error": f"Missing columns: {missing}. Required: {required}"}), 400
+
+    if clear_first:
+        db.session.query(StyleNo).delete()
+        db.session.commit()
+
+    total_rows = len(df)
+    inserted = 0
+    skipped = 0
+
+    for _, row in df.iterrows():
+        style_no = str(row.get("style_no") or "").strip()
+        if not style_no or style_no.lower() == "nan":
+            skipped += 1
+            continue
+
+        try:
+            gold_wt = float(row.get("gold_wt")) if pd.notna(row.get("gold_wt")) else None
+        except:
+            gold_wt = None
+
+        try:
+            pcs = int(row.get("pcs")) if pd.notna(row.get("pcs")) else None
+        except:
+            pcs = None
+
+        size_val = str(row.get("size")).strip() if pd.notna(row.get("size")) else None
+
+        db.session.add(StyleNo(style_no=style_no, gold_wt=gold_wt, size=size_val, pcs=pcs))
+        inserted += 1
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"DB insert failed: {str(e)}"}), 500
+
+    return jsonify({
+        "message": "Imported successfully",
+        "total_rows": total_rows,
+        "inserted": inserted,
+        "skipped": skipped
+    }), 200
+
+
+def require_admin_json():
+    if "role" not in session or session["role"] != "admin":
+        return jsonify({"error": "Unauthorized. Please login as admin."}), 401
+    return None
+
+@app.route("/api/image-crop-excel-upload", methods=["POST"])
+def image_crop_excel_upload():
+    auth = require_admin_json()
+    if auth:
+        return auth
+
+    f = request.files.get("file")
+    clear_first = request.form.get("clear_first") == "1"
+
+    if not f:
+        return jsonify({"error": "No file uploaded"}), 400
+
+    filename = secure_filename(f.filename or "")
+    if not filename.lower().endswith((".xlsx",)):
+        return jsonify({"error": "Upload only .xlsx (images supported in .xlsx)"}), 400
+
+    try:
+        file_bytes = f.read()
+        wb = openpyxl.load_workbook(BytesIO(file_bytes))
+        ws = wb.active
+    except Exception as e:
+        return jsonify({"error": f"Excel open failed: {str(e)}"}), 400
+
+    # Expected headers: style_no | image
+    h1 = (ws.cell(row=1, column=1).value or "").strip().lower()
+    h2 = (ws.cell(row=1, column=2).value or "").strip().lower()
+    if h1 != "style_no" or h2 != "image":
+        return jsonify({"error": "Header must be: style_no | image"}), 400
+
+    if clear_first:
+        db.session.query(ImageCrop).delete()
+        db.session.commit()
+
+    # Map: excel_row_number -> image_bytes
+    # openpyxl stores images in ws._images with anchors
+    row_to_img = {}
+    for im in getattr(ws, "_images", []):
+        try:
+            # anchor._from.row is 0-based (row=1 means Excel row 2)
+            excel_row = im.anchor._from.row + 1
+            img_bytes = im._data()  # bytes of the image (jpg/png)
+            row_to_img[excel_row] = img_bytes
+        except:
+            pass
+
+    total_rows = ws.max_row - 1
+    inserted = 0
+    skipped = 0
+    no_image = 0
+
+    for r in range(2, ws.max_row + 1):
+        style_no = str(ws.cell(row=r, column=1).value or "").strip()
+        if not style_no:
+            skipped += 1
+            continue
+
+        img_bytes = row_to_img.get(r)
+        if not img_bytes:
+            no_image += 1
+            continue
+
+        db.session.add(ImageCrop(style_no=style_no, image=img_bytes))
+        inserted += 1
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": f"DB insert failed: {str(e)}"}), 500
+
+    return jsonify({
+        "message": "Image excel imported successfully",
+        "total_rows": total_rows,
+        "inserted": inserted,
+        "skipped_empty_style": skipped,
+        "rows_without_image": no_image
+    }), 200
+
+@app.route("/admin/upload-style-and-images")
+def upload_style_and_images():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/signin")
+    return render_template("upload_style_and_images.html")
 
 @app.route("/upload-docs", methods=["POST"])
 def upload_docs():
@@ -187,13 +482,23 @@ def upload_docs():
     })
 
 
-@app.route("/")
-def login():
-    return render_template("signin.html")
+@app.route("/", methods=["GET"])
+def portal():
+    return render_template("portal.html")
+    
 
-@app.route("/index")
-def index():
-    return render_template("index.html")
+
+@app.route("/sales")
+def sales_page():
+    if "role" not in session or session["role"] != "sales":
+        return redirect("/signin")
+    return render_template("sales.html")
+
+@app.route("/admin")
+def admin():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/signin")
+    return render_template("admin.html")
 
 @app.route("/signup")
 def signup():
@@ -203,41 +508,6 @@ def signup():
 # PAGES ROUTES (ERP MODULES)
 # -----------------------------
 
-@app.route("/table")
-def table():
-    return render_template("table.html")
-
-@app.route("/form")
-def form():
-    return render_template("form.html")
-
-@app.route("/chart")
-def chart():
-    return render_template("chart.html")
-
-@app.route("/button")
-def button():
-    return render_template("button.html")
-
-@app.route("/widget")
-def widget():
-    return render_template("widget.html")
-
-@app.route("/element")
-def element():
-    return render_template("element.html")
-
-@app.route("/typography")
-def typography():
-    return render_template("typography.html")
-
-@app.route("/blank")
-def blank():
-    return render_template("blank.html")
-
-@app.route("/error")
-def error():
-    return render_template("404.html")
 
 @app.route("/create_order")
 def create_order():
@@ -247,6 +517,16 @@ def create_order():
 @app.route("/Client_kyc")
 def Client_kyc():
     return render_template("Client_kyc.html")
+
+
+@app.route("/production-board")
+def production_board():
+    orders = ProductionOrder.query.order_by(ProductionOrder.id.desc()).all()
+    return render_template("production_board.html", orders=orders)
+
+
+
+    # ---------- Upload Pdf doc to DB ----------
 
 @app.route("/upload-doc", methods=["POST"])
 def upload_doc():
@@ -258,8 +538,6 @@ def upload_doc():
 
     result = process_image_ocr(file, doc_type)
     return jsonify(result)
-
-    # ---------- Upload Pdf doc to DB ----------
 
 @app.route("/upload-pdf-doc", methods=["POST"])
 def upload_pdf_doc():
@@ -499,344 +777,8 @@ def process_image_ocr(file, doc_type):
     
     return response
 
-def extract_style_no(img):
-    crop = img[0:280, 0:520]   # exact STYLE NO box
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
 
-    gray = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)[1]
 
-    text = pytesseract.image_to_string(
-        gray,
-        config="--psm 6 -c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    )
-
-    for line in text.splitlines():
-        line = line.strip().replace(" ", "")
-        match = re.search(r"SJ[A-Z0-9]{3,}", line)
-        if match:
-            return match.group()
-
-    return None
-
-
-
-# ---------------- CROP GOLD + GEM ----------------
-def crop_gold_gem(img):
-    h, w, _ = img.shape
-
-    y1 = int(h * 0.28) # start from TOP
-    y2 = int(h * 0.60) # go DOWN
-
-    x1 = int(w * 0.0)  # start from LEFT
-    x2 = int(w * 0.70) # go RIGHT
-
-    return img[y1:y2, x1:x2]
-
-# ---------------- BLOCK GEM ----------------
-def blur_gems(img):
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
-    lower = np.array([90, 40, 50])
-    upper = np.array([140, 255, 255])
-
-    mask = cv2.inRange(hsv, lower, upper)
-
-    blurred = cv2.GaussianBlur(img, (25, 25), 0)
-    img[mask > 0] = blurred[mask > 0]
-
-    return img
-
-
-# ---------------- extract_gold_wt ----------------
-
-
-def extract_gold_wt(img):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    gray = cv2.resize(gray, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-    gray = cv2.GaussianBlur(gray, (3, 3), 0)
-    thr = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-
-    data = pytesseract.image_to_data(thr, output_type=Output.DICT, config="--psm 6")
-
-    # group words by (block, par, line) so we can read whole line
-    lines = {}
-    n = len(data["text"])
-    for i in range(n):
-        word = (data["text"][i] or "").strip()
-        if not word:
-            continue
-        key = (data["block_num"][i], data["par_num"][i], data["line_num"][i])
-        lines.setdefault(key, []).append((data["left"][i], word))
-
-    # search each line for GM/gm and take number before it
-    for key, words in lines.items():
-        words.sort(key=lambda x: x[0])
-        line = " ".join(w for _, w in words)
-        low = line.lower().replace(" ", "")
-
-        if "gm" not in low:
-            continue
-
-        # extract number in that line (prefer the one closest to gm)
-        # examples: "GOLD WT = 3.000 GM"
-        nums = re.findall(r"\d+\.\d+", low)
-        if not nums:
-            continue
-
-        val = float(nums[-1])  # usually last float on that line is weight
-        # sanity: gold wt typically 1..30 gm
-        if 0.5 <= val <= 30:
-            return round(val, 3)
-
-    return None
-
-
-
-
-def crop_cad_panel(img):
-    h, w, _ = img.shape
-    return img[
-        int(h * 0.35):int(h * 0.56),
-        int(w * 0.00):int(w * 0.46)
-    ]
-
-
-
-
-def normalize_size_token(tok):
-    t = str(tok).strip().replace(",", ".")
-    t = re.sub(r"[^0-9.]", "", t)
-    if not t: return 0.0
-    if t.startswith("."): t = "0" + t
-    # Handle OCR missing decimal: "90" -> 0.90
-    if t.isdigit() and len(t) == 2: return float(t) / 100.0
-    try: return float(t)
-    except: return 0.0
-
-def ocr_rows_with_alignment(img_bin, y_threshold=20):
-    # Use image_to_data to get bounding box coordinates
-    data = pytesseract.image_to_data(img_bin, output_type=Output.DICT, config="--psm 6")
-    tokens = []
-    
-    for i in range(len(data["text"])):
-        text = (data["text"][i] or "").strip()
-        try:
-            conf = int(float(data["conf"][i]))
-        except:
-            conf = -1
-            
-        if text and conf > 30:
-            # Calculate the vertical center of the text token
-            tokens.append({
-                "text": text,
-                "y": data["top"][i] + (data["height"][i] / 2),
-                "x": data["left"][i]
-            })
-
-    if not tokens: return []
-
-    # Sort tokens from top to bottom
-    tokens.sort(key=lambda t: t['y'])
-    
-    merged_lines = []
-    current_row = [tokens[0]]
-
-    # Group tokens that share a similar Y-coordinate
-    for i in range(1, len(tokens)):
-        if abs(tokens[i]['y'] - current_row[-1]['y']) <= y_threshold:
-            current_row.append(tokens[i])
-        else:
-            # Sort the completed row from Left to Right (X-axis)
-            current_row.sort(key=lambda t: t['x'])
-            merged_lines.append(" ".join([t['text'] for t in current_row]))
-            current_row = [tokens[i]]
-    
-    current_row.sort(key=lambda t: t['x'])
-    merged_lines.append(" ".join([t['text'] for t in current_row]))
-    return merged_lines
-
-def extract_round_details(img):
-    # 1. Crop to the CAD panel table area
-    cad = crop_cad_panel(img)
-    ch, cw, _ = cad.shape
-    crop = cad[int(ch * 0.05):int(ch * 0.95), int(cw * 0.16):int(cw * 0.80)]
-
-    # 2. Pre-process for thin white/green text on dark background
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    gray = cv2.resize(gray, None, fx=5, fy=5, interpolation=cv2.INTER_CUBIC)
-    _, th = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-    
-    # 3. OCR with Y-Alignment to catch the PCS counts (5, 17, etc.)
-    ocr_lines = ocr_rows_with_alignment(th)
-    
-    # 4. Final Extraction Logic
-    rounds = []
-    for line in ocr_lines:
-        line = line.replace('X', 'x').replace('x', ' x ')
-        # Find: [Size1] x [Size2] followed by any characters then [PCS]
-        m = re.search(r"(\d?\.?\d+)\s*x\s*(\d?\.?\d+)(.*)", line)
-        if m:
-            s1, s2, tail = m.groups()
-            size_str = f"{normalize_size_token(s1):.2f} x {normalize_size_token(s2):.2f}"
-            
-            # Find the PCS: first integer in the tail
-            pcs_match = re.search(r"(\d+)", tail)
-            pcs = int(pcs_match.group(1)) if pcs_match else 0
-            
-            if size_str != "0.00 x 0.00":
-                rounds.append({"shape": "Round", "size": size_str, "pcs": pcs})
-
-    return rounds
-
-
-
-
-
-
-def ocr_ready_no_threshold(crop, scale=8):
-    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-    gray = cv2.resize(gray, None, fx=scale, fy=scale, interpolation=cv2.INTER_CUBIC)
-    gray = cv2.GaussianBlur(gray, (3,3), 0)
-
-    # 🔥 NO THRESHOLD
-    return gray
-
-
- 
-
-# ---------- Job Card Folder Uploding db ----------
-
-@app.route("/upload-folder", methods=["POST"])
-def upload_folder():
-    files = request.files.getlist("files")
-    if not files:
-        return jsonify({"error": "No files uploaded"}), 400
-
-    saved = 0
-    ocr_failed = 0
-    debug_limit = 3          # ✅ only save debug for first 3 images
-    debug_count = 0
-
-    for file in files:
-        try:
-            file_bytes = file.read()
-            npimg = np.frombuffer(file_bytes, np.uint8)
-            img = cv2.imdecode(npimg, cv2.IMREAD_COLOR)
-            if img is None:
-                ocr_failed += 1
-                continue
-
-            style_no = extract_style_no(img)
-            if not style_no:
-                ocr_failed += 1
-                continue
-
-            gold_wt = extract_gold_wt(img)
-            
-            round_details = extract_round_details(img)
-            
-            print("FINAL VALUES >>>")
-            print("STYLE:", style_no)
-            print("GOLD WT:", gold_wt) 
-            print("ROUNDS:", round_details)
-
-            # ✅ debug only first few
-            if debug_count < debug_limit:
-                draw_cad_debug_boxes(img, out_path=f"DEBUG_JOB_CARD_BOXES_{debug_count+1}.jpg")
-                debug_count += 1
-
-            # ✅ if gold not found, skip saving
-            if gold_wt is None:
-                ocr_failed += 1
-                continue
-
-            # store processed image (your old crop + blur)
-            crop = crop_gold_gem(img)
-            final_img = blur_gems(crop)
-
-            success, buffer = cv2.imencode(".jpg", final_img)
-            if not success:
-                ocr_failed += 1
-                continue
-
-            record = StyleImage(
-                style_no=style_no,
-                image=buffer.tobytes(),
-                gold_wt=gold_wt,               
-                round_details=round_details
-            )
-
-            db.session.add(record)
-            saved += 1
-
-        except Exception as e:
-            print("ERROR >>>", e)
-            ocr_failed += 1
-
-
-
-    db.session.commit()
-
-    return jsonify({
-        "status": "success",
-        "uploaded": len(files),
-        "saved": saved,
-        "ocr_failed": ocr_failed,
-        "debug_saved": debug_count
-    })
-
-
-def draw_cad_debug_boxes(img, out_path="DEBUG_CAD_BOXES.jpg"):
-    h, w, _ = img.shape
-    debug = img.copy()
-
-    # 🟣 CAD PANEL (tight)
-    cx1, cy1 = int(w * 0.00), int(h * 0.35)
-    cx2, cy2 = int(w * 0.46), int(h * 0.56)
-
-    cv2.rectangle(debug, (cx1, cy1), (cx2, cy2), (255, 0, 255), 3)
-    cv2.putText(debug, "CAD PANEL", (cx1 + 5, max(30, cy1 - 10)),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 255), 2)
-
-
-    # 🔵 ROUND ROWS (3 rows area)
-    rx1, ry1 = int(w * 0.04), int(h * 0.40)
-    rx2, ry2 = int(w * 0.46), int(h * 0.515)
-
-    cv2.rectangle(debug, (rx1, ry1), (rx2, ry2), (255, 0, 0), 3)
-    cv2.putText(debug, "ROUND ROWS", (rx1 + 5, max(30, ry1 - 10)),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
-
-    cv2.imwrite(out_path, debug)
-    print(f"✅ CAD debug saved: {out_path}")
-
-
-# ---------- get style no imge ----------
-@app.route("/api/style/<style_no>", methods=["GET"])
-def api_get_style(style_no):
-    row = StyleImage.query.filter_by(style_no=style_no).first()
-
-    if not row:
-        return jsonify({"ok": False, "message": "Style not found"}), 404
-
-    # LONGBLOB -> base64 -> data URL
-    img_b64 = base64.b64encode(row.image).decode("utf-8")
-    img_url = f"data:image/jpeg;base64,{img_b64}"  # if png, change to image/png
-
-    return jsonify({
-        "ok": True,
-        "style_no": row.style_no,
-        "image_url": img_url,
-        "gold_wt": row.gold_wt,
-        
-        "round_details": row.round_details  # JSON field
-    })
-
-# ---------- get Cad card details ----------
-@app.route("/api/styles", methods=["GET"])
-def api_styles():
-    styles = StyleImage.query.with_entities(StyleImage.style_no).order_by(StyleImage.style_no.asc()).all()
-    return jsonify([s[0] for s in styles])
 # ---------- Get Client Names ----------
 @app.route("/api/clients")
 def api_clients():
@@ -851,139 +793,9 @@ def api_clients():
     ])
 
 
-    # ---------- Sieve api ----------
-
-#@app.route("/upload-sieve", methods=["GET", "POST"])
-#def upload_sieve():
-#    if request.method == "POST":
-#        file = request.files.get("excel_file")
-#        if not file or file.filename == "":
-#            flash("❌ Please select an Excel file", "danger")
-#            return redirect(url_for("upload_sieve"))
-#
-#        try:
-#            df = pd.read_excel(file)
-#
-#            # ✅ 1) FIX: remove hidden \n in column names
-#            df.columns = df.columns.astype(str).str.strip()
-#
-#            # ✅ 2) Clean string cells (remove \n, extra spaces)
-#            def clean_text(x):
-#                if pd.isna(x):
-#                    return None
-#                if isinstance(x, str):
-#                    x = x.replace("\n", " ").strip()
-#                    x = re.sub(r"\s+", " ", x)   # multiple spaces -> single space
-#                    return x
-#                return x
-#
-#            df = df.applymap(clean_text)
-#
-#            # ✅ 3) Optional: normalize sieve_size format (+ 000 - 00 -> +000-00)
-#            if "sieve_size" in df.columns:
-#                df["sieve_size"] = df["sieve_size"].astype(str).str.replace(" ", "", regex=False)
-#
-#            # ✅ 4) Validate required columns
-#            required_cols = ["sieve_range", "sieve_size", "mm_size", "no_of_stones", "ct_weight_per_piece"]
-#            missing = [c for c in required_cols if c not in df.columns]
-#            if missing:
-#                flash(f"❌ Missing columns in Excel: {missing}", "danger")
-#                return redirect(url_for("upload_sieve"))
-#
-#            # ✅ 5) Insert into DB
-#            for _, row in df.iterrows():
-#                record = DiamondSieveMaster(
-#                    sieve_range=str(row["sieve_range"]).strip(),
-#                    sieve_size=str(row["sieve_size"]).strip(),
-#                    mm_size=float(row["mm_size"]),
-#                    no_of_stones=int(row["no_of_stones"]),
-#                    ct_weight_per_piece=float(row["ct_weight_per_piece"])
-#                )
-#                db.session.add(record)
-#
-#            db.session.commit()
-#            flash("✅ Sieve chart uploaded & saved successfully!", "success")
-#            return redirect(url_for("upload_sieve"))
-#
-#        except Exception as e:
-#            db.session.rollback()
-#            flash(f"❌ Upload failed: {str(e)}", "danger")
-#            return redirect(url_for("upload_sieve"))
-#
-#    return render_template("upload_sieve.html")
-@app.route("/api/sieve-lookup-batch", methods=["POST"])
-def sieve_lookup_batch():
-
-    payload = request.get_json(silent=True) or {}
-    mm_list = payload.get("mm_list", [])
-
-    # --- normalize mm list (round to 1 decimal)
-    norm_mm = []
-    for mm in mm_list:
-        try:
-            mm = round(float(mm), 1)
-            norm_mm.append(mm)
-        except:
-            pass
-
-    if not norm_mm:
-        return jsonify({})
-
-    # --- tolerance (important for float safety)
-    TOL = 0.05
-
-    # --- fetch all possible rows in ONE query
-    rows = (
-        DiamondSieveMaster.query
-        .filter(
-            and_(
-                DiamondSieveMaster.mm_size >= min(norm_mm) - TOL,
-                DiamondSieveMaster.mm_size <= max(norm_mm) + TOL
-            )
-        )
-        .all()
-    )
-
-    # --- map mm_size -> row
-    sieve_map = {
-        round(row.mm_size, 1): row
-        for row in rows
-    }
-
-    # --- build response
-    out = {}
-
-    for raw_mm in mm_list:
-        try:
-            mm = round(float(raw_mm), 1)
-        except:
-            out[str(raw_mm)] = None
-            continue
-
-        row = sieve_map.get(mm)
-
-        out[str(raw_mm)] = None
-        if row:
-            out[str(raw_mm)] = {
-                "mm_key": mm,
-                "sieve_range": row.sieve_range,
-                "sieve_size": row.sieve_size,
-                "ct_weight_per_piece": float(row.ct_weight_per_piece),
-            }
-
-    return jsonify(out)
-
-def parse_dt(s):
-    if not s:
-        return None
-    return datetime.fromisoformat(s)  # expects "YYYY-MM-DDTHH:MM"
 
 
 
-@app.route("/production-board")
-def production_board():
-    orders = ProductionOrder.query.order_by(ProductionOrder.id.desc()).all()
-    return render_template("production_board.html", orders=orders)
 
 
 
@@ -1035,15 +847,42 @@ def api_create_order():
 
     return jsonify({"ok": True, "order_id": row.id}), 201
 
-@app.route("/production-board")
-def production_board_page():
-    rows = db.session.query(
-        ProductionOrder,
-        Client.full_name
-    ).join(Client, Client.id == ProductionOrder.client_id)\
-     .order_by(ProductionOrder.id.desc()).all()
 
-    return render_template("production_board.html", rows=rows)
+
+
+
+@app.route("/signin", methods=["GET", "POST"])
+def signin():
+    selected_role = request.args.get("role")
+
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+
+        user = User.query.filter_by(email=email, password=password).first()
+
+        if user:
+            session["user_id"] = user.id
+            session["role"] = user.role
+
+            if user.role == "admin":
+                return redirect("/admin")
+            elif user.role == "sales":
+                return redirect("/sales")
+            elif user.role == "production":
+                return redirect("/production-board")
+
+        return "Invalid Login"
+
+    return render_template("signin.html", selected_role=selected_role)
+
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/signin")
+
 
 
 
