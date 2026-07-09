@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>EShopper - Bootstrap Shop Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="{{ url_for('static', filename='img_ec/favicon.ico') }}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+
+    <!-- Font Awesome (CDN - No changes needed) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ url_for('static', filename='lib_ec/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ url_for('static', filename='css_ec/style.css') }}" rel="stylesheet">
+    <style>
+        .nav-link{
+    color:#444;
+    font-weight:600;
+    transition:.3s;
+}
+
+.nav-link:hover{
+    background:#d19c97;
+    color:#fff !important;
+    padding-left:20px;
+}
+
+.dropdown-item{
+    font-weight:500;
+}
+
+.dropdown-item:hover{
+    background:#d19c97;
+    color:#fff;
+}
+    </style>
+</head>
+
+
+<body>
+    <!-- Topbar Start -->
+    <div class="container-fluid">
+        <div class="row align-items-center py-3 px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+<a  class="text-decoration-none">
+                        <img  
+                       src="{{ url_for('static', filename='img/SonalikaLogo.png') }}" 
+                       alt="User Profile" 
+                       style="width: 80%; height: 50px;" >
+</a>
+            </div>
+            <div class="col-lg-6 col-6 text-left">
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for products">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-transparent text-primary">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3 col-6 text-right">
+                <a href="" class="btn border">
+                    <i class="fas fa-heart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+                <a href="" class="btn border">
+                    <i class="fas fa-shopping-cart text-primary"></i>
+                    <span class="badge">0</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid mb-5">
+        <div class="row border-top px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
+<h6 class="m-0">
+    <i class="fas fa-crown text-warning mr-2"></i>
+    SONALIKA COLLECTIONS
+</h6>
+                    
+                </a>
+            <nav class="navbar navbar-light bg-white border rounded shadow-sm p-0">
+
+    <div class="w-100">
+
+        <a href="/" class="nav-link py-3 border-bottom">
+            <i class="fa fa-gem text-primary mr-2"></i>
+            EAR RINGS
+        </a>
+
+        <a href="sales_nk" class="nav-link py-3 border-bottom">
+            <i class="fa fa-circle text-success mr-2"></i>
+            NECKLACE
+        </a>
+
+        <a href="sales_ns" class="nav-link py-3 border-bottom">
+            <i class="fa fa-dot-circle text-danger mr-2"></i>
+            NOSE PIN
+        </a>
+
+        <a href="sales_pd" class="nav-link py-3 border-bottom">
+            <i class="fa fa-heart text-warning mr-2"></i>
+            PENDANTS
+        </a>
+
+        <a href="sales_lr" class="nav-link py-3 border-bottom">
+            <i class="fa fa-ring text-info mr-2"></i>
+            LADIES RING
+        </a>
+
+        <div class="dropdown">
+
+            <button class="btn btn-dark btn-block rounded-0 text-left py-3"
+                    data-toggle="dropdown">
+
+                <i class="fa fa-crown mr-2"></i>
+
+                TASSO COLLECTION
+
+                <i class="fa fa-chevron-down float-right mt-1"></i>
+
+            </button>
+
+            <div class="dropdown-menu w-100 shadow">
+
+                <a class="dropdown-item" href="sales_ter">
+                    💎 TASSO Ear Rings
+                </a>
+
+                <a class="dropdown-item" href="sales_tnk">
+                    💎 TASSO Necklace
+                </a>
+
+                <a class="dropdown-item" href="sales_tns">
+                    💎 TASSO Nose Pin
+                </a>
+
+                <a class="dropdown-item" href="sales_tpd">
+                    💎 TASSO Pendants
+                </a>
+
+                <a class="dropdown-item" href="sales_tlr">
+                    💎 TASSO Ladies Ring
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+            </nav>
+            </div>
+            <div class="col-lg-9">
+                <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
+                    <a href="" class="text-decoration-none d-block d-lg-none">
+                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                    </a>
+                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            <a href="index.html" class="nav-item nav-link active">Home</a>
+                            <a href="shop.html" class="nav-item nav-link">Shop</a>
+                            <a href="cart.html" class="nav-item nav-link">Shop Cart</a>
+                            <a href="checkout.html" class="nav-item nav-link">Checkout</a>
+                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        </div>
+                        <div class="navbar-nav ml-auto py-0">
+                            <a href="" class="nav-item nav-link">Login</a>
+                            <a href="" class="nav-item nav-link">Register</a>
+                        </div>
+                    </div>
+                </nav>
+                <div id="header-carousel" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner"style="border-radius : 20px">
+                        <div class="carousel-item active" style="height: 410px;">
+                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/er-1.jpeg') }}" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4"></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" style="height: 410px;">
+                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/er-2.jpeg') }}" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4"></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" style="height: 410px;">
+                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/er-3.jpeg') }}" alt="Image">
+                            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                                <div class="p-3" style="max-width: 700px;">
+                                    <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
+                                    <h3 class="display-4 text-white font-weight-semi-bold mb-4"></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-prev-icon mb-n2"></span>
+                        </div>
+                    </a>
+                    <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+                        <div class="btn btn-dark" style="width: 45px; height: 45px;">
+                            <span class="carousel-control-next-icon mb-n2"></span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Products Start -->
+<div class="container-fluid pt-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5">
+            <span class="px-2">TASO EAR RINGS</span>
+        </h2>
+    </div>
+
+    <div class="row px-xl-5 pb-3" id="products">
+
+    </div>
+</div>
+    <!-- Products End -->
+
+
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib_ec/easing/easing.min.js"></script>
+    <script src="lib_ec/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js_ec/main.js"></script>
+    <script>
+
+fetch("/api/styles")
+.then(response => response.json())
+.then(products => {
+
+    let html = "";
+
+    products.forEach(product => {
+
+        html += `
+        <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+
+            <div class="card product-item border-0 mb-4">
+
+                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+
+                    <img class="img-fluid"
+                    src="data:image/jpeg;base64,${product.image}"
+                    alt="${product.style_no}">
+
+                </div>
+
+                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+
+                    <h6 class="text-truncate mb-3">${product.style_no}</h6>
+
+                    <p class="mb-1">
+                        <strong>${product.brand}</strong>
+                    </p>
+
+                    <small>
+                        Gold : ${product.gold_wt} g<br>
+                        Net : ${product.net_wt} g<br>
+                        Diamond : ${product.dia_wt} ct<br>
+                        Pieces : ${product.dia_pc}
+                    </small>
+
+                </div>
+
+                <div class="card-footer d-flex justify-content-between bg-light border">
+
+                    <a href="#" class="btn btn-sm text-dark">
+                        <i class="fas fa-eye text-primary"></i> View
+                    </a>
+
+                    <a href="#" class="btn btn-sm text-dark">
+                        <i class="fas fa-shopping-cart text-primary"></i> Add
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+        `;
+    });
+
+    document.getElementById("products").innerHTML = html;
+
+})
+.catch(error => console.log(error));
+
+</script>
+</body>
+
+</html>

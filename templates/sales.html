@@ -3,33 +3,71 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - ERP</title>
+    <title>Sonalika - Sales</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
 
     <!-- Favicon -->
-<link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
 
-<!-- Google Web Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Icon Font Stylesheet -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-<!-- Libraries Stylesheet -->
-<link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-<link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
+    <!-- Libraries Stylesheet -->
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
 
-<!-- Customized Bootstrap Stylesheet -->
-<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 
-<!-- Template Stylesheet -->
-<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
+    <style>
+        .category-list .list-group-item {
+            border-radius: 0; cursor: pointer; font-size: 13px; letter-spacing: .5px;
+            text-transform: uppercase; font-weight: 600;
+        }
+        .category-list .list-group-item.active { background:#000; border-color:#000; }
+        .product-card {
+            border:1px solid #eee; border-radius:6px; overflow:hidden; background:#fff;
+            transition: box-shadow .2s ease, transform .2s ease;
+        }
+        .product-card:hover { box-shadow:0 .5rem 1rem rgba(0,0,0,.1); transform:translateY(-3px); }
+        .product-card .img-wrap { position:relative; aspect-ratio:1/1; background:#f8f8f8; overflow:hidden; }
+        .product-card .img-wrap img { width:100%; height:100%; object-fit:cover; }
+        .product-card .quick-view {
+            position:absolute; top:10px; left:10px; width:34px; height:34px; background:rgba(0,0,0,.75);
+            color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            opacity:0; transition:opacity .2s ease;
+        }
+        .product-card:hover .quick-view { opacity:1; }
+        .product-card .stock-badge { position:absolute; top:10px; right:10px; }
+        .product-card .card-body { padding:.85rem 1rem 1rem; }
+        .product-card .price { font-weight:700; color:#b8860b; }
+        #imagePreviewBox, #orderImagePreview {
+            width:100%; max-height:180px; object-fit:contain; border:1px dashed #ccc; border-radius:6px;
+            padding:4px; display:none;
+        }
+        .empty-state { padding:80px 20px; text-align:center; color:#888; }
+
+        /* ---- Responsive tweaks ---- */
+        @media (max-width: 991.98px) {
+            .category-list { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:6px; }
+            .category-list .list-group-item { white-space:nowrap; border-radius:20px !important; border:1px solid #ddd; }
+        }
+        @media (max-width: 575.98px) {
+            .product-card .price { font-size: 14px; }
+            .product-card h6 { font-size: 13px; }
+        }
+    </style>
 </head>
 
 <body>
@@ -42,323 +80,365 @@
         </div>
         <!-- Spinner End -->
 
-
         <!-- Sidebar Start -->
-{% include 'menu.html' %}
+        {% include 'menu.html' %}
         <!-- Sidebar End -->
-
 
         <!-- Content Start -->
         <div class="content">
             <!-- Navbar Start -->
-             {% include 'navbar.html' %}
+            {% include 'navbar.html' %}
             <!-- Navbar End -->
 
+            <!-- Page Header Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded p-4 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div>
+                        <h4 class="mb-0">Diamond Portfolio</h4>
+                        <small class="text-muted">Browse products &amp; take customer orders</small>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <div class="input-group" style="max-width:260px;">
+                            <span class="input-group-text bg-white"><i class="fa fa-search"></i></span>
+                            <input type="text" id="searchBox" class="form-control" placeholder="Search product...">
+                        </div>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            <i class="fa fa-plus me-1"></i> Add Product
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Page Header End -->
 
-            <!-- Sale & Revenue Start -->
+            <!-- Portfolio Start -->
             <div class="container-fluid pt-4 px-4">
                 <div class="row g-4">
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-line fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
+
+                    <!-- Category Sidebar -->
+                    <div class="col-12 col-lg-2">
+                        <div class="list-group category-list" id="categoryList">
+                            <a class="list-group-item list-group-item-action active" data-category="all">
+                                <i class="fa fa-eye me-1"></i> All
+                            </a>
+                            <!-- more categories injected here by JS from CATEGORIES array -->
                         </div>
                     </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Sale</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-area fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Today Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-xl-3">
-                        <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                            <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                            <div class="ms-3">
-                                <p class="mb-2">Total Revenue</p>
-                                <h6 class="mb-0">$1234</h6>
-                            </div>
+
+                    <!-- Product Grid -->
+                    <div class="col-12 col-lg-10">
+                        <div class="row g-4" id="productGrid"></div>
+                        <div class="empty-state d-none" id="emptyState">
+                            <i class="fa fa-box-open fa-3x mb-3"></i>
+                            <h6>No products found</h6>
+                            <p class="mb-0">Try a different category or search term.</p>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Sale & Revenue End -->
-
-
-            <!-- Sales Chart Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-light text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Worldwide Sales</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <canvas id="worldwide-sales"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-light text-center rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Salse & Revenue</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <canvas id="salse-revenue"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Sales Chart End -->
-
-
-            <!-- Recent Sales Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-light text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Salse</h6>
-                        <a href="">Show All</a>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-dark">
-                                    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Invoice</th>
-                                    <th scope="col">Customer</th>
-                                    <th scope="col">Amount</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                                <tr>
-                                    <td><input class="form-check-input" type="checkbox"></td>
-                                    <td>01 Jan 2045</td>
-                                    <td>INV-0123</td>
-                                    <td>Jhon Doe</td>
-                                    <td>$123</td>
-                                    <td>Paid</td>
-                                    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <!-- Recent Sales End -->
-
-
-            <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">Messages</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-3">
-                                <img class="rounded-circle flex-shrink-0" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-0">Jhon Doe</h6>
-                                        <small>15 minutes ago</small>
-                                    </div>
-                                    <span>Short message goes here...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Calender</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div id="calender"></div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-light rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">To Do List</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="d-flex mb-2">
-                                <input class="form-control bg-transparent" type="text" placeholder="Enter task">
-                                <button type="button" class="btn btn-primary ms-2">Add</button>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox" checked>
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span><del>Short task goes here...</del></span>
-                                        <button class="btn btn-sm text-primary"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center border-bottom py-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex align-items-center pt-2">
-                                <input class="form-check-input m-0" type="checkbox">
-                                <div class="w-100 ms-3">
-                                    <div class="d-flex w-100 align-items-center justify-content-between">
-                                        <span>Short task goes here...</span>
-                                        <button class="btn btn-sm"><i class="fa fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Widgets End -->
-
-
-
-
+            <!-- Portfolio End -->
 
             <!-- Footer Start -->
-             {% include 'footer.html' %}
+            {% include 'footer.html' %}
             <!-- Footer End -->
         </div>
         <!-- Content End -->
-
 
         <!-- Back to Top -->
         <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
-<!-- Sieve js-->
+    <!-- ===================== Add Product Modal ===================== -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <form id="addProductForm">
+            <div class="modal-header">
+              <h5 class="modal-title">Add New Product</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Product Name / Code</label>
+                  <input type="text" id="f_name" class="form-control" placeholder="e.g. Diamond Ladies Ring 259" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Category</label>
+                  <select id="f_category" class="form-select" required>
+                    <option value="">Select category</option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Price (₹)</label>
+                  <input type="number" step="0.01" id="f_price" class="form-control" placeholder="e.g. 25000" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Weight (g)</label>
+                  <input type="number" step="0.01" id="f_weight" class="form-control" placeholder="e.g. 4.5">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Stock Qty</label>
+                  <input type="number" id="f_stock" class="form-control" value="1">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Product Photo</label>
+                  <input type="file" id="f_image" accept="image/*" class="form-control" required>
+                </div>
+                <div class="col-12 text-center">
+                  <img id="imagePreviewBox" src="#" alt="Preview">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Product</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
+    <!-- ===================== Take Order Modal ===================== -->
+    <div class="modal fade" id="takeOrderModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form id="takeOrderForm">
+            <input type="hidden" id="orderProductId">
+            <div class="modal-header">
+              <h5 class="modal-title">Take Order</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="text-center mb-3">
+                <img id="orderImagePreview" src="#" alt="Product" style="display:block;margin:0 auto;max-width:160px;max-height:160px;">
+                <h6 class="mt-2 mb-0" id="orderProductName"></h6>
+                <small class="text-muted" id="orderProductPrice"></small>
+              </div>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Customer Name</label>
+                  <input type="text" id="o_name" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Customer Phone</label>
+                  <input type="tel" id="o_phone" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Quantity</label>
+                  <input type="number" id="o_qty" class="form-control" value="1" min="1" required>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Advance Amount (₹)</label>
+                  <input type="number" step="0.01" id="o_advance" class="form-control" placeholder="0">
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Notes</label>
+                  <textarea id="o_notes" class="form-control" rows="2" placeholder="Size, engraving, delivery date, etc."></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-success"><i class="fa fa-check me-1"></i> Confirm Order</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
-<!-- JavaScript Libraries -->
+    <!-- Template Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
+    <!-- Portfolio page logic -->
+    <script>
+    (function () {
+        const CATEGORIES = [
+            "Necklace", "Ear Rings", "Chain", "Ladies Ring",
+            "Gents Ring", "Couples Rings", "Pendents", "Pendents Set", "Ladies Bracelet"
+        ];
 
+        let PRODUCTS = [
+            { id: 258, name: "Diamond Ladies Ring 258", category: "Ladies Ring", price: 28500, stock: 1, image: "https://via.placeholder.com/300x300.png?text=Ring+258" },
+            { id: 257, name: "Diamond Ladies Ring 257", category: "Ladies Ring", price: 31200, stock: 1, image: "https://via.placeholder.com/300x300.png?text=Ring+257" },
+            { id: 256, name: "Diamond Ladies Ring 256", category: "Ladies Ring", price: 26800, stock: 1, image: "https://via.placeholder.com/300x300.png?text=Ring+256" },
+            { id: 255, name: "Diamond Ladies Ring 255", category: "Ladies Ring", price: 22500, stock: 0, image: "https://via.placeholder.com/300x300.png?text=Ring+255" },
+            { id: 254, name: "Diamond Ladies Ring 254", category: "Ladies Ring", price: 24000, stock: 1, image: "https://via.placeholder.com/300x300.png?text=Ring+254" },
+            { id: 253, name: "Diamond Ladies Ring 253", category: "Ladies Ring", price: 27000, stock: 1, image: "https://via.placeholder.com/300x300.png?text=Ring+253" },
+        ];
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        let ORDERS = [];
 
-<script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+        function renderCategories() {
+            const list = document.getElementById('categoryList');
+            CATEGORIES.forEach(cat => {
+                const a = document.createElement('a');
+                a.className = 'list-group-item list-group-item-action';
+                a.setAttribute('data-category', cat.toLowerCase());
+                a.textContent = cat;
+                list.appendChild(a);
+            });
+        }
 
-<script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+        function productCardHtml(p) {
+            return `
+            <div class="col-6 col-md-4 col-xl-3 product-item" data-category="${p.category.toLowerCase()}" data-name="${p.name.toLowerCase()}">
+                <div class="product-card h-100">
+                    <div class="img-wrap">
+                        <img src="${p.image}" alt="${p.name}">
+                        <span class="quick-view"><i class="fa fa-eye"></i></span>
+                        ${p.stock <= 0 ? '<span class="badge bg-danger stock-badge">Sold Out</span>' : ''}
+                    </div>
+                    <div class="card-body text-center">
+                        <h6 class="mb-1">${p.name}</h6>
+                        <small class="text-muted d-block mb-1">${p.category}</small>
+                        <div class="price mb-2">₹${Number(p.price).toLocaleString('en-IN')}</div>
+                        <button type="button" class="btn btn-sm btn-outline-dark w-100 take-order-btn"
+                                data-bs-toggle="modal" data-bs-target="#takeOrderModal"
+                                data-product-id="${p.id}" data-product-name="${p.name}"
+                                data-product-price="${p.price}" data-product-image="${p.image}"
+                                ${p.stock <= 0 ? 'disabled' : ''}>
+                            <i class="fa fa-shopping-cart me-1"></i> Take Order
+                        </button>
+                    </div>
+                </div>
+            </div>`;
+        }
 
-<!-- Template Javascript -->
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        function renderProducts() {
+            document.getElementById('productGrid').innerHTML = PRODUCTS.map(productCardHtml).join('');
+            attachOrderButtonListeners();
+        }
+
+        function populateCategoryDropdown() {
+            const select = document.getElementById('f_category');
+            CATEGORIES.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.textContent = cat;
+                select.appendChild(opt);
+            });
+        }
+
+        let activeCategory = 'all';
+
+        function applyFilters() {
+            const term = document.getElementById('searchBox').value.toLowerCase().trim();
+            let visibleCount = 0;
+            document.querySelectorAll('.product-item').forEach(item => {
+                const cat = item.getAttribute('data-category');
+                const name = item.getAttribute('data-name');
+                const matchesCategory = activeCategory === 'all' || cat === activeCategory;
+                const matchesSearch = !term || name.includes(term);
+                const visible = matchesCategory && matchesSearch;
+                item.style.display = visible ? '' : 'none';
+                if (visible) visibleCount++;
+            });
+            document.getElementById('emptyState').classList.toggle('d-none', visibleCount !== 0);
+        }
+
+        document.getElementById('categoryList').addEventListener('click', (e) => {
+            const link = e.target.closest('[data-category]');
+            if (!link) return;
+            document.querySelectorAll('#categoryList .list-group-item').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            activeCategory = link.getAttribute('data-category');
+            applyFilters();
+        });
+
+        document.getElementById('searchBox').addEventListener('input', applyFilters);
+
+        const productImageInput = document.getElementById('f_image');
+        const imagePreviewBox = document.getElementById('imagePreviewBox');
+        let pendingImageDataUrl = null;
+
+        productImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) { imagePreviewBox.style.display = 'none'; return; }
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                pendingImageDataUrl = evt.target.result;
+                imagePreviewBox.src = pendingImageDataUrl;
+                imagePreviewBox.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('addProductForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newProduct = {
+                id: Date.now(),
+                name: document.getElementById('f_name').value,
+                category: document.getElementById('f_category').value,
+                price: parseFloat(document.getElementById('f_price').value) || 0,
+                weight: parseFloat(document.getElementById('f_weight').value) || 0,
+                stock: parseInt(document.getElementById('f_stock').value) || 0,
+                image: pendingImageDataUrl || 'https://via.placeholder.com/300x300.png?text=No+Image'
+            };
+
+            // TODO (backend): swap for fetch('/api/products', { method:'POST', body: new FormData(e.target) })
+            PRODUCTS.unshift(newProduct);
+            renderProducts();
+
+            e.target.reset();
+            imagePreviewBox.style.display = 'none';
+            pendingImageDataUrl = null;
+            bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+        });
+
+        function attachOrderButtonListeners() {
+            document.querySelectorAll('.take-order-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.getElementById('orderProductId').value = btn.getAttribute('data-product-id');
+                    document.getElementById('orderProductName').textContent = btn.getAttribute('data-product-name');
+                    document.getElementById('orderProductPrice').textContent = '₹' + Number(btn.getAttribute('data-product-price')).toLocaleString('en-IN');
+                    const img = document.getElementById('orderImagePreview');
+                    img.src = btn.getAttribute('data-product-image');
+                    img.style.display = 'block';
+                });
+            });
+        }
+
+        document.getElementById('takeOrderForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const order = {
+                id: Date.now(),
+                product_id: document.getElementById('orderProductId').value,
+                product_name: document.getElementById('orderProductName').textContent,
+                customer_name: document.getElementById('o_name').value,
+                customer_phone: document.getElementById('o_phone').value,
+                quantity: document.getElementById('o_qty').value,
+                advance_amount: document.getElementById('o_advance').value,
+                notes: document.getElementById('o_notes').value,
+                date: new Date().toLocaleString()
+            };
+
+            // TODO (backend): swap for fetch('/api/orders', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(order) })
+            ORDERS.push(order);
+            console.log('Orders so far:', ORDERS);
+            alert('Order saved for ' + order.customer_name + ' — ' + order.product_name);
+
+            e.target.reset();
+            bootstrap.Modal.getInstance(document.getElementById('takeOrderModal')).hide();
+        });
+
+        renderCategories();
+        populateCategoryDropdown();
+        renderProducts();
+    })();
+    </script>
 
 </body>
 

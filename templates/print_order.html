@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+/* WATERMARK */
+.watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  opacity: 0.08; /* light watermark */
+  
+  z-index: 0;
+  pointer-events: none;
+}
+
+.watermark img {
+  width: 400px; /* adjust size */
+}
+
+/* Ensure content above watermark */
+#printArea {
+  position: relative;
+  z-index: 1;
+}
+@page { size:A4; margin:10mm; }
+
+body{ font-family: Arial; font-size:12px; }
+
+table{ width:100%; border-collapse:collapse; }
+
+td,th{
+  border:1px solid #000;
+  padding:5px;
+}
+
+.center{text-align:center;}
+.bold{font-weight:bold;}
+
+.no-print{ margin-bottom:10px; }
+
+@media print{
+  .no-print{ display:none; }
+}
+</style>
+
+</head>
+
+<body>
+
+
+<!-- WATERMARK -->
+<div class="watermark">
+  <img src="/static/img/SonalikaLogo.png">
+</div>
+
+
+<div id="printArea"></div>
+
+<script>
+const orderId = "{{ request.view_args['order_id'] }}";
+
+fetch("/api/order/" + orderId)
+.then(res => res.json())
+.then(data => {
+
+let html = `
+
+<!-- HEADER -->
+<table>
+<tr>
+<td colspan="4" class="center bold">${data.company.name}</td>
+</tr>
+<tr>
+<td>GST NUMBER</td>
+<td colspan="3">${data.company.gst}</td>
+</tr>
+<tr>
+<td>ADDRESS</td>
+<td colspan="3">${data.company.address}</td>
+</tr>
+</table>
+
+<br>
+
+<!-- ORDER INFO -->
+<table>
+<tr>
+<td>CLIENT CODE</td>
+<td>${data.client.client_code}</td>
+<td>ORDER DATE</td>
+<td>${data.order_date}</td>
+</tr>
+
+<tr>
+<td>ORDER NUMBER</td>
+<td>${data.order_no}</td>
+<td>DELIVERY DATE</td>
+<td>${data.delivery_date || ""}</td>
+</tr>
+
+<tr>
+<td>CLIENT NAME</td>
+<td colspan="3">${data.client.company_name}</td>
+</tr>
+
+<tr>
+<td>GST NUMBER</td>
+<td colspan="3">${data.client.gst}</td>
+</tr>
+
+<tr>
+<td>ADDRESS</td>
+<td colspan="3">${data.client.address}</td>
+</tr>
+</table>
+
+<br>
+
+<!-- ITEMS -->
+<table>
+<thead>
+<tr>
+<th>SL NO</th>
+<th>DESIGN NUMBER</th>
+<th>IMAGE</th>
+<th>PURITY</th>
+<th>GOLD COLOR</th>
+<th>DIAMOND CLARITY</th>
+<th>DIAMOND COLOR</th>
+<th>QTY</th>
+<th>REMARK</th>
+</tr>
+</thead>
+<tbody>
+`;
+
+data.items.forEach((item, index) => {
+
+html += `
+<tr>
+<td>${index+1}</td>
+<td>${item.style_no}</td>
+
+<td>
+  <img src="/api/style-image/${item.style_no}" width="100">
+</td>
+
+<td>${item.gold_purity || ""}</td>
+<td>${item.gold_color || ""}</td>
+<td>${item.diamond_clarity || ""}</td>
+<td>${item.diamond_color || ""}</td>
+<td>${item.pieces}</td>
+<td>${item.remark || ""}</td>
+</tr>
+`;
+
+});
+
+html += `
+</tbody>
+</table>
+`;
+
+
+// ✅ TOTAL CALCULATION
+let totalGross = 0;
+let totalNet = 0;
+let totalDiaWt = 0;
+let totalDiaPcs = 0;
+
+data.items.forEach(item => {
+  totalGross += Number(item.gross_weight || 0);
+  totalNet += Number(item.net_weight || 0);
+  totalDiaWt += Number(item.diamond_weight || 0);
+  totalDiaPcs += Number(item.diamond_pcs || 0);
+});
+
+
+// ✅ TOTAL WEIGHT TABLE
+html += `
+
+<br>
+
+<table>
+<thead>
+<tr>
+<th colspan="4" class="center bold">WEIGHT DETAILS</th>
+</tr>
+<tr>
+<th>Gr.wt</th>
+<th>Nt.wt</th>
+<th>Dia.wt</th>
+<th>Dia.pc</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>${totalGross.toFixed(3)}</td>
+<td>${totalNet.toFixed(3)}</td>
+<td>${totalDiaWt.toFixed(3)}</td>
+<td>${totalDiaPcs}</td>
+</tr>
+</tbody>
+</table>
+
+`;
+
+
+// ✅ TOTAL AMOUNT TABLE
+html += `
+
+<br>
+
+<table>
+<tr>
+<td class="bold">TOTAL AMOUNT</td>
+<td>${data.total_amount}</td>
+</tr>
+
+</table>
+
+`;
+
+// ✅ SIGNATURE SECTION (NEW)
+html += `
+<br><br><br>
+
+<table style="border:none;">
+<tr>
+<td style="border:none; text-align:left;">
+Customer Signature
+</td>
+
+<td style="border:none; text-align:right;">
+For ${data.company.name}
+<br><br><br>
+Authorized Signature
+</td>
+</tr>
+</table>
+`;
+
+document.getElementById("printArea").innerHTML = html;
+
+});
+</script>
+<br><br>
+     <center><button onclick="window.print()" class="no-print mt 6">Print</button></center>
+</body>
+</html>

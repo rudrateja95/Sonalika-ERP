@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Client MOU - ERP</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+  <style>
+    .section-title {
+      background: #f1f1f1;
+      padding: 8px 12px;
+      font-weight: 600;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+    .form-box {
+      border: 1px solid #d9d9d9;
+      border-radius: 10px;
+      padding: 16px;
+      background: #fff;
+      margin-bottom: 18px;
+    }
+    .kyc-header h3 { font-weight: 700; margin-bottom: 2px; }
+    .kyc-header h5 { margin-bottom: 0; opacity: .85; }
+    .table td, .table th { vertical-align: middle; }
+    @media print {
+      .no-print { display: none !important; }
+      .content { margin: 0 !important; padding: 0 !important; }
+      .container-fluid { padding: 0 !important; }
+      body { background: #fff !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid position-relative bg-white d-flex p-0">
+  
+    {% include 'menu.html' %}
+  
+    <div class="content">
+      {% include 'navbar.html' %}
+  
+<form id="mouForm" enctype="multipart/form-data">
+
+<div class="container my-4">
+
+<!-- HEADER -->
+<div class="text-center mb-4">
+<h4 class="fw-bold">SONALIKA JEWELLERS</h4>
+<h5 class="text-secondary">CLIENT MOU CREATE</h5>
+</div>
+
+
+<!-- CLIENT-CODE -->
+<div class="card mb-4 shadow-sm">
+<div class="section-title text-center">Client Information</div>
+
+<div class="card-body">
+<div class="row justify-content-center">
+
+<div class="col-md-4 text-center">
+<label class="form-label">Client Code</label>
+
+<input type="text"
+       id="clientCode"
+       name="client_code"
+       class="form-control"
+       list="clientList"
+       placeholder="Type Client Code...">
+
+<datalist id="clientList"></datalist>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- CHARGES -->
+<div class="card mb-4 shadow-sm">
+<div class="section-title text-center">Charges</div>
+
+<div class="card-body">
+<div class="row g-3">
+
+<div class="col-md-6">
+<label class="form-label">Making Charges</label>
+<input type="number" name="making_charges" class="form-control">
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Chain Charges</label>
+<input type="number" name="chain_charges" class="form-control">
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Synthetic Stone</label>
+<input type="number" name="synthetic_stone_charges" class="form-control">
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Minimum Labour</label>
+<input type="text" name="minimum_labour_rule" class="form-control">
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Nose Pin Labour</label>
+<input type="text" name="nose_pin_labour" class="form-control">
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- CREDIT PERIOD -->
+<div class="card mb-4 shadow-sm">
+<div class="section-title text-center">Payment Terms</div>
+
+<div class="card-body">
+<div class="row g-3">
+
+<div class="col-md-3">
+<label class="form-label">Gold</label>
+<input type="number" name="gold_credit_days" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label class="form-label">Labour</label>
+<input type="number" name="labour_credit_days" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label class="form-label">Diamond</label>
+<input type="number" name="diamond_credit_days" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label class="form-label">Chain</label>
+<input type="number" name="chain_credit_days" class="form-control">
+</div>
+
+<div class="col-md-6">
+<label class="form-label">Certificate & Hallmark Charges</label>
+<input type="number" name="certificate_hallmark_days" class="form-control">
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- Diamond Details -->
+<div class="card mb-4 shadow-sm">
+
+<div class="section-title text-center">Diamond Details</div>
+
+<div class="card-body">
+<div class="row g-3">
+
+<div class="col-md-3">
+<label class="form-label fw-semibold">Diamond Clarity</label>
+<select class="form-select shadow-sm" name="diamond_clarity">
+<option value="">Diamond Clarity</option>
+<option value="VVS">VVS</option>
+<option value="VS">VS</option>
+<option value="SI">SI</option>
+<option value="IJ">IJ</option>
+</select>
+</div>
+
+<div class="col-md-3">
+<label class="form-label fw-semibold">Diamond Color</label>
+<select class="form-select shadow-sm" name="diamond_color">
+<option value="">Diamond Color</option>
+<option value="EF">EF</option>
+<option value="FG">FG</option>
+<option value="GH">GH</option>
+<option value="HI">HI</option>
+<option value="IJ">IJ</option>
+</select>
+</div>
+
+<div class="col-md-2">
+<label class="form-label">Diamond Rate (-2)</label>
+<input type="number" step="0.01" name="diamond_rate_2" class="form-control">
+</div>
+
+<div class="col-md-2">
+<label class="form-label">Diamond Rate (-6.5)</label>
+<input type="number" step="0.01" name="diamond_rate_6_5" class="form-control">
+</div>
+
+<div class="col-md-2">
+<label class="form-label">Diamond Rate (-11)</label>
+<input type="number" step="0.01" name="diamond_rate_11" class="form-control">
+</div>
+
+</div>
+</div>
+</div>
+
+
+<!-- GOLD LABOUR % -->
+<div class="card shadow-sm">
+
+<div class="section-title">
+Gold & Labour On Net Weight
+</div>
+
+<div class="card-body">
+
+<div class="row g-3">
+
+<div class="col-md-3">
+<label class="form-label">Percentage</label>
+<div class="input-group">
+<input type="number" name="gold_labour_percent" class="form-control">
+<span class="input-group-text">%</span>
+</div>
+</div>
+
+<div class="col-md-6">
+<label class="form-label">MOU Document Upload</label>
+<input type="file"
+       name="mou_document"
+       class="form-control"
+       accept=".pdf,.jpg,.png">
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- SAVE BUTTON -->
+<div class="text-center mt-4">
+<button type="submit" class="btn btn-primary px-4">
+Save MOU
+</button>
+</div>
+
+</div>
+
+</form>
+  
+      {% include 'footer.html' %}
+    </div>
+  </div>
+
+  <!-- JS Libraries -->
+<script>
+  document.getElementById("mouForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const btn = document.getElementById("mouSubmitBtn");
+    const btnText = document.getElementById("mouBtnText");
+    const btnLoader = document.getElementById("mouBtnLoader");
+
+    // ✅ START LOADING
+    btn.disabled = true;
+    btnText.classList.add("d-none");
+    btnLoader.classList.remove("d-none");
+
+    const formData = new FormData(this);
+
+    fetch("/save-mou",{
+        method:"POST",
+        body:formData
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if(data.status === "success"){
+
+            Swal.fire({
+                icon: "success",
+                title: "MOU Saved Successfully",
+                confirmButtonColor: "#28a745"
+            });
+
+            document.getElementById("mouForm").reset();
+
+        }
+        else if(data.status === "client_not_found"){
+
+            Swal.fire({
+                icon: "error",
+                title: "Client Code Not Found",
+                confirmButtonColor: "#dc3545"
+            });
+
+        }
+
+    })
+    .catch(err => {
+
+        Swal.fire({
+            icon: "error",
+            title: "Upload Failed",
+            text: "Server not responding"
+        });
+
+    })
+    .finally(() => {
+
+        // ✅ STOP LOADING
+        btn.disabled = false;
+        btnText.classList.remove("d-none");
+        btnLoader.classList.add("d-none");
+
+    });
+
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+</body>
+</html>

@@ -16,10 +16,245 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
   <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-  <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+    rel="stylesheet">
 
   <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  <style>
+    body {
+      background: #f8f9fa;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    /* Remove input box borders inside table cells */
+td input[type="text"],
+td input[type="number"],
+td input[type="date"] {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 13px;
+  color: inherit;
+}
+
+.tr[data-dept-total] {
+  border-top: none !important;
+  border: none !important;
+}
+.tr[data-dept-total] td:first-child {
+  border: none !important;
+  background: transparent !important;
+}
+
+.form-control,
+select {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.d-mm {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+td input[readonly] {
+  background: #f0f4f8;  /* subtle tint for auto-calc fields */
+  color: #555;
+}
+
+td input:focus {
+  background: #fffde7;  /* highlight on focus */
+}
+
+
+
+    .job-card-title {
+      background: #2E74B5;
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      padding: 8px;
+      letter-spacing: 2px;
+    }
+
+    .jc-table {
+      width: 100%;
+
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .jc-table td,
+    .jc-table th {
+      border: 1px solid #000;
+      
+      vertical-align: middle;
+    }
+
+    .th-blue {
+      background: #2E74B5;
+      color: #fff;
+      font-weight: 700;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .th-lblue {
+      background: #BDD7EE;
+      color: #000;
+      font-weight: 700;
+      text-align: center;
+      white-space: nowrap;
+      font-size: 11px;
+    }
+
+    .dept-label {
+      font-weight: 600;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .gram-cell {
+      background: #BDD7EE;
+      font-weight: 700;
+      text-align: center;
+      font-size: 11px;
+    }
+
+    input[type="text"] {
+      border: none;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      font-size: 11px;
+      min-width: 30px;
+    }
+
+    input[type="text"]:focus {
+      background: #fffde7;
+      border-radius: 2px;
+    }
+
+    .row-h {
+      height: 28px;
+    }
+
+    .row-extra {
+      height: 20px;
+    }
+
+    .table-responsive-wrapper {
+      overflow: visible !important;
+      -webkit-overflow-scrolling: touch;
+    }
+.emp-select {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  font-size: 12px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+#design_image {
+  border-radius: 8px;
+  background: #f9f9f9;
+}
+.job-card-wrapper {
+  background: #fff;
+  border: 2px solid #116d74;
+
+  box-sizing: border-box;
+}
+
+/* ================= PRINT PERFECT A4 ================= */
+@media print {
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+  }
+
+
+  body * {
+    visibility: hidden;
+  }
+
+  .job-card-wrapper,
+  .job-card-wrapper * {
+    visibility: visible;
+  }
+
+  .job-card-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 210mm;
+    height: 297mm;
+
+    box-sizing: border-box;
+  }
+
+  
+
+  /* REMOVE MODAL LIMITS */
+  .modal,
+  .modal-dialog,
+  .modal-content,
+  .modal-body {
+    position: static !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* TABLE FIX */
+
+
+  .jc-table td,
+  .jc-table th {
+    font-size: 11px;
+    border: 1px solid #000;
+    word-break: break-word;
+  }
+
+  
+
+  /* IMAGE FIX */
+  #design_image {
+    max-height: 120px;
+    display: block;
+    margin: 5px auto;
+    width: 100%;
+  }
+
+  /* REMOVE EXTRA SPACE */
+  .text-center {
+    margin: 0 !important;
+  }
+
+  /* COLOR PRINT */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+  </style>
+
 </head>
 
 <body>
@@ -30,6 +265,8 @@
     <div class="content">
       {% include 'navbar.html' %}
 
+
+
       <div class="container-fluid pt-4 px-4">
         <div class="bg-light rounded p-4">
 
@@ -37,1293 +274,161 @@
             <h4 class="mb-0">Production Orders</h4>
           </div>
 
-          <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle">
-              <thead class="table-primary text-center">
-                <tr>
-                  <th>ID</th>
-                  <th>Client</th>
-                  <th>Style</th>
-                  <th>Order Date</th>
-                  <th>Delivery Date</th>
-                  <th>Diamond</th>
-                  <th>Gold</th>
-                  <th>Amount</th>
-                  <th>Remark</th>
-                  <th>Details</th>
-                  <th>Report</th>
-                </tr>
-              </thead>
+<div class="table-responsive">
+  <table class="table table-bordered table-hover shadow-sm small">
 
-              <tbody>
-                {% for o in orders %}
-                <tr>
-                  <td class="text-center">{{ o.id }}</td>
-                  <td class="fw-semibold">{{ o.client.full_name }}</td>
+<thead class="table-primary text-center">
+  <tr>
+    <th>Sl no</th>
+    <th>Order No</th>
+    <th>Styles</th>
+    <th>Pieces</th>
 
-                  <td class="fw-bold">{{ o.style_no }}</td>
+    <th>Gold Details</th>
+    <th>Gold Wt</th>
 
-                  <td>{{ o.order_datetime.strftime("%d-%b-%Y %I:%M %p") }}</td>
+    <th>Diamond Details</th>
+    <th>Diamond Ct</th>
 
-                  <td>
-                    {{ o.delivery_datetime.strftime("%d-%b-%Y %I:%M %p") if o.delivery_datetime else "-" }}
-                  </td>
+    <th>Issue Date</th>
+  </tr>
+</thead>
 
+    <tbody id="waxIssueTableBody">
+      <tr>
+        <td colspan="8" class="text-center text-muted">Loading...</td>
+      </tr>
+    </tbody>
 
-                  <td>{{ o.diamond_clarity or "-" }} / {{ o.diamond_color or "-" }}</td>
-
-                  <td>
-                    {{ o.gold_color or "-" }}<br>
-                    <small class="text-muted">{{ o.gold_purity or "-" }}</small>
-                  </td>
-
-                  <td class="fw-bold text-success">
-                    ₹ {{ "{:,.0f}".format(o.total_amount or 0) }}
-                  </td>
-
-                  <td>{{ o.remark or "-" }}</td>
-
-<td class="text-center">
-         <button class="btn btn-sm btn-primary" type="button"
-                      onclick="openStyleDetails('{{ o.style_no }}')">
-                      View
-                    </button>
-
-
-</td>
-<td class="text-center">
-<button class="btn btn-sm btn-primary"
-onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_color }}','{{ o.gold_purity }}')">
-  Update
-</button>
-</td>
-
-                </tr>
-                {% else %}
-                <tr>
-                  <td colspan="10" class="text-center text-muted">
-                    No production orders found
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-
-            </table>
-          </div>
+  </table>
+</div>
 
         </div>
       </div>
 
-      <!-- ✅ Modal -->
-      <div class="modal fade" id="styleModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable">
-          <div class="modal-content">
-
-            <div class="modal-header">
-              <h5 class="modal-title">Style No: <span id="modalStyleNo"></span></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div class="modal-body">
-              <div class="row g-3">
-
-                <!-- LEFT: IMAGE -->
-                <div class="col-md-4 text-center">
-                  <img id="modalStyleImage" class="img-fluid rounded border d-none" style="max-height:280px;">
-                  <div id="modalImgHint" class="text-muted small">Loading image...</div>
-                </div>
-
-                <!-- RIGHT: SUMMARY + TABLE -->
-                <div class="col-md-8">
-
-                  <!-- Summary -->
-                  <div class="row g-2">
-                    <div class="col-md-3">
-                      <div class="bg-light border rounded p-2 text-center">
-                        <div class="small text-muted">Gross Weight (gm)</div>
-                        <div class="fw-bold" id="modalGrossWt">-</div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-3">
-                      <div class="bg-light border rounded p-2 text-center">
-                        <div class="small text-muted">Total Diamonds</div>
-                        <div class="fw-bold" id="modalTotalPcs">-</div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-3">
-                      <div class="bg-light border rounded p-2 text-center">
-                        <div class="small text-muted">Total Diamond Weight (Ct)</div>
-                        <div class="fw-bold" id="modalTotalCt">-</div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-3">
-                      <div class="bg-light border rounded p-2 text-center">
-                        <div class="small text-muted">Net Weight (gm)</div>
-                        <div class="fw-bold" id="modalNetWt">-</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Round Details -->
-                  <div class="mt-3">
-                    <h6 class="mb-2">Round Details</h6>
-
-                    <div class="table-responsive border rounded">
-                      <table class="table table-sm table-striped mb-0">
-                        <thead class="table-primary">
-                          <tr>
-                            <th>Size</th>
-                            <th>Pcs</th>
-                            <th>Shape</th>
-                            <th>Sieve Range</th>
-                            <th>Sieve Size</th>
-                            <th>Ct / Pc</th>
-                          </tr>
-                        </thead>
-
-                        <tbody id="modalRoundTable">
-                          <tr>
-                            <td colspan="6" class="text-center text-muted">Loading...</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= Production Update Modal ================= -->
-<div class="modal fade" id="productionUpdateModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal fade" id="jobCardModal" tabindex="-1">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
 
+      <!-- HEADER -->
       <div class="modal-header">
-        <div>
-          <h5 class="modal-title mb-0">Production Update</h5>
-          <small class="text-muted">
-            Order ID: <span id="pu_order_id">-</span> |
-            Style: <span id="pu_style_no">-</span>
-          </small>
-        </div>
+        <h5 class="modal-title">Job Card</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <div class="modal-body">
+      <!-- BODY -->
+  <div class="modal-body">
 
-        <!-- Tabs -->
-        <ul class="nav nav-tabs" id="puTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabCasting" type="button">
-              Casting
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabFiling" type="button">
-              Pre-Filing
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPre-Ep" type="button">
-              Pre-EP
-            </button>
-          </li>
-                    <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPostFiling" type="button">
-              Post-Filing
-            </button>
-          </li>
-                    <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPost-Ep" type="button">
-              Post-EP
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabPp" type="button">
-              PP
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabSetting" type="button">
-              Setting
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAssembly" type="button">
-              Assembly
-            </button>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabFP" type="button">
-              FP
-            </button>
-          </li>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabQC" type="button">
-              QC
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabHM" type="button">
-              HM
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabIGI" type="button">
-              IGI
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabDWT" type="button">
-              DWT
-            </button>
-          </li>
-                    <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabRepair" type="button">
-              Repair
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabFinalQC" type="button">
-              FinalQC
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabTagPrint" type="button">
-              Tag Print
-            </button>
-          </li>
-        </ul>
+  <div class="job-card-wrapper">
 
-        <!-- Tab Content -->
-        <div class="tab-content pt-3">
+    <!-- Title -->
+    <div class="job-card-title">SONALIKA JEWELLERS</div>
 
-<!-- ============ CASTING ============ -->
-<div class="tab-pane fade show active" id="tabCasting">
-  <div class="row g-3">
-
-    <!-- Date -->
-    <div class="col-md-3">
-      <label class="form-label">Date</label>
-      <input type="date" class="form-control" id="casting_date">
+    <!-- Header Info -->
+    <div class="table-responsive-wrapper">
+      <table class="jc-table">
+        <tr>
+          <td class="th-blue" style="width:13%">JOB CARD #</td>
+          <td style="width:13%">
+          <input type="text" id="job_card_no" placeholder="Auto Job Card #" readonly>
+          </td>
+          <td class="th-blue" colspan="2" style="width:20%">GOLD PURITY / COLOR</td>
+          <td style="width:13%"><input type="text" id="gold_purity" placeholder="e.g. 18Kt / RG" readonly></td>
+          <td class="th-blue" style="width:6%" >OD</td>
+          <td style="width:17%" colspan="2"><input type="text"  placeholder="OD Number" id="job_card" readonly></td>
+        </tr>
+        <tr>
+          <td class="th-blue">DESIGN #</td>
+          <td><input type="text" id="design_no" placeholder="Enter Design #" readonly></td>
+          <td colspan="2" class="th-blue">DIAMOND QUALITY</td>
+          <td><input type="text" id="diamond_quality" placeholder="e.g. VVS·EF" readonly></td>
+          <td class="th-blue">CLIENT CODE</td>
+           <td><input type="text" id="client_code" placeholder="Client Code" readonly></td>
+        </tr>
+      </table>
     </div>
 
-    <!-- Employee Name -->
-<div class="col-md-3">
-  <label class="form-label">Employee Name</label>
-  <select class="form-select" id="casting_employee_name">
-    <option value="">Loading...</option>
-  </select>
-</div>
-
-
-
-    <!-- Employee ID -->
-    <div class="col-md-3">
-      <label class="form-label">Employee ID</label>
-      <input type="text" class="form-control" id="casting_employee_id" placeholder="Enter Employee ID">
+    <!-- Department Table -->
+    <div class="table-responsive-wrapper">
+      <table class="jc-table">
+        <thead>
+          <tr>
+            <td rowspan="2" class="th-lblue" style="width:8%">DEPARTMENT</td>
+            <td rowspan="2" class="th-lblue" style="width:8%">NAME</td>
+            <td colspan="3" class="th-blue" style="text-align:center">ISSUE</td>
+            <td colspan="6" class="th-blue" style="text-align:center">RECIVE</td>
+          </tr>
+          <tr>
+            <td class="th-lblue" style="width:7%">DATE</td>
+            <td class="th-lblue" style="width:9%">WEIGHT</td>
+            <td class="th-lblue" style="width:6%">PC</td>
+            <td class="th-lblue" style="width:8%">DATE</td>
+            <td class="th-lblue" style="width:9%">WEIGHT</td>
+            <td class="th-lblue" style="width:6%">PC</td>
+            <td class="th-lblue" style="width:7%">DUST</td>
+            <td class="th-lblue" style="width:4%">EXT. METL</td>
+            <td class="th-lblue" style="width:7%">WASTAGE</td>
+          </tr>
+        </thead>
+        <tbody id="dept-body"></tbody>
+      </table>
     </div>
 
-    <!-- Purity -->
-    <div class="col-md-3">
-      <label class="form-label">Purity</label>
-      <input type="text" class="form-control" id="casting_purity" placeholder="auto_fill e.g. 9kt">
+    <!-- Diamond Details -->
+    <div class="table-responsive-wrapper">
+      <table class="jc-table">
+        <tr>
+          <td class="th-blue" style="width:14%">COLOR STONE</td>
+          <td colspan="8" class="th-blue" style="text-align:center">DIAMOND DETAILS</td>
+        </tr>
+        <tr>
+          <td class="th-lblue">WEIGHT</td>
+          <td class="th-lblue">PC</td>
+          <td class="th-lblue">C-Gram</td>
+          <td class="th-lblue">MM</td>
+          <td class="th-lblue">CARET</td>
+          <td class="th-lblue">PICE</td>
+          <td class="th-lblue">D-GRAM</td>
+        </tr>
+        <tbody id="diamond-body"></tbody>
+      </table>
+        <!-- DESIGN IMAGE -->
+
     </div>
-
-    <!-- Colour -->
-    <div class="col-md-3">
-      <label class="form-label">Colour</label>
-      <input type="text" class="form-control" id="casting_colour" placeholder="Yellow/White/Rose">
-    </div>
-
-    <!-- Wax -->
-    <div class="col-md-3">
-      <label class="form-label">Wax</label>
-      <input type="text" class="form-control" id="casting_wax">
-    </div>
-
-    <!-- Karat -->
-<div class="col-md-3">
-  <label class="form-label">Gold Karat</label>
-  <select class="form-select" id="casting_karat">
-    <option value="">Select Karat</option>
-    <option value="9">9 KT</option>
-    <option value="14">14 KT</option>
-    <option value="18">18 KT</option>
-    <option value="22">22 KT</option>
-     <option value="24">24 KT</option>
-  </select>
-</div>
-
-    <!-- Gold/gm -->
-    <div class="col-md-3">
-      <label class="form-label">Gold/gm</label>
-      <input type="number" step="0.001" class="form-control" id="casting_pure_gold">
-    </div>
-
-    <!-- Alloy -->
-    <div class="col-md-3">
-      <label class="form-label">Alloy</label>
-      <input type="number" step="0.001" class="form-control" id="casting_alloy">
-    </div>
-
-    <!-- Net -->
-    <div class="col-md-3">
-      <label class="form-label">Net</label>
-      <input type="number" step="0.001" class="form-control" id="casting_net">
-    </div>
-
-    <!-- Wastage -->
-    <div class="col-md-3">
-      <label class="form-label">Wastage</label>
-      <input type="number" step="0.001" class="form-control" id="casting_wastage">
-    </div>
-
-    <!-- Receive Finish -->
-    <div class="col-md-3">
-      <label class="form-label">Receive Finish</label>
-      <input type="number" step="0.001" class="form-control" id="casting_finish">
-    </div>
-
-    <!-- Receive Extra -->
-    <div class="col-md-3">
-      <label class="form-label">Receive Extra</label>
-      <input type="number" step="0.001" class="form-control" id="casting_extra">
-    </div>
-
-    <div class="col-md-3">
-      <label class="form-label">Receive PC</label>
-      <input type="number" class="form-control" id="casting_receive_pc">
-    </div>
-
-    <!-- Casting Remark -->
-<div class="col-md-6">
-  <label class="form-label">Remark</label>
-  <textarea class="form-control" id="casting_remark" rows="2"
-    placeholder="Enter casting remark..."></textarea>
+<div class="text-center mt-3">
+ <center> <img id="design_image"
+       src=""
+       alt="Design Image"
+       style="max-height:200px; border:1px solid #ddd; padding:5px; display:none;"></center>
 </div>
 
   </div>
+
+
+      </div>
+
+
+<div class="modal-footer d-flex justify-content-between">
+  <button class="btn btn-success px-4">
+    Edit
+  </button>
+
+
+  <button class="btn btn-outline-primary" id="printBtn">
+    🖨 Print
+  </button>
+
+  <button class="btn btn-success px-4">
+    Save
+  </button>
+
 </div>
-
-
-          <!-- ============ Filing ============ -->
-          <div class="tab-pane fade" id="tabFiling">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="filing_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="filing_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_dust_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust PC</label>
-                <input type="number" class="form-control" id="filing_dust_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="filing_remark">
-              </div>
-
-            </div>
-          </div>
-          <!-- ============ Filing ============ -->
-          <div class="tab-pane fade" id="tabFiling">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="filing_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="filing_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_dust_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust PC</label>
-                <input type="number" class="form-control" id="filing_dust_pc">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="filing_remark">
-              </div>
-
-            </div>
-          </div>
-
-          <!-- ============ EP ============ -->
-          <div class="tab-pane fade" id="tabPre-Ep">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="fp_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="fp_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_dust_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust PC</label>
-                <input type="number" class="form-control" id="fp_dust_pc">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="fp_remark">
-              </div>
-
-            </div>
-          </div>
-                    <!-- ============ Filing ============ -->
-          <div class="tab-pane fade" id="tabPostFiling">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="filing_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="filing_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Weight</label>
-                <input type="number" step="0.001" class="form-control" id="filing_dust_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust PC</label>
-                <input type="number" class="form-control" id="filing_dust_pc">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="filing_remark">
-              </div>
-
-            </div>
-          </div>
-                    <!-- ============ EP ============ -->
-          <div class="tab-pane fade" id="tabPost-Ep">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="fp_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="fp_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_dust_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust PC</label>
-                <input type="number" class="form-control" id="fp_dust_pc">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="fp_remark">
-              </div>
-
-            </div>
-          </div>
-          <!-- ============ PP ============ -->
-          <div class="tab-pane fade" id="tabPp">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="fp_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="fp_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_dust_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust PC</label>
-                <input type="number" class="form-control" id="fp_dust_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="fp_remark">
-              </div>
-
-            </div>
-          </div>
-
-          <!-- ============ SETTING ============ -->
-          <div class="tab-pane fade" id="tabSetting">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Dia PC</label>
-                <input type="number" class="form-control" id="st_dia_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dia CT</label>
-                <input type="number" step="0.001" class="form-control" id="st_dia_ct">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dia GM</label>
-                <input type="number" step="0.001" class="form-control" id="st_dia_gm">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Wt</label>
-                <input type="number" step="0.001" class="form-control" id="st_dust_wt">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="st_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="st_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="st_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="st_receive_pc">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="fp_remark">
-              </div>
-
-            </div>
-          </div>
-          <!-- ============ ASSEMBLY ============ -->
-          <div class="tab-pane fade" id="tabAssembly">
-    <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="fp_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="fp_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_dust_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust PC</label>
-                <input type="number" class="form-control" id="fp_dust_pc">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="fp_remark">
-              </div>
-
-            </div>
-          </div>
-          <!-- ============ FP ============ -->
-          <div class="tab-pane fade" id="tabFP">
-    <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="fp_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="fp_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust Weight</label>
-                <input type="number" step="0.001" class="form-control" id="fp_dust_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Dust PC</label>
-                <input type="number" class="form-control" id="fp_dust_pc">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="fp_remark">
-              </div>
-
-            </div>
-          </div>
-
-          <!-- ============ QC ============ -->
-          <div class="tab-pane fade" id="tabQC">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="qc_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-
-                            <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-
-
-
-
-
-              
-              <div class="col-md-6">
-                <label class="form-label">Remark</label>
-                <input type="text" class="form-control" id="fp_remark">
-              </div>
-
-            </div>
-          </div>
-          <!-- ============ HM ============ -->
-          <div class="tab-pane fade" id="tabHM">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="qc_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="qc_wastage">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Diamond wt</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Diamond PCs</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-           
-
-
-              
-              
-
-            </div>
-          </div>
-          <!-- ============ IGI ============ -->
-          <div class="tab-pane fade" id="tabIGI">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="qc_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Diamond wt</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Diamond PCs</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-
-
-  
-
- 
-
-
-
-              
-              <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              
-
-            </div>
-          </div>
-          <!-- ============ DWT ============ -->
-          <div class="tab-pane fade" id="tabDWT">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="qc_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-
-
-
- 
-              
-               <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-                            <div class="col-md-3">
-                <label class="form-label">Diamond wt</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Diamond PCs</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-            </div>
-          </div>
-          <!-- ============ Final QC ============ -->
-          <div class="tab-pane fade" id="tabFinalQC">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="qc_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="qc_wastage">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">IGI Cert</label>
-                <select class="form-select" id="qc_igi_cert">
-                  <option value="">-</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </select>
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">HUID Stamp</label>
-                <select class="form-select" id="qc_huid_stamp">
-                  <option value="">-</option>
-                  <option value="DONE">DONE</option>
-                  <option value="PENDING">PENDING</option>
-                </select>
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Final QC</label>
-                <select class="form-select" id="qc_final_status">
-                  <option value="">-</option>
-                  <option value="PASS">PASS</option>
-                  <option value="HOLD">HOLD</option>
-                  <option value="REWORK">REWORK</option>
-                </select>
-              </div>
-
-            </div>
-          </div>
-          <!-- ============ Repair ============ -->
-          <div class="tab-pane fade" id="tabRepair">
-            <div class="row g-3">
-
-              <div class="col-md-3">
-                <label class="form-label">Issue Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_issue_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Issue PC</label>
-                <input type="number" class="form-control" id="qc_issue_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive Weight</label>
-                <input type="number" step="0.001" class="form-control" id="qc_receive_weight">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Receive PC</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Wastage</label>
-                <input type="number" step="0.001" class="form-control" id="qc_wastage">
-              </div>
-
-
-              <div class="col-md-3">
-                <label class="form-label">Diamond wt</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-
-              <div class="col-md-3">
-                <label class="form-label">Diamond PCs</label>
-                <input type="number" class="form-control" id="qc_receive_pc">
-              </div>
-                            
-               <div class="col-md-3">
-                <label class="form-label">Extra Metal Recieved</label>
-                <input type="number" step="0.001" class="form-control" id="filing_receive_weight">
-              </div>
-
-            </div>
-          </div>
-
-          <!-- ============ TAG PRINT ============ -->
-<div class="tab-pane fade" id="tabTagPrint">
-
-  <div class="row g-3">
-
-    <!-- Left: Tag Preview -->
-    <div class="col-lg-6">
-      <div class="card shadow-sm">
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-          <div>
-            <strong>Tag Preview</strong><br>
-            <small class="text-muted">Ready to print</small>
-          </div>
-          <button type="button" class="btn btn-sm btn-primary" onclick="printTag()">
-            <i class="bi bi-printer"></i> Print
-          </button>
-        </div>
-
-        <div class="card-body">
-          <!-- Tag Box -->
-          <div id="tagPrintArea" class="border rounded p-3" style="width: 320px;">
-            <div class="d-flex justify-content-between">
-              <div>
-                <div class="fw-bold" id="tag_style_no">STYLE: -</div>
-                <div class="small text-muted" id="tag_order_id">ORDER: -</div>
-              </div>
-              <div class="text-end">
-                <div class="badge bg-dark" id="tag_purity">-</div>
-                <div class="small" id="tag_colour">-</div>
-              </div>
-            </div>
-
-            <hr class="my-2">
-
-            <div class="d-flex justify-content-between small">
-              <div>Issue Kt: <span id="tag_issue_kt">-</span></div>
-              <div>Net: <span id="tag_net">-</span> gm</div>
-            </div>
-
-            <div class="mt-3 text-center">
-              <!-- Barcode SVG -->
-              <svg id="tagBarcode"></svg>
-              <div class="small text-muted mt-1" id="tag_barcode_text">-</div>
-            </div>
-          </div>
-
-          <small class="text-muted d-block mt-2">
-            Tip: Barcode value uses Order ID + Style No.
-          </small>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right: Inputs -->
-    <div class="col-lg-6">
-      <div class="card shadow-sm">
-        <div class="card-header bg-light">
-          <strong>Tag Details</strong>
-        </div>
-
-        <div class="card-body">
-          <div class="row g-3">
-
-            <div class="col-md-6">
-              <label class="form-label">Barcode Value</label>
-              <input type="text" class="form-control" id="tag_barcode_value"
-                     placeholder="Auto" readonly>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Net (gm)</label>
-              <input type="text" class="form-control" id="tag_net_input"
-                     placeholder="Auto" readonly>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Purity</label>
-              <input type="text" class="form-control" id="tag_purity_input"
-                     placeholder="Auto" readonly>
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Colour</label>
-              <input type="text" class="form-control" id="tag_colour_input"
-                     placeholder="Auto" readonly>
-            </div>
-
-            <div class="col-md-12">
-              <label class="form-label">Notes (optional)</label>
-              <textarea class="form-control" id="tag_notes" rows="2"
-                        placeholder="Any note to show on tag (optional)"></textarea>
-            </div>
-
-            <div class="col-md-12">
-              <button type="button" class="btn btn-outline-primary w-100" onclick="generateTagBarcode()">
-                <i class="bi bi-upc-scan"></i> Refresh Barcode
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-light" data-bs-dismiss="modal">Close</button>
-        <button class="btn btn-success" type="button" onclick="saveProductionUpdate()">Save</button>
-      </div>
 
     </div>
   </div>
 </div>
 
-
-      {% include 'footer.html' %}
-    </div>
-  </div>
-
-  <!-- JS Libraries -->
+      <!-- JS Libraries -->
 
 
 
@@ -1332,407 +437,800 @@ onclick="openProductionUpdateModal('{{ o.id }}','{{ o.style_no }}','{{ o.gold_co
 
 
 
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
-  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+      <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-  <!-- ✅ Production Board getting round details JS -->
-  <script>
-    function toNum(v, def = 0) {
-      const n = Number(v);
-      return Number.isFinite(n) ? n : def;
-    }
-
-    // "1.20 x 1.20" -> 1.2 (1 decimal)
-    function sizeTextToMm(sizeText) {
-      const m = String(sizeText || "").match(/(\d+(\.\d+)?)/);
-      if (!m) return null;
-      return Number(parseFloat(m[1]).toFixed(1));
-    }
-
-    async function openStyleDetails(styleNo) {
-      document.getElementById("modalStyleNo").textContent = styleNo;
-
-      const img = document.getElementById("modalStyleImage");
-      const hint = document.getElementById("modalImgHint");
-      const tbody = document.getElementById("modalRoundTable");
-
-      const grossWtEl = document.getElementById("modalGrossWt");
-      const totalPcsEl = document.getElementById("modalTotalPcs");
-      const totalCtEl = document.getElementById("modalTotalCt");
-      const netWtEl = document.getElementById("modalNetWt");
-
-      // reset UI
-      img.classList.add("d-none");
-      img.src = "";
-      hint.textContent = "Loading image...";
-      hint.classList.remove("d-none");
-
-      grossWtEl.textContent = "-";
-      totalPcsEl.textContent = "-";
-      totalCtEl.textContent = "-";
-      netWtEl.textContent = "-";
-
-      tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Loading...</td></tr>`;
-
-      // show modal
-      const modal = new bootstrap.Modal(document.getElementById("styleModal"));
-      modal.show();
-
-      try {
-        // 1) Style API
-        const res = await fetch(`/api/style/${encodeURIComponent(styleNo)}`);
-        const data = await res.json();
-
-        if (!res.ok || !data?.ok) {
-          hint.textContent = data?.message || "Style not found";
-          tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">No data</td></tr>`;
-          return;
-        }
-
-        // image
-        if (data.image_url) {
-          img.src = data.image_url;
-          img.classList.remove("d-none");
-          hint.classList.add("d-none");
-        } else {
-          hint.textContent = "No image";
-        }
-
-        // gross weight
-        const grossWt = toNum(data.gold_wt, 0);
-        grossWtEl.textContent = grossWt ? grossWt.toFixed(3) : "-";
-
-        // round details
-        let rounds = data.round_details;
-        if (typeof rounds === "string") {
-          try { rounds = JSON.parse(rounds); } catch { rounds = []; }
-        }
-        if (!Array.isArray(rounds)) rounds = [];
-
-        if (!rounds.length) {
-          tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No round details</td></tr>`;
-          return;
-        }
-
-        // 2) Render rows + collect mm list + total pcs
-        const mmList = [];
-        let totalPcs = 0;
-
-        tbody.innerHTML = rounds.map(r => {
-          const size = (r.size ?? "").toString();
-          const pcs = toNum(r.pcs, 0);
-          const shape = (r.shape ?? "").toString();
-
-          totalPcs += pcs;
-
-          const mm = sizeTextToMm(size);
-          if (mm !== null) mmList.push(String(mm));
-
-          const rowClass = pcs === 0 ? "text-muted" : "";
-
-          return `
-            <tr class="${rowClass}" data-mm="${mm !== null ? mm : ""}">
-              <td>${size}</td>
-              <td>${pcs}</td>
-              <td>${shape}</td>
-              <td class="sieve-range">...</td>
-              <td class="sieve-size">...</td>
-              <td class="ct-per-pc">...</td>
-            </tr>
-          `;
-        }).join("");
-
-        totalPcsEl.textContent = totalPcs;
-
-        // 3) Sieve lookup (batch)
-        const uniqueMm = [...new Set(mmList.filter(Boolean))];
-
-        let sieveMap = {};
-        if (uniqueMm.length) {
-          try {
-            const sres = await fetch("/api/sieve-lookup-batch", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ mm_list: uniqueMm })
-            });
-            sieveMap = await sres.json();
-          } catch (e) {
-            console.error("sieve lookup error:", e);
-            sieveMap = {};
-          }
-        }
-
-        // 4) Fill sieve columns
-        tbody.querySelectorAll("tr[data-mm]").forEach(tr => {
-          const mm = (tr.getAttribute("data-mm") || "").toString();
-          const info = sieveMap[mm] || null;
-
-          tr.querySelector(".sieve-range").textContent = info?.sieve_range ?? "-";
-          tr.querySelector(".sieve-size").textContent = info?.sieve_size ?? "-";
-          tr.querySelector(".ct-per-pc").textContent = info?.ct_weight_per_piece ?? "-";
-        });
-
-        // 5) Total Ct = sum(pcs * ct_per_piece)
-        let totalCt = 0;
-        tbody.querySelectorAll("tr").forEach(tr => {
-          const pcs = toNum(tr.children?.[1]?.textContent, 0);
-          const ctPerPc = toNum(tr.querySelector(".ct-per-pc")?.textContent, 0);
-          totalCt += (pcs * ctPerPc);
-        });
-
-        totalCtEl.textContent = totalCt.toFixed(3);
-
-        // 6) Net Weight (gm) = Gold(gm) - (Ct * 0.2)
-        const netWt = grossWt - (totalCt * 0.2);
-        netWtEl.textContent = netWt.toFixed(3);
-
-      } catch (e) {
-        console.error(e);
-        hint.textContent = "Server / network error";
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error</td></tr>`;
-      }
-    }
-  </script>
-
-
-
-
-
+      <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 
 <script>
+
 /* =========================================================
-   PRODUCTION UPDATE MODAL - TOTAL SCRIPT (ISSUE KT -> TARGET KT)
-   Your requirement (final):
-   - casting_purity = TARGET KT (style purity auto-filled: 9kt/14kt/18kt/22kt/24kt) (readonly recommended)
-   - casting_karat  = ISSUE KT (user selects: 9/14/18/22/24)
-   - casting_pure_gold = ISSUE GOLD gm (user enters)
-   - Auto-calc to CONVERT issue KT gold into target KT:
-        pure_gold_content = issue_gm * fineness(issueKT)
-        net_required      = pure_gold_content / fineness(targetKT)
-        alloy_to_add      = net_required - pure_gold_content
-   - Show:
-        casting_alloy = alloy_to_add
-        casting_net   = net_required
-   - Works for: 9,14,18,22,24
+   GLOBAL STORAGE
 ========================================================= */
+let waxIssueMap = {};
 
-var puModal = null;
-
-// KT → fineness
-const KT_FINENESS = {
-  9:  0.375,
-  14: 0.585,
-  18: 0.750,
-  22: 0.916,
-  24: 1.000
-};
-
-document.addEventListener("DOMContentLoaded", function () {
-  const modalEl = document.getElementById("productionUpdateModal");
-  if (modalEl) puModal = new bootstrap.Modal(modalEl);
-
-  setupIssueToTargetCalc();
+/* =========================================================
+   INIT
+========================================================= */
+document.addEventListener("DOMContentLoaded", () => {
+  loadWaxIssuesTable();
 });
 
-/* ---------------------------
-   Helpers
---------------------------- */
-function parseKt(val) {
-  // supports: "22kt", "22 KT", "22K", "14kt", "24", etc.
-  const t = String(val || "").toUpperCase().replace(/\s+/g, "");
-  const m = t.match(/(\d+)/);
-  if (!m) return null;
-  const k = parseInt(m[1], 10);
-  return (k === 9 || k === 14 || k === 18 || k === 22 || k === 24) ? k : null;
+/* =========================================================
+   LOAD TABLE DATA
+========================================================= */
+function loadWaxIssuesTable() {
+
+  fetch("/api/wax-issues-full")
+    .then(res => res.json())
+    .then(res => {
+
+      const tbody = document.getElementById("waxIssueTableBody");
+
+      if (!res.data || res.data.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="10" class="text-center text-muted">
+              No Data Found
+            </td>
+          </tr>`;
+        return;
+      }
+
+      let html = "";
+
+      res.data.forEach((item, index) => {
+
+        // store full data
+        waxIssueMap[item.id] = item;
+
+        /* ================= STYLES ================= */
+        let stylesHtml = item.styles?.length
+          ? item.styles.map(s => `
+              <div class="d-flex justify-content-between align-items-center mb-2">
+
+                <div>
+                  <span class="badge bg-dark">${s.style_no}</span><br>
+                  <small>(${s.gold_color} ${s.gold_purity})</small>
+                </div>
+
+            <button class="btn btn-sm btn-primary"
+  onclick="viewJobCard('${item.id}', '${s.style_no}')">
+  View
+</button>
+
+              </div>
+            `).join("")
+          : `<span class="text-muted">-</span>`;
+
+        /* ================= GOLD ================= */
+        let goldHtml = item.gold?.length
+          ? item.gold.map(g => `
+              <div>
+                <span class="badge bg-warning text-dark">${g.gold_gm} gm</span>
+                <small>(${g.gold_kt})</small>
+              </div>
+            `).join("")
+          : `<span class="text-muted">-</span>`;
+
+        /* ================= DIAMOND (RAW DISPLAY) ================= */
+        let diamondHtml = item.diamond_text?.length
+          ? item.diamond_text.map(d => `<div>${d}</div>`).join("")
+          : `<span class="text-muted">-</span>`;
+
+        /* ================= ROW ================= */
+        html += `
+          <tr class="text-center align-middle">
+
+            <td>${index + 1}</td>
+
+            <td class="fw-bold text-primary">
+              ${item.order_no || "-"}
+            </td>
+
+            <td class="text-start">${stylesHtml}</td>
+
+            <td>
+              <span class="badge bg-secondary">
+                ${item.pieces || 0}
+              </span>
+            </td>
+
+            <td class="text-start">${goldHtml}</td>
+
+            <td class="fw-bold text-warning">
+              ${item.total_gold_wt || 0}
+            </td>
+
+            <td class="text-start">${diamondHtml}</td>
+
+            <td class="fw-bold text-info">
+              ${item.total_diamond_ct || 0}
+            </td>
+
+            <td>${item.date || "-"}</td>
+
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+
+    })
+    .catch(err => {
+      console.error("Error:", err);
+
+      document.getElementById("waxIssueTableBody").innerHTML = `
+        <tr>
+          <td colspan="10" class="text-danger text-center">
+            Failed to load data
+          </td>
+        </tr>`;
+    });
 }
 
-function toNum(val) {
-  const n = parseFloat(val);
-  return Number.isFinite(n) ? n : null;
+function viewJobCard(issue_id, style_no) {  // ← remove order_id
+
+  console.log("CLICKED:", issue_id, style_no);
+
+  fetch(`/get-job-card/${issue_id}/${style_no}`)  // ← remove /${order_id}
+    .then(res => res.json())
+    .then(data => {
+
+      if (!data || data.error) {
+        alert(data.error);
+        return;
+      }
+
+      const modalEl = document.getElementById("jobCardModal");
+
+      if (!modalEl) {
+        console.error("Modal not found");
+        return;
+      }
+
+      const modal = new bootstrap.Modal(modalEl);
+      modal.show();
+
+      document.getElementById("job_card_no").value = data.job_card_no || "-";
+      document.getElementById("job_card").value    = data.order_no    || "-";
+      document.getElementById("design_no").value   = data.style_no    || "-";
+      document.getElementById("gold_purity").value = `${data.gold_purity} / ${data.gold_color}`;
+      document.getElementById("diamond_quality").value = data.diamond_quality || "-";
+      document.getElementById("client_code").value = data.client_code || "-";
+      
+
+      const imgEl = document.getElementById("design_image");
+      if (data.style_no) {
+        imgEl.src = `/api/style-image/${data.style_no}`;
+        imgEl.style.display = "block";
+        imgEl.onerror = () => { imgEl.style.display = "none"; };
+      } else {
+        imgEl.style.display = "none";
+      }
+
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error ❌");
+    });
 }
 
-function set3(el, n) {
-  el.value = Number.isFinite(n) ? n.toFixed(3) : "";
+</script>
+
+<script>
+  /* ============================
+   GLOBAL EMPLOYEES
+============================ */
+let allEmployees = [];
+
+async function loadEmployees() {
+  const res = await fetch("/api/employees");
+  const data = await res.json();
+  if (data.ok) allEmployees = data.employees;
 }
 
-/* ---------------------------
-   MAIN CALC: Issue KT -> Target KT
---------------------------- */
-function setupIssueToTargetCalc() {
-  const targetPurityEl = document.getElementById("casting_purity");     // TARGET KT (style)
-  const issueKaratEl   = document.getElementById("casting_karat");      // ISSUE KT (selected)
-  const issueGmEl      = document.getElementById("casting_pure_gold");  // ISSUE GOLD gm
-  const alloyEl        = document.getElementById("casting_alloy");      // Alloy to add
-  const netEl          = document.getElementById("casting_net");        // Final net
+/* ============================
+   DEPARTMENTS
+============================ */
+const departments = [
+  { name: "PRE FILLING"            },
+  { name: "FILLING EP"             },
+  { name: "FINAL FILLING"          },
+  { name: "POLISHING EP"           },
+  { name: "PRE POLISHING"          },
+  { name: "SETTING"                },
+  { name: "DIAMOND/STONE WEIGHT"   },
+  { name: "FINAL POLISHING"        },
+  { name: "IGI/HM/DIA.WT./QC"      },
+  { name: "TAGING/PACKING/BILLING" },
+];
 
-  if (!targetPurityEl || !issueKaratEl || !issueGmEl || !alloyEl || !netEl) return;
+const CHAIN = [
+  "PRE FILLING", "FILLING EP", "FINAL FILLING",
+  "POLISHING EP", "PRE POLISHING", "SETTING",
+  "DIAMOND/STONE WEIGHT", "FINAL POLISHING",
+  "IGI/HM/DIA.WT./QC", "TAGING/PACKING/BILLING",
+];
 
-  function calc() {
-    const targetKt = parseKt(targetPurityEl.value);   // style purity
-    const issueKt  = parseKt(issueKaratEl.value);     // issuing kt
-    const issueGm  = toNum(issueGmEl.value);
+const DIAMOND_DEPTS  = ["DIAMOND/STONE WEIGHT"];
+const TOTAL_WT_DEPTS = ["DIAMOND/STONE WEIGHT"];
+const rowRefs        = {};
 
-    // Debug (optional)
-    // console.log({ targetKt, issueKt, issueGm });
+/* ============================
+   GET TODAY — returns { date, time }
+   date: dd-mm-yyyy
+   time: HH:MM
+============================ */
+function getTodayFormatted() {
+  const now  = new Date();
+  const dd   = String(now.getDate()).padStart(2, "0");
+  const mm   = String(now.getMonth() + 1).padStart(2, "0");
+  const yyyy = now.getFullYear();
+  const hh   = String(now.getHours()).padStart(2, "0");
+  const min  = String(now.getMinutes()).padStart(2, "0");
+  return { date: `${dd}-${mm}-${yyyy}`, time: `${hh}:${min}` };
+}
 
-    if (!targetKt || !issueKt || issueGm === null) {
-      alloyEl.value = "";
-      netEl.value = "";
-      return;
-    }
+/* ============================
+   SET DATE + TIME into a date cell
+   Looks for .date-part and .time-part inside the cell
+============================ */
+function setDateTimeInputs(container, dateVal, timeVal) {
+  const datePart = container.querySelector(".date-part");
+  const timePart = container.querySelector(".time-part");
+  if (datePart && !datePart.value) datePart.value = dateVal;
+  if (timePart && !timePart.value) timePart.value = timeVal;
+}
 
-    const fIssue  = KT_FINENESS[issueKt];
-    const fTarget = KT_FINENESS[targetKt];
+/* ============================
+   AUTO SET TODAY DATE (GLOBAL)
+============================ */
+function autoSetTodayDate(dept, type) {
+  const { date, time } = getTodayFormatted();
 
-    if (!fIssue || !fTarget || fTarget === 0) {
-      alloyEl.value = "";
-      netEl.value = "";
-      return;
-    }
-
-    // Pure gold content in issued metal
-    const pureGoldContent = issueGm * fIssue;
-
-    // Final net weight needed for target KT
-    const netRequired = pureGoldContent / fTarget;
-
-    // Alloy to add
-    const alloyToAdd = netRequired - pureGoldContent;
-
-    set3(alloyEl, alloyToAdd);
-    set3(netEl, netRequired);
+  if (type === "issue") {
+    const cell = document.querySelector(`.issue-date-cell[data-dept="${dept}"]`);
+    if (cell) setDateTimeInputs(cell, date, time);
   }
 
-  issueKaratEl.addEventListener("change", calc);
-  issueGmEl.addEventListener("input", calc);
-
-  // If target purity changes by autofill, still recalc
-  targetPurityEl.addEventListener("input", calc);
+  if (type === "recv") {
+    const key  = (dept === "SETTING" || dept === "DIAMOND/STONE WEIGHT")
+                   ? "SETTING_DSW" : dept;
+    const cell = document.querySelector(`.recv-date-cell[data-dept="${key}"]`);
+    if (cell) setDateTimeInputs(cell, date, time);
+  }
 }
 
-/* ---------------------------
-   OPEN MODAL
-   orderId, styleNo, goldColor, goldPurity (style purity) from table
---------------------------- */
-function openProductionUpdateModal(orderId, styleNo, goldColor, goldPurity) {
-  document.getElementById("pu_order_id").innerText = orderId || "-";
-  document.getElementById("pu_style_no").innerText = styleNo || "-";
-
-  clearProductionModal();
-
-  // Date = today (optional)
-  const dateEl = document.getElementById("casting_date");
-  if (dateEl) dateEl.value = new Date().toISOString().split("T")[0];
-
-  // Colour autofill
-  const colourEl = document.getElementById("casting_colour");
-  if (colourEl) colourEl.value = goldColor || "";
-
-  // TARGET purity autofill (style purity)
-  const targetEl = document.getElementById("casting_purity");
-  if (targetEl) targetEl.value = goldPurity || "";
-
-  // Default ISSUE KT = 24 (common use-case) OR match style purity if you want:
-  // Option A: default issue to 24
-  const issueKaratEl = document.getElementById("casting_karat");
-  if (issueKaratEl) issueKaratEl.value = "24";
-
-  // Trigger calc if issue gm already present
-  const issueGmEl = document.getElementById("casting_pure_gold");
-  if (issueGmEl) issueGmEl.dispatchEvent(new Event("input"));
-
-  puModal.show();
+/* ============================
+   HELPER: build a date+time cell HTML
+   Returns an inner HTML string with two stacked inputs
+============================ */
+function dateCell(cssClass, dept) {
+  return `
+    <div class="${cssClass}" data-dept="${dept}"
+         style="display:flex; flex-direction:column; gap:0;">
+      <input type="text" readonly class="date-part"
+             style="font-size:11px; border:none; outline:none;
+                    background:transparent; width:100%; text-align:center;">
+      <input type="text" readonly class="time-part"
+             style="font-size:11px; border:none; outline:none;
+                    background:transparent; width:100%; text-align:center;
+                    color:#555;">
+    </div>`;
 }
 
-/* ---------------------------
-   CLEAR MODAL
---------------------------- */
-function clearProductionModal() {
-  const ids = [
-    // casting
-    "casting_date","casting_karat","casting_purity","casting_colour","casting_wax",
-    "casting_pure_gold","casting_alloy","casting_net","casting_wastage","casting_finish","casting_extra",
-    // filing
-    "filing_issue_weight","filing_issue_pc","filing_receive_weight","filing_receive_pc","filing_dust_weight","filing_dust_pc","filing_remark",
-    // fp
-    "fp_issue_weight","fp_issue_pc","fp_receive_weight","fp_receive_pc","fp_dust_weight","fp_dust_pc","fp_remark",
-    // setting
-    "st_dia_pc","st_dia_ct","st_dia_gm","st_dust_wt","st_issue_weight","st_issue_pc","st_receive_weight","st_receive_pc",
-    // qc
-    "qc_issue_weight","qc_issue_pc","qc_receive_weight","qc_receive_pc","qc_wastage","qc_igi_cert","qc_huid_stamp","qc_final_status"
-  ];
+/* ============================
+   GET FULL DATETIME STRING from a date cell
+   (used when reading back for display / save)
+============================ */
+function getDateTimeValue(cssClass, dept) {
+  const cell = document.querySelector(`.${cssClass}[data-dept="${dept}"]`);
+  if (!cell) return "";
+  const d = cell.querySelector(".date-part")?.value || "";
+  const t = cell.querySelector(".time-part")?.value || "";
+  return d ? `${d} ${t}`.trim() : "";
+}
 
-  ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
+/* ============================
+   CREATE DEPARTMENT TABLE
+============================ */
+function createDepartmentTable() {
+  const deptBody = document.getElementById("dept-body");
+  deptBody.innerHTML = "";
+
+  departments.forEach((d) => {
+    const isDiamond = d.name === "DIAMOND/STONE WEIGHT";
+    const isSetting = d.name === "SETTING";
+    const tr        = document.createElement("tr");
+    tr.dataset.dept = d.name;
+
+    /* ── SETTING ROW ── */
+    if (isSetting) {
+      tr.innerHTML = `
+        <td class="dept-label">${d.name}</td>
+        <td>
+          <select class="emp-select" data-role="${d.name}">
+            <option value="">Select Employee</option>
+          </select>
+        </td>
+        <td style="padding:0;">
+          ${dateCell("issue-date-cell", d.name)}
+        </td>
+        <td><input type="number" step="0.001" class="issue-wt" data-dept="${d.name}"></td>
+        <td><input type="number" class="issue-pc" data-dept="${d.name}"></td>
+        <!-- SHARED RECV rowspan=2 -->
+        <td rowspan="2" style="padding:0;">
+          ${dateCell("recv-date-cell", "SETTING_DSW")}
+        </td>
+        <td rowspan="2"><input type="number" step="0.001" class="recv-wt" data-dept="SETTING_DSW"></td>
+        <td rowspan="2"><input type="number" class="recv-pc" data-dept="SETTING_DSW"></td>
+        <td rowspan="2"><input type="number" step="0.001" class="dust-field" data-dept="SETTING_DSW" readonly></td>
+        <td rowspan="2"><input type="number" step="0.001" class="extra-metal" data-dept="SETTING_DSW"></td>
+        <td rowspan="2"><input type="number" step="0.001" class="wastage-field" data-dept="SETTING_DSW" readonly></td>
+      `;
+    }
+
+    /* ── DSW ROW ── */
+    else if (isDiamond) {
+      tr.innerHTML = `
+        <td class="dept-label">${d.name}</td>
+        <td>
+          <select class="emp-select" data-role="${d.name}">
+            <option value="">Select Employee</option>
+          </select>
+        </td>
+        <td style="padding:0;">
+          ${dateCell("issue-date-cell", d.name)}
+        </td>
+        <td>
+          <div style="display:flex; flex-direction:column;">
+            <input type="number" step="0.001" class="dsw-weight-total" data-dept="${d.name}"
+                   readonly style="border-bottom:1px solid #000; border-radius:0;">
+            <input type="number" step="0.001" class="issue-wt" data-dept="${d.name}"
+                   placeholder="Stone wt + Issue wt" style="border-radius:0;">
+          </div>
+        </td>
+        <td>
+          <div style="display:flex; flex-direction:column;">
+            <input type="number" class="dsw-pc-total" data-dept="${d.name}"
+                   readonly style="border-bottom:1px solid #000; border-radius:0;">
+            <input type="number" class="issue-pc" data-dept="${d.name}" style="border-radius:0;">
+          </div>
+        </td>
+        <!-- recv covered by SETTING rowspan=2 -->
+      `;
+    }
+
+    /* ── NORMAL ROWS ── */
+    else {
+      tr.innerHTML = `
+        <td class="dept-label">${d.name}</td>
+        <td>
+          <select class="emp-select" data-role="${d.name}">
+            <option value="">Select Employee</option>
+          </select>
+        </td>
+        <td style="padding:0;">
+          ${dateCell("issue-date-cell", d.name)}
+        </td>
+        <td><input type="number" step="0.001" class="issue-wt" data-dept="${d.name}"></td>
+        <td><input type="number" class="issue-pc" data-dept="${d.name}"></td>
+        <td style="padding:0;">
+          ${dateCell("recv-date-cell", d.name)}
+        </td>
+        <td><input type="number" step="0.001" class="recv-wt" data-dept="${d.name}"></td>
+        <td><input type="number" class="recv-pc" data-dept="${d.name}"></td>
+        <td><input type="number" step="0.001" class="dust-field" data-dept="${d.name}" readonly></td>
+        <td><input type="number" step="0.001" class="extra-metal" data-dept="${d.name}"></td>
+        <td><input type="number" step="0.001" class="wastage-field" data-dept="${d.name}" readonly></td>
+      `;
+    }
+
+    deptBody.appendChild(tr);
+  });
+
+  buildRowRefs();
+  attachCalculationListeners();
+}
+
+/* ============================
+   BUILD ROW REFS
+============================ */
+function buildRowRefs() {
+  departments.forEach(d => {
+    const name      = d.name;
+    const isSetting = name === "SETTING";
+    const isDSW     = name === "DIAMOND/STONE WEIGHT";
+
+    const issueWt    = document.querySelector(`.issue-wt[data-dept="${name}"]`);
+    const issuePc    = document.querySelector(`.issue-pc[data-dept="${name}"]`);
+    const recvKey    = (isSetting || isDSW) ? "SETTING_DSW" : name;
+    const recvWt     = document.querySelector(`.recv-wt[data-dept="${recvKey}"]`);
+    const recvPc     = document.querySelector(`.recv-pc[data-dept="${recvKey}"]`);
+    const dust       = document.querySelector(`.dust-field[data-dept="${recvKey}"]`);
+    const extraMetal = document.querySelector(`.extra-metal[data-dept="${recvKey}"]`);
+    const wastage    = document.querySelector(`.wastage-field[data-dept="${recvKey}"]`);
+
+    rowRefs[name] = { issueWt, issuePc, recvWt, recvPc, dust, extraMetal, wastage };
+
+    if (isDSW) {
+      rowRefs[name].totalIssueWt = document.querySelector(`.dsw-weight-total[data-dept="${name}"]`);
+      rowRefs[name].totalIssuePc = document.querySelector(`.dsw-pc-total[data-dept="${name}"]`);
+      rowRefs[name].totalRecvWt  = recvWt;
+      rowRefs[name].totalDust    = null;
+      rowRefs[name].totalWastage = null;
+    }
   });
 }
 
-/* ---------------------------
-   SAVE (your original payload pattern)
---------------------------- */
-function saveProductionUpdate() {
-  const orderId = document.getElementById("pu_order_id").innerText;
+/* ============================
+   CALC DUST & WASTAGE
+============================ */
+function calcRow(deptName) {
+  const r = rowRefs[deptName];
+  if (!r) return;
+  const issueWt = parseFloat(r.issueWt?.value)    || 0;
+  const recvWt  = parseFloat(r.recvWt?.value)     || 0;
+  const extra   = parseFloat(r.extraMetal?.value) || 0;
+  const dust    = parseFloat((issueWt - recvWt).toFixed(3));
+  const wastage = parseFloat((dust - extra).toFixed(3));
+  if (r.dust)    r.dust.value    = (issueWt > 0 || recvWt > 0) ? dust    : "";
+  if (r.wastage) r.wastage.value = (issueWt > 0 || recvWt > 0) ? wastage : "";
+  if (TOTAL_WT_DEPTS.includes(deptName)) calcTotalRow(deptName);
+}
 
-  const payload = {
-    order_id: orderId,
+/* ============================
+   CALC TOTAL ROW (DSW)
+============================ */
+function calcTotalRow(deptName) {
+  const r = rowRefs[deptName];
+  if (!r || !r.totalIssueWt) return;
+  const sum     = sel => [...document.querySelectorAll(sel)].reduce((a, e) => a + (parseFloat(e.value) || 0), 0);
+  const stoneWt = parseFloat((sum(".d-cgram") + sum(".d-gram")).toFixed(3));
+  r.totalIssueWt.value = stoneWt > 0 ? stoneWt : "";
+  if (r.totalIssuePc) {
+    const stonePc = sum(".d-pc") + sum(".d-pice");
+    r.totalIssuePc.value = stonePc > 0 ? stonePc : "";
+  }
+}
 
-    casting: {
-      date: document.getElementById("casting_date")?.value || "",
-      target_purity: document.getElementById("casting_purity")?.value || "", // style KT
-      issue_karat: document.getElementById("casting_karat")?.value || "",    // issued KT
-      colour: document.getElementById("casting_colour")?.value || "",
-      wax: document.getElementById("casting_wax")?.value || "",
-      issue_gold_gm: document.getElementById("casting_pure_gold")?.value || "",
-      alloy_to_add: document.getElementById("casting_alloy")?.value || "",
-      net_required: document.getElementById("casting_net")?.value || "",
-      wastage: document.getElementById("casting_wastage")?.value || "",
-      finish: document.getElementById("casting_finish")?.value || "",
-      extra: document.getElementById("casting_extra")?.value || ""
-    }
+function refreshAllTotalRows() { TOTAL_WT_DEPTS.forEach(calcTotalRow); }
 
-    // If you still need other sections (filing/fp/setting/qc) add them here,
-    // or merge with your old payload structure.
-  };
+/* ============================
+   AUTO-FILL CHAIN
+============================ */
+function autoFillNext(deptName) {
+  const chainIdx = CHAIN.indexOf(deptName);
+  if (chainIdx === -1 || chainIdx === CHAIN.length - 1) return;
+  const nextDept = CHAIN[chainIdx + 1];
+  if (DIAMOND_DEPTS.includes(nextDept)) return;
+  const curr = rowRefs[deptName];
+  const next = rowRefs[nextDept];
+  if (!curr || !next) return;
 
-  fetch("/api/production/update", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(r => r.json())
-  .then(res => {
-    if (res.ok) {
-      alert("Saved Successfully ✅");
-      puModal.hide();
+  if (curr.recvWt?.value !== "") {
+    next.issueWt.value = curr.recvWt.value;
+    next.issueWt.dispatchEvent(new Event("input"));
+    // Set issue date on next dept
+    const { date, time } = getTodayFormatted();
+    const nextCell = document.querySelector(`.issue-date-cell[data-dept="${nextDept}"]`);
+    if (nextCell) setDateTimeInputs(nextCell, date, time);
+  }
+  if (curr.recvPc?.value !== "") {
+    next.issuePc.value = curr.recvPc.value;
+    next.issuePc.dispatchEvent(new Event("input"));
+  }
+  if (nextDept === "SETTING") fillDiamondDeptIssue();
+}
+
+/* ============================
+   FILL DIAMOND DEPTS ISSUE
+============================ */
+function fillDiamondDeptIssue() {
+  const sum        = sel => [...document.querySelectorAll(sel)].reduce((a, e) => a + (parseFloat(e.value) || 0), 0);
+  const settingRef = rowRefs["SETTING"];
+  const dswRef     = rowRefs["DIAMOND/STONE WEIGHT"];
+
+  DIAMOND_DEPTS.forEach(deptName => {
+    const r = rowRefs[deptName];
+    if (!r) return;
+
+    if (deptName === "DIAMOND/STONE WEIGHT") {
+      const settingIssueWt = parseFloat(settingRef?.issueWt?.value) || 0;
+      const stoneWt        = parseFloat((sum(".d-cgram") + sum(".d-gram")).toFixed(3));
+      r.issueWt.value      = (settingIssueWt + stoneWt) > 0
+                               ? parseFloat((settingIssueWt + stoneWt).toFixed(3)) : "";
+      const settingIssuePc = parseFloat(document.querySelector(`.issue-pc[data-dept="SETTING"]`)?.value) || 0;
+      r.issuePc.value      = settingIssuePc > 0 ? settingIssuePc : "";
+
+      // Auto-set DSW issue date
+      const settingPcEntered = settingIssuePc;
+      if (settingIssueWt > 0 && settingPcEntered > 0) {
+        const { date, time } = getTodayFormatted();
+        const cell = document.querySelector(`.issue-date-cell[data-dept="DIAMOND/STONE WEIGHT"]`);
+        if (cell) setDateTimeInputs(cell, date, time);
+      }
     } else {
-      alert(res.error || "Save failed ❌");
+      const baseWt  = parseFloat(dswRef?.recvWt?.value) || 0;
+      const basePc  = parseFloat(dswRef?.recvPc?.value) || 0;
+      const totalWt = parseFloat((sum(".d-cgram") + sum(".d-gram") + baseWt).toFixed(3));
+      const totalPc = sum(".d-pc") + sum(".d-pice") + basePc;
+      r.issueWt.value = totalWt > 0 ? totalWt : "";
+      r.issuePc.value = totalPc > 0 ? totalPc : "";
     }
-  })
-  .catch(err => {
-    console.error(err);
-    alert("Server error ❌");
+    calcRow(deptName);
+  });
+  refreshAllTotalRows();
+}
+
+/* ============================
+   ATTACH CALCULATION LISTENERS
+============================ */
+function attachCalculationListeners() {
+  const sharedRecvWt  = document.querySelector(`.recv-wt[data-dept="SETTING_DSW"]`);
+  const sharedRecvPc  = document.querySelector(`.recv-pc[data-dept="SETTING_DSW"]`);
+  const sharedDust    = document.querySelector(`.dust-field[data-dept="SETTING_DSW"]`);
+  const sharedWastage = document.querySelector(`.wastage-field[data-dept="SETTING_DSW"]`);
+  const sharedExtra   = document.querySelector(`.extra-metal[data-dept="SETTING_DSW"]`);
+
+  function getDswMaxIssueWt() {
+    const settingIssueWt = parseFloat(document.querySelector(`.issue-wt[data-dept="SETTING"]`)?.value) || 0;
+    const stoneWt = [...document.querySelectorAll(".d-cgram, .d-gram")]
+      .reduce((a, e) => a + (parseFloat(e.value) || 0), 0);
+    return parseFloat((settingIssueWt + stoneWt).toFixed(3));
+  }
+
+  function recalcSharedDustWastage() {
+    const dswIssueWt = getDswMaxIssueWt();
+    const recvWt     = parseFloat(sharedRecvWt?.value) || 0;
+    const extra      = parseFloat(sharedExtra?.value)  || 0;
+    const dust       = parseFloat((dswIssueWt - recvWt).toFixed(3));
+    const wastage    = parseFloat((dust - extra).toFixed(3));
+    if (sharedDust)    sharedDust.value    = (dswIssueWt > 0 || recvWt > 0) ? dust    : "";
+    if (sharedWastage) sharedWastage.value = (dswIssueWt > 0 || recvWt > 0) ? wastage : "";
+  }
+
+  departments.forEach(d => {
+    const r = rowRefs[d.name];
+    if (!r) return;
+
+    r.issueWt?.addEventListener("input", () => {
+      autoSetTodayDate(d.name, "issue");
+      if (d.name === "DIAMOND/STONE WEIGHT") {
+        const max = getDswMaxIssueWt();
+        if (max > 0 && (parseFloat(r.issueWt.value) || 0) > max)
+          r.issueWt.value = max.toFixed(3);
+      }
+      calcRow(d.name);
+      if (d.name === "SETTING") fillDiamondDeptIssue();
+      if (TOTAL_WT_DEPTS.includes(d.name)) calcTotalRow(d.name);
+      if (d.name === "DIAMOND/STONE WEIGHT") recalcSharedDustWastage();
+    });
+
+    r.issuePc?.addEventListener("input", () => {
+      autoSetTodayDate(d.name, "issue");
+      if (d.name === "SETTING") fillDiamondDeptIssue();
+      if (TOTAL_WT_DEPTS.includes(d.name)) calcTotalRow(d.name);
+    });
+
+    if (d.name !== "DIAMOND/STONE WEIGHT" && d.name !== "SETTING") {
+      r.recvWt?.addEventListener("input", () => {
+        autoSetTodayDate(d.name, "recv");
+        const issueWt = parseFloat(r.issueWt?.value) || 0;
+        let   recvWt  = parseFloat(r.recvWt?.value)  || 0;
+        if (recvWt > issueWt && issueWt > 0) { r.recvWt.value = issueWt; recvWt = issueWt; }
+        calcRow(d.name);
+        autoFillNext(d.name);
+        if (TOTAL_WT_DEPTS.includes(d.name)) calcTotalRow(d.name);
+      });
+
+      r.recvPc?.addEventListener("input", () => {
+        autoSetTodayDate(d.name, "recv");
+        autoFillNext(d.name);
+        if (d.name === "PRE POLISHING") fillDiamondDeptIssue();
+      });
+    }
+
+    if (d.name !== "DIAMOND/STONE WEIGHT") {
+      r.extraMetal?.addEventListener("input", () => {
+        calcRow(d.name);
+        if (TOTAL_WT_DEPTS.includes(d.name)) calcTotalRow(d.name);
+      });
+    }
+  });
+
+  sharedRecvWt?.addEventListener("input", () => {
+    autoSetTodayDate("SETTING", "recv");
+    const max    = getDswMaxIssueWt();
+    let   recvWt = parseFloat(sharedRecvWt.value) || 0;
+    if (recvWt > max && max > 0) { sharedRecvWt.value = max.toFixed(3); recvWt = max; }
+    recalcSharedDustWastage();
+    const next = rowRefs["FINAL POLISHING"];
+    if (next && sharedRecvWt.value !== "") {
+      next.issueWt.value = sharedRecvWt.value;
+      next.issueWt.dispatchEvent(new Event("input"));
+      const { date, time } = getTodayFormatted();
+      const nextCell = document.querySelector(`.issue-date-cell[data-dept="FINAL POLISHING"]`);
+      if (nextCell) setDateTimeInputs(nextCell, date, time);
+    }
+    fillDiamondDeptIssue();
+    refreshAllTotalRows();
+  });
+
+  sharedExtra?.addEventListener("input", () => recalcSharedDustWastage());
+
+  sharedRecvPc?.addEventListener("input", () => {
+    autoSetTodayDate("SETTING", "recv");
+    const next = rowRefs["FINAL POLISHING"];
+    if (next && sharedRecvPc.value !== "") {
+      next.issuePc.value = sharedRecvPc.value;
+      next.issuePc.dispatchEvent(new Event("input"));
+    }
+    fillDiamondDeptIssue();
   });
 }
+
+/* ============================
+   FILL EMPLOYEE DROPDOWNS
+============================ */
+function fillEmployeeDropdowns() {
+  document.querySelectorAll(".emp-select").forEach(select => {
+    const role = select.getAttribute("data-role");
+    select.innerHTML = `<option value="">Select Employee</option>`;
+    allEmployees.filter(emp => emp.role === role).forEach(emp => {
+      const opt       = document.createElement("option");
+      opt.value       = emp.name;
+      opt.textContent = emp.name;
+      select.appendChild(opt);
+    });
+  });
+}
+
+/* ============================
+   DIAMOND TABLE
+============================ */
+function createDiamondTable() {
+  const diamondBody = document.getElementById("diamond-body");
+  diamondBody.innerHTML = "";
+  for (let i = 0; i < 10; i++) {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><input type="number" step="0.001" class="d-wt"    data-row="${i}"></td>
+      <td><input type="number"              class="d-pc"    data-row="${i}"></td>
+      <td><input type="number" step="0.001" class="d-cgram" data-row="${i}" readonly></td>
+      <td>
+        <select class="d-mm" data-row="${i}">
+          <option value="">*</option>
+          <option value="1.0*1.0">1.0 * 1.0</option>
+          <option value="0.9*0.9">0.9 * 0.9</option>
+          <option value="0.8*0.8">0.8 * 0.8</option>
+          <option value="0.7*0.7">0.7 * 0.7</option>
+          <option value="0.6*0.6">0.6 * 0.6</option>
+        </select>
+      </td>
+      <td><input type="number" step="0.001" class="d-caret" data-row="${i}"></td>
+      <td><input type="number" step="0.001" class="d-pice"  data-row="${i}"></td>
+      <td><input type="number" step="0.001" class="d-gram"  data-row="${i}" readonly></td>
+    `;
+    diamondBody.appendChild(tr);
+  }
+  const trTot = document.createElement("tr");
+  trTot.innerHTML = `
+    <td id="d-tot-wt"    style="font-weight:500;"></td>
+    <td id="d-tot-pc"    style="font-weight:500;"></td>
+    <td id="d-tot-cgram" style="font-weight:500;"></td>
+    <td></td>
+    <td id="d-tot-caret" style="font-weight:500;"></td>
+    <td id="d-tot-pice"  style="font-weight:500;"></td>
+    <td id="d-tot-gram"  style="font-weight:500;"></td>
+  `;
+  diamondBody.appendChild(trTot);
+  attachDiamondListeners();
+}
+
+function calcDiamondRow(row) {
+  const wt    = parseFloat(document.querySelector(`.d-wt[data-row="${row}"]`)?.value)    || 0;
+  const caret = parseFloat(document.querySelector(`.d-caret[data-row="${row}"]`)?.value) || 0;
+  const cg    = document.querySelector(`.d-cgram[data-row="${row}"]`);
+  const gr    = document.querySelector(`.d-gram[data-row="${row}"]`);
+  if (cg) cg.value = wt    > 0 ? (wt    / 5).toFixed(3) : "";
+  if (gr) gr.value = caret > 0 ? (caret / 5).toFixed(3) : "";
+}
+
+function calcDiamondTotals() {
+  const sum = sel => [...document.querySelectorAll(sel)].reduce((a, e) => a + (parseFloat(e.value) || 0), 0);
+  document.getElementById("d-tot-wt").textContent    = sum(".d-wt")    > 0 ? sum(".d-wt").toFixed(3)    : "";
+  document.getElementById("d-tot-pc").textContent    = sum(".d-pc")    > 0 ? sum(".d-pc").toFixed(0)    : "";
+  document.getElementById("d-tot-cgram").textContent = sum(".d-cgram") > 0 ? sum(".d-cgram").toFixed(3) : "";
+  document.getElementById("d-tot-caret").textContent = sum(".d-caret") > 0 ? sum(".d-caret").toFixed(3) : "";
+  document.getElementById("d-tot-pice").textContent  = sum(".d-pice")  > 0 ? sum(".d-pice").toFixed(0)  : "";
+  document.getElementById("d-tot-gram").textContent  = sum(".d-gram")  > 0 ? sum(".d-gram").toFixed(3)  : "";
+  fillDiamondDeptIssue();
+  refreshAllTotalRows();
+}
+
+function attachDiamondListeners() {
+  for (let i = 0; i < 10; i++) {
+    document.querySelector(`.d-wt[data-row="${i}"]`)?.addEventListener("input",    () => { calcDiamondRow(i); calcDiamondTotals(); });
+    document.querySelector(`.d-caret[data-row="${i}"]`)?.addEventListener("input", () => { calcDiamondRow(i); calcDiamondTotals(); });
+  }
+  document.querySelectorAll(".d-pc, .d-pice").forEach(el => el.addEventListener("input", calcDiamondTotals));
+}
+
+/* ============================
+   DISABLE SCROLL ON NUMBER INPUTS
+============================ */
+function disableScrollOnNumberInputs() {
+  document.querySelectorAll('input[type="number"]').forEach(input => {
+    input.addEventListener("wheel", e => e.preventDefault());
+  });
+}
+
+/* ============================
+   ARROW KEY NAVIGATION
+============================ */
+function enableArrowNavigation() {
+  const inputs = Array.from(document.querySelectorAll("input, select"));
+  inputs.forEach((input, index) => {
+    input.addEventListener("keydown", (e) => {
+      let next;
+      switch (e.key) {
+        case "ArrowRight": next = inputs[index + 1];  break;
+        case "ArrowLeft":  next = inputs[index - 1];  break;
+        case "ArrowDown":  next = inputs[index + 10]; break;
+        case "ArrowUp":    next = inputs[index - 10]; break;
+      }
+      if (next) { e.preventDefault(); next.focus(); }
+    });
+  });
+}
+
+/* ============================
+   INIT
+============================ */
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadEmployees();
+  createDepartmentTable();
+  fillEmployeeDropdowns();
+  createDiamondTable();
+  disableScrollOnNumberInputs();
+  enableArrowNavigation();
+});
+
+/* ============================
+   PRINT BUTTON
+============================ */
+document.getElementById("printBtn").addEventListener("click", function () {
+  const modal = document.getElementById("jobCardModal");
+  modal.classList.remove("fade");
+  modal.style.position = "static";
+  modal.style.display  = "block";
+  window.print();
+  setTimeout(() => {
+    modal.classList.add("fade");
+    modal.style.position = "";
+    modal.style.display  = "";
+  }, 500);
+});
 </script>
 
 
 
 
 
+
 </body>
+
 </html>

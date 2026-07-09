@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>DASHMIN - Bootstrap Admin Template</title>
+    <title>Sonalika - Client_KYC</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -30,7 +30,63 @@
 
     <!-- Template Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+<style>
 
+.kyc-popup{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.kyc-popup-box{
+    position: relative;
+    width: 320px;
+    padding: 35px;
+    background: #111;
+    border-radius: 12px;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+/* Animated border line */
+
+.kyc-line{
+    position: absolute;
+    inset: -3px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        white,
+        transparent
+    );
+    animation: rotateLine 2s linear infinite;
+}
+
+@keyframes rotateLine{
+    0%{transform: rotate(0deg);}
+    100%{transform: rotate(360deg);}
+}
+
+.kyc-popup-box h3{
+    margin-bottom: 10px;
+}
+
+.kyc-popup-box button{
+    margin-top: 15px;
+    padding: 8px 20px;
+    border: none;
+    background: #00c853;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+</style>
 </head>
 
 <body>
@@ -58,26 +114,30 @@
 
 
             <!-- Blank Start -->
-            <form method="POST" action="/upload-docs" enctype="multipart/form-data">
+            <form id="kycForm" method="POST" action="/upload-docs" enctype="multipart/form-data">
                 <div class="container-fluid pt-4 px-4">
                     <div class="row pt-4 pb-4 bg-light rounded align-items-center justify-content-center mx-0">
 
                         <center>
                             <h2 class="mb-4">Upload Documents</h2>
+                            
                         </center>
 
-                        <div class="col-sm-6 col-xl-6">
-                            <div class="pb-4">
-                                <label class="form-label">Aadhar Document</label>
-<input type="file" class="form-control form-control-lg"
-       id="aadhar_doc"
-       name="aadhar_doc"
-       accept="image/*,.pdf"
-       onchange="uploadDoc(this, 'aadhar')">
+<div class="col-sm-6 col-xl-6">
+<div class="pb-4">
+<label class="form-label">Company PAN</label>
+<small>(PAN Number)</small>
 
-                            </div>
+<input type="file"
+       class="form-control form-control-lg"
+       id="pan_doc"
+       name="pan_doc"
+       accept="image/*,.pdf"
+       onchange="uploadDoc(this, 'comp_pan')">
+</div>
                             <div class="pb-4">
                                 <label class="form-label">GST Certificate</label>
+                                <small>(GST No.,address)</small>
 <input type="file" class="form-control form-control-lg"
        id="gst_doc"
        name="gst_doc"
@@ -85,20 +145,22 @@
        onchange="uploadDoc(this, 'gst')">
 
                             </div>
-                            <div class="pb-4">
-                                <label class="form-label">Owner PAN</label>
-<input type="file" class="form-control form-control-lg"
-       id="pan_doc"
-       name="pan_doc"
-       accept="image/*,.pdf"
-       onchange="uploadDoc(this, 'pan')">
 
-                            </div>
+
+                                                        <div class="pb-4">
+    <label class="form-label">Bank Passbook / Cheque</label>
+    <input type="file" class="form-control form-control-lg"
+           id="bank_doc"
+           name="bank_doc"
+           accept="image/*,.pdf"
+           onchange="uploadDoc(this, 'bank')">
+</div>
                         </div>
 
                         <div class="col-sm-6 col-xl-6">
                             <div class="pb-4">
                                 <label class="form-label">Import / Export Doc</label>
+                                <small>(IEC No.)</small>
 <input type="file" class="form-control form-control-lg"
        id="iec_doc"
        name="iec_doc"
@@ -108,6 +170,7 @@
                             </div>
                             <div class="pb-4">
                                 <label class="form-label">MSME Certificate</label>
+                                <small>(MSME No.,Phone No.,Email)</small>
 <input type="file" class="form-control form-control-lg"
        id="msme_doc"
        name="msme_doc"
@@ -124,62 +187,8 @@
        onchange="uploadDoc(this, 'visiting_card')">
 
                             </div>
+
                         </div>
-
-                        <hr>
-
-                        <center>
-                            <h2 class="mb-4">Personal Information</h2>
-                        </center>
-
-                        <div class="col-sm-6 col-xl-6 pb-4">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="fullName" name="full_name" placeholder="Full Name">
-                                <label>Full Name</label>
-                            </div>
-
-
-<div class="form-floating mb-3">
-    <input type="text" class="form-control" id="company_name" name="company_name"
-        placeholder="Company Name">
-    <label>Company Name</label>
-</div>
-<div class="form-floating mb-3">
-    <input type="text" class="form-control" id="mobile" name="mobile">
-    <label>Mobile Number</label>
-</div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="alt_phone" name="alt_phone"
-                                    placeholder="Alternate Phone">
-                                <label>Alternate Phone</label>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6 col-xl-6 pb-4">
-
-
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="office_phone" name="office_phone"
-                                    placeholder="Office Phone">
-                                <label>Office Phone</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="Landline" name="landline"
-                                    placeholder="Landline">
-                                <label for="">Landline</label>
-                            </div>
-<div class="form-floating mb-3">
-    <input type="email" class="form-control" id="email" name="email">
-    <label>Email</label>
-</div>
-
-
-<div class="form-floating mb-3">
-    <textarea class="form-control" id="address" name="address" style="height:100px"></textarea>
-    <label>Address</label>
-</div>
-                        </div>
-
 
 
                         <hr>
@@ -187,25 +196,23 @@
                         <center>
                             <h2 class="mb-4">Business Information</h2>
                         </center>
+<div class="form-floating mb-3">
+<input type="text" class="form-control" id="company_name" name="company_name" placeholder="Company Name">
+<label>Company Name</label>
+</div>
 
-                        <div class="col-sm-6 col-xl-6">
+                        <div class=" col-xl-6">
+
+<div class="form-floating mb-3">
+<input type="text" class="form-control" id="company_pan" name="company_pan" placeholder="Company Pan">
+<label>Company PAN</label>
+</div>
                             <div class="form-floating mb-3">
                                 <input type="text" class="form-control" id="gst_number" name="gst_number" placeholder="GST">
                                 <label>GST Number</label>
                             </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="company_pan" name="company_pan"
-                                    placeholder="Company PAN">
-                                <label for="floatingPassword">Company PAN</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="panNumber" name="pan_number" placeholder="PAN">
-                                <label>PAN Number</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="aadharNumber" name="aadhar_number" placeholder="Aadhar">
-                                <label>Aadhar Number</label>
-                            </div>
+
+
                         </div>
 
                         <div class="col-sm-6 col-xl-6">
@@ -214,18 +221,166 @@
         placeholder="MSME Registration">
     <label>MSME Registration</label>
 </div>
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="dwlm" name="diamond_weight_lazer_marking" 
-                                    placeholder="dwlm">
-                                <label for="floatingPassword">Diamond Weight Lazer Marking</label>
-                            </div>
+
 <div class="form-floating mb-3">
     <input type="text" class="form-control" id="iec_code" name="iec_code" placeholder="IEC Code">
     <label>IEC Code</label>
 </div>
+<div class="form-floating mb-3">
+<textarea class="form-control" name="address" id="address" style="height:100px"></textarea>
+<label>Company Address</label>
+</div>
                         </div>
-                        <center><button class="btn btn-outline-primary w-50 m-2" type="submit">Submit</button></center>
+  
+  <hr>
+<center><h2 class="mb-4">Owner / Director / Partner</h2></center>
+
+<div id="ownersContainer">
+
+<div class="owner-section border p-3 mb-3 position-relative">
+
+<!-- REMOVE BUTTON -->
+<button type="button"
+        class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
+        onclick="removeOwner(this)">
+Remove
+</button>
+
+<div class="row">
+
+<div class="col-sm-6 col-xl-6">
+
+<div class="pb-4">
+<label class="form-label">Pan Card</label>
+<small>(PAN Number)</small>
+<input type="file"
+class="form-control form-control-lg"
+name="pan_doc[]"
+accept="image/*,.pdf"
+onchange="uploadOwnerDoc(this,'pan')">
+</div>
+
+<div class="form-floating mb-3">
+<input type="text" class="form-control owner_name" name="full_name[]" placeholder="Full Name">
+<label>Full Name</label>
+</div>
+
+<div class="form-floating mb-3">
+<input type="text" class="form-control owner_pan" name="pan_number[]" placeholder="Pan Number">
+<label>Pan Number</label>
+</div>
+
+<div class="form-floating mb-3">
+<input type="text" class="form-control" name="phone_number[]" placeholder="Phone">
+<label>Phone Number</label>
+</div>
+
+</div>
+
+<div class="col-sm-6 col-xl-6">
+
+<div class="pb-4">
+<label class="form-label">Aadhar Document</label>
+<small>(Adhar No.)</small>
+<input type="file"
+class="form-control form-control-lg"
+name="aadhar_doc[]"
+accept="image/*,.pdf"
+onchange="uploadOwnerDoc(this,'aadhar')">
+</div>
+
+<div class="form-floating mb-3">
+<input type="text" class="form-control owner_aadhar" name="aadhar_number[]" placeholder="Aadhar">
+<label>Aadhar Number</label>
+</div>
+
+<div class="form-floating mb-3">
+<input type="text" class="form-control" name="email_id[]" placeholder="Email">
+<label>Email Id</label>
+</div>
+
+<div class="form-floating mb-3">
+<textarea class="form-control" name="address[]" style="height:60px"></textarea>
+<label>Address</label>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+<center class="pb-4">
+<button type="button" class="btn btn-success mt-2" onclick="addOwner()">
+Add Owner
+</button>
+</center>
+
+
+
+
+<hr>
+
+<center>
+    <h2 class="mb-4">Bank Details</h2>
+</center>
+
+<div class="col-sm-6 col-xl-6">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="bank_name" name="bank_name"
+            placeholder="Bank Name">
+        <label>Bank Name</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="account_number" name="account_number"
+            placeholder="Account Number">
+        <label>Account Number</label>
+    </div>
+</div>
+
+<div class="col-sm-6 col-xl-6">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="ifsc_code" name="ifsc_code"
+            placeholder="IFSC Code">
+        <label>IFSC Code</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="branch" name="branch"
+            placeholder="Branch">
+        <label>Branch</label>
+    </div>
+</div>
+
+                        <center>
+  <button id="kycSubmitBtn" class="btn btn-outline-primary w-50 m-2" type="submit">
+
+    <span id="kycBtnText">
+      Submit
+    </span>
+
+    <span id="kycBtnLoader" class="spinner-border spinner-border-sm d-none"></span>
+
+  </button>
+</center>
                     </form>
+                      <!-- Upload loader -->
+<!-- OCR Loading Modal -->
+<div class="modal fade" id="ocrModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false" >
+  <div class="modal-dialog modal-dialog-centered " >
+    <div class="modal-content text-center p-4 align-items-center "  >
+
+      <div class="spinner-border text-primary mb-3" style="width:3rem;height:3rem;"></div>
+
+      <h5 id="ocrText">Scanning document...</h5>
+      <small>Please wait while we extract details</small>
+
+    </div>
+  </div>
+</div>
+
                     </div>
                 </div>
                 <!-- Blank End -->
@@ -249,52 +404,30 @@ function uploadDoc(fileInput, docType) {
 
     if (!fileInput.files || !fileInput.files.length) return;
 
-    const file = fileInput.files[0]; // ✅ ADD
+    const file = fileInput.files[0];
     let formData = new FormData();
     formData.append("file", file);
     formData.append("doc_type", docType);
 
-    // ✅ ADD: detect pdf
     const isPdf = file.type === "application/pdf";
-
-    // ✅ ADD: choose correct API
     const apiUrl = isPdf ? "/upload-pdf-doc" : "/upload-doc";
 
-    fetch(apiUrl, {   // ✅ CHANGED
+    // ⭐ SHOW POPUP
+    const modal = new bootstrap.Modal(document.getElementById('ocrModal'));
+    document.getElementById("ocrText").innerText = "Scanning " + docType.toUpperCase() + " document...";
+    modal.show();
+
+    fetch(apiUrl, {
         method: "POST",
         body: formData
     })
     .then(res => res.json())
     .then(data => {
 
-        // ---------- AADHAR ----------
-        if (data.aadhar_number && document.getElementById("aadharNumber")) {
-            document.getElementById("aadharNumber").value = data.aadhar_number;
-        }
+        modal.hide();  // ⭐ CLOSE POPUP
 
-        // ---------- PAN ----------
-        if (data.pan_number && document.getElementById("panNumber")) {
-            document.getElementById("panNumber").value = data.pan_number;
-        }
 
-        if (data.full_name && document.getElementById("fullName")) {
-            document.getElementById("fullName").value = data.full_name;
-        }
-
-        // ---------- VISITING CARD ----------
-        if (data.mobile && document.getElementById("mobile")) {
-            document.getElementById("mobile").value = data.mobile;
-        }
-
-        if (data.email && document.getElementById("email")) {
-            document.getElementById("email").value = data.email;
-        }
-
-        if (data.address && document.getElementById("address")) {
-            document.getElementById("address").value = data.address;
-        }
-
-        // ---------- MSME / UDYAM ----------
+        // ---------- MSME ----------
         if (data.udyam_number && document.getElementById("msme")) {
             document.getElementById("msme").value = data.udyam_number;
         }
@@ -303,21 +436,160 @@ function uploadDoc(fileInput, docType) {
             document.getElementById("company_name").value = data.enterprise_name;
         }
 
-        // ---------- IEC ----------
-        if (data.iec_code && document.getElementById("iec_code")) {
-            document.getElementById("iec_code").value = data.iec_code;
-        }
-
         // ---------- GST ----------
         if (data.gst_number && document.getElementById("gst_number")) {
             document.getElementById("gst_number").value = data.gst_number;
         }
 
-        console.log("OCR RESPONSE:", data);
+        if (data.address && document.getElementById("address")) {
+            document.getElementById("address").value = data.address;
+        }
+
+        // ---------- IEC ----------
+        if (data.iec_code && document.getElementById("iec_code")) {
+            document.getElementById("iec_code").value = data.iec_code;
+        }
+
+        if (data.mobile && document.getElementById("mobile")) {
+            document.getElementById("mobile").value = data.mobile;
+        }
+
+        if (data.email && document.getElementById("email")) {
+            document.getElementById("email").value = data.email;
+        }
+        // ---------- COMPANY PAN ----------
+        if (data.pan_number && document.getElementById("company_pan")) {
+            document.getElementById("company_pan").value = data.pan_number;
+        }
+        
+        if (data.company_name && document.getElementById("company_name")) {
+            document.getElementById("company_name").value = data.company_name;
+        }
+
     })
-    .catch(err => console.error("Upload error:", err));
+    .catch(err => {
+
+        modal.hide();
+        alert("Document scan failed");
+
+        console.error(err);
+
+    });
 }
 </script>
+
+<script>
+
+function addOwner(){
+
+let container = document.getElementById("ownersContainer");
+let section = container.querySelector(".owner-section");
+
+let clone = section.cloneNode(true);
+
+clone.querySelectorAll("input").forEach(input=>{
+    input.value="";
+});
+
+clone.querySelectorAll("textarea").forEach(t=>{
+    t.value="";
+});
+
+container.appendChild(clone);
+
+}
+
+function removeOwner(btn){
+
+let container = document.getElementById("ownersContainer");
+
+if(container.children.length > 1){
+
+btn.closest(".owner-section").remove();
+
+}else{
+
+alert("At least one owner is required");
+
+}
+
+}
+
+</script>
+
+<script>
+function uploadOwnerDoc(fileInput, docType){
+
+if (!fileInput.files.length) return;
+
+const file = fileInput.files[0];
+
+let formData = new FormData();
+formData.append("file", file);
+formData.append("doc_type", docType);
+
+const apiUrl = file.name.toLowerCase().endsWith(".pdf")
+? "/upload-pdf-doc"
+: "/upload-doc";
+
+const modal = new bootstrap.Modal(document.getElementById('ocrModal'));
+document.getElementById("ocrText").innerText = "Scanning document...";
+modal.show();
+
+fetch(apiUrl,{
+method:"POST",
+body:formData
+})
+.then(res => res.json())
+.then(data => {
+
+modal.hide();
+
+console.log("OCR RESULT:", data);
+
+let section = fileInput.closest(".owner-section");
+
+/* ===== PAN OCR ===== */
+
+if(docType === "pan"){
+
+let nameField = section.querySelector(".owner_name");
+let panField = section.querySelector(".owner_pan");
+
+if(data.full_name && nameField){
+nameField.value = data.full_name;
+}
+
+if(data.pan_number && panField){
+panField.value = data.pan_number;
+}
+
+}
+
+/* ===== AADHAR OCR ===== */
+
+if(docType === "aadhar"){
+
+let aadharField = section.querySelector(".owner_aadhar");
+
+if(data.aadhar_number && aadharField){
+aadharField.value = data.aadhar_number;
+}
+
+}
+
+})
+.catch(err => {
+
+modal.hide();
+console.error(err);
+alert("Owner document scan failed");
+
+});
+
+}
+</script>
+
 
 
 
@@ -341,6 +613,75 @@ function uploadDoc(fileInput, docType) {
 
     <!-- Template Javascript -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.getElementById("kycForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const btn = document.getElementById("kycSubmitBtn");
+    const btnText = document.getElementById("kycBtnText");
+    const btnLoader = document.getElementById("kycBtnLoader");
+
+    // ✅ START LOADING
+    btn.disabled = true;
+    btnText.classList.add("d-none");
+    btnLoader.classList.remove("d-none");
+
+    let formData = new FormData(this);
+
+    fetch("/upload-docs", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if(data.status === "success"){
+
+            Swal.fire({
+                icon: "success",
+                title: "Client KYC Saved",
+                html: `
+                    <b>Client Code:</b> ${data.client_code}<br>
+                    <b>Client ID:</b> ${data.client_id}
+                `,
+                confirmButtonColor: "#3085d6"
+            });
+
+            document.getElementById("kycForm").reset();
+
+        } else {
+
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: data.message
+            });
+
+        }
+
+    })
+    .catch(error => {
+
+        Swal.fire({
+            icon: "error",
+            title: "Server Error",
+            text: "Something went wrong"
+        });
+
+    })
+    .finally(() => {
+
+        // ✅ STOP LOADING
+        btn.disabled = false;
+        btnText.classList.remove("d-none");
+        btnLoader.classList.add("d-none");
+
+    });
+
+});
+</script>
 
 </body>
 

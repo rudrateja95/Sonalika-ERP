@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Account - ERP</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+    rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container-fluid position-relative bg-white d-flex p-0">
+
+    {% include 'account_menu.html' %}
+
+    <div class="content">
+      {% include 'navbar.html' %}
+<!-- Order Recieved render -->
+      <div class="container-fluid pt-4 px-4">
+        <div class="bg-light rounded p-4">
+
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <h4 class="mb-0">New Orders</h4>
+            <button class="btn btn-primary mb-3" onclick="openMultiOrderStyles()">
+             View Selected Orders Styles
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle" style="border-color: black;">
+
+<thead class="table-primary text-center">
+  <tr>
+    <th>
+      <input type="checkbox" id="selectAll">
+    </th>
+    <th>ID</th>
+    <th>Client Code</th>
+    <th>Order No</th>
+    <th>Order Date</th>
+    <th>Delivery</th>
+    <th>Total Amount</th>
+    <th>Remark</th>
+  </tr>
+</thead>
+
+<tbody>
+{% for o in orders %}
+<tr>
+
+  <td class="text-center">
+    <input type="checkbox" class="orderCheckbox" value="{{ o.id }}">
+  </td>
+
+  <td class="text-center">{{ o.id }}</td>
+
+  <td class="fw-semibold">
+    {{ o.client.client_code }}
+  </td>
+
+  <td class="fw-bold text-primary">
+    {{ o.order_no }}
+  </td>
+
+  <td>
+    {{ o.order_datetime.strftime("%d-%b-%Y %I:%M %p") }}
+  </td>
+
+  <td>
+    {{ o.delivery_datetime.strftime("%d-%b-%Y %I:%M %p") if o.delivery_datetime else "-" }}
+  </td>
+
+  <td class="fw-bold text-success">
+    ₹ {{ "{:,.0f}".format(o.total_amount or 0) }}
+  </td>
+
+  <td>
+    {{ o.remark or "-" }}
+  </td>
+
+
+</tr>
+{% endfor %}
+</tbody>
+
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+<!-- Image and Round Details PopUp -->
+ 
+      <div class="modal fade" id="styleModal"  aria-hidden="true" style="z-index: 10000;">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">Style No: <span id="modalStyleNo"></span></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+              <div class="row g-3">
+
+                <!-- LEFT: IMAGE -->
+                <div class="col-md-4 text-center">
+                  <img id="modalStyleImage" class="img-fluid rounded border d-none" style="max-height:280px;">
+                  <div id="modalImgHint" class="text-muted small">Loading image...</div>
+                </div>
+
+                <!-- RIGHT: SUMMARY + TABLE -->
+                <div class="col-md-8">
+
+                  <!-- Summary -->
+                  <div class="row g-2">
+                    <div class="col-md-3">
+                      <div class="bg-light border rounded p-2 text-center">
+                        <div class="small text-muted">Gross Weight (gm)</div>
+                        <div class="fw-bold" id="modalGrossWt">-</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="bg-light border rounded p-2 text-center">
+                        <div class="small text-muted">Total Diamonds</div>
+                        <div class="fw-bold" id="modalTotalPcs">-</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="bg-light border rounded p-2 text-center">
+                        <div class="small text-muted">Total Diamond Weight (Ct)</div>
+                        <div class="fw-bold" id="modalTotalCt">-</div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-3">
+                      <div class="bg-light border rounded p-2 text-center">
+                        <div class="small text-muted">Net Weight (gm)</div>
+                        <div class="fw-bold" id="modalNetWt">-</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Round Details -->
+                  <div class="mt-3">
+                    <h6 class="mb-2">Round Details</h6>
+
+                    <div class="table-responsive border rounded">
+                      <table class="table table-sm table-striped mb-0">
+                        <thead class="table-primary">
+                          <tr>
+                            <th>Size</th>
+                            <th>Pcs</th>
+                            <th>Shape</th>
+                            <th>Sieve Range</th>
+                            <th>Sieve Size</th>
+                            <th>Ct / Pc</th>
+                          </tr>
+                        </thead>
+
+                        <tbody id="modalRoundTable">
+                          <tr>
+                            <td colspan="6" class="text-center text-muted">Loading...</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+<!-- STYLE LIST MODAL and Check Box Pop Up -->
+
+      <div class="modal fade" id="styleListModal" >
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">
+                Order Styles - <span id="styleListOrderNo"></span>
+              </h5>
+              <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+              <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+
+                  <thead class="table-primary text-center">
+                    <tr>
+
+                      <th>
+                        <input type="checkbox" id="selectAllStyles" onclick="toggleSelectAll(this)">
+                      </th>
+
+                      <th>Style No</th>
+                      <th>Pcs</th>
+                      <th>Gold Color</th>
+                      <th>Gold Kt</th>
+                      <th>Diamond Clarity</th>
+                      <th>Diamond Color</th>
+                      <th>Remark</th>
+                      <th>Image</th>
+
+                    </tr>
+                  </thead>
+
+                  <tbody id="styleListBody">
+                    <tr>
+                      <td colspan="9" class="text-center text-muted">
+                        Loading...
+                      </td>
+                    </tr>
+                  </tbody>
+
+                </table>
+              </div>
+
+              <div class="text-end mt-3">
+
+<button class="btn btn-warning" onclick="openDiamondIssueForm()">
+    <i class="fa fa-gem me-2"></i> Issue Diamond
+</button>
+
+                
+<button class="btn btn-warning" onclick="openWaxIssueForm()">
+    <i class=" me-2"></i> Issue Wax + Gold
+</button>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+<!-- WAX & GOLD ISSUE MODAL -->
+<div class="modal fade" id="waxIssueModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content shadow-lg rounded-3">
+
+      <!-- Header -->
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title fw-bold">Wax & Gold Issue</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+
+        <input type="hidden" id="issueOrderId">
+
+        <!-- Order -->
+        <div class="mb-3">
+          <label class="fw-semibold">Order No</label>
+          <input type="text" class="form-control" id="waxOrderNo" readonly>
+        </div>
+
+        <!-- Styles -->
+        <div class="mb-3">
+          <label class="fw-semibold">Selected Styles</label>
+          <div id="selectedStylesList" class="border rounded p-2 bg-light small"></div>
+        </div>
+
+        <!-- Wax + Gold -->
+        <div class="row mb-3 g-3">
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Wax Weight</label>
+            <input type="number" class="form-control"
+                   id="wax_wt"
+                   placeholder="Enter Wax Weight"
+                   oninput="calculateGoldTotal()">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Required Gold Weight</label>
+            <input type="number" class="form-control bg-light fw-bold"
+                   id="total_gold_wt"
+                   readonly>
+          </div>
+
+        </div>
+
+        <hr>
+
+<!-- Gold Issue -->
+<label class="fw-semibold mb-2">Gold Issue</label>
+
+<div id="goldIssueContainer">
+
+  <div class="row mb-2 gold-row g-2 align-items-center">
+
+    <!-- Gold GM -->
+    <div class="col-md-3">
+      <input type="number"
+             class="form-control"
+             placeholder="Gold GM"
+             data-role="gold_gm">
+    </div>
+
+    <!-- KT -->
+    <div class="col-md-2">
+      <select class="form-select"
+              data-role="gold_kt">
+        <option value="">KT</option>
+        <option value="9">9K</option>
+        <option value="14">14K</option>
+        <option value="18">18K</option>
+        <option value="22">22K</option>
+        <option value="24">24K</option>
+      </select>
+    </div>
+
+    <!-- ✅ NEW: GOLD COLOR -->
+    <div class="col-md-3">
+      <select class="form-select" data-role="gold_color">
+        <option value="">Color</option>
+        <option value="YELLOW GOLD">Yellow Gold</option>
+        <option value="ROSE GOLD">Rose Gold</option>
+        <option value="WHITE GOLD">White Gold</option>
+      </select>
+    </div>
+
+    <!-- ✅ NEW: PIECES -->
+    <div class="col-md-2">
+      <input type="number"
+             class="form-control"
+             placeholder="Pcs"
+             min="1"
+             data-role="pieces">
+    </div>
+
+    <!-- Add Button -->
+    <div class="col-md-2">
+      <button class="btn btn-success w-100" onclick="addGoldRow()">
+        +
+      </button>
+    </div>
+
+  </div>
+
+</div>
+
+        <hr>
+
+        <!-- Silver + Alloy -->
+        <div class="row g-3">
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Silver Weight</label>
+            <input type="number" class="form-control" id="silver_wt">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Alloy Weight</label>
+            <input type="number" class="form-control" id="alloy_wt">
+          </div>
+
+<div id="mixSuggestionText" class="mt-2 small text-info"></div>
+
+        </div>
+        <!-- Gold + Silver + Alloy -->
+         <hr>
+        <div class="row g-3">
+
+          <center><div class="col-md-6">
+            <label class="form-label fw-semibold">Total Weight/gm</label>
+            <input type="number" class="form-control" id="final_total_wt" readonly>
+          </div></center>
+
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+
+        <button class="btn btn-primary px-4" onclick="submitWaxIssue()">
+          Submit Issue
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="diamondIssueModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          Diamond Issue - <span id="di_order_no"></span>
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+<div class="modal-body">
+
+        <!-- ✅ Diamond Summary -->
+<div class="mt-3">
+  <h6 class="fw-semibold">Diamond Summary</h6>
+
+  <table class="table table-bordered text-center">
+    <thead class="table-secondary">
+      <tr>
+        <th>style No</th>
+        <th>Clarity</th>
+        <th>Color</th>
+        <th>Quantity</th>
+      </tr>
+    </thead>
+<tfoot>
+  <tr class="table-dark fw-semibold">
+    <td colspan="3">Total</td>
+    <td id="di_summary_total_qty">0</td>
+  </tr>
+</tfoot>
+
+    <tbody id="di_summary_body">
+      <tr>
+        <td colspan="4" class="text-muted">No data</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="table-responsive">
+
+  <table class="table table-bordered table-hover text-center align-middle">
+
+    <thead class="table-primary">
+      <tr>
+        <th>Size</th>
+        <th>Pcs * Qnty</th>
+        <th>Ct / Pc * Qnty</th>
+      </tr>
+    </thead>
+
+    <tbody id="di_round_body">
+      <tr>
+        <td colspan="3" class="text-muted">Loading...</td>
+      </tr>
+    </tbody>
+
+    <!-- ✅ Footer Totals -->
+    <tfoot>
+      <tr class="table-dark fw-semibold">
+        <td>Total</td>
+        <td id="di_total_pcs">0</td>
+        <td id="di_total_ct">0.000</td>
+      </tr>
+    </tfoot>
+
+  </table>
+
+</div>
+
+<div class="mt-3 text-end">
+  <button class="btn btn-success" onclick="submitDiamondIssue()">
+    Issue Diamond
+  </button>
+</div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ❌ No Stock Modal -->
+<div class="modal fade" id="noStockModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-danger">
+
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">
+          ⚠️ Stock Not Available
+        </h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p id="noStockMessage" class="fw-semibold text-danger">
+          No stock available
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-danger" data-bs-dismiss="modal">
+          OK
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+      {% include 'footer.html' %}
+    </div>
+  </div>
+
+  <!-- JS Libraries -->
+
+
+
+<script>
+
+/* ===============================
+SHOW NO STOCK POPUP (MULTIPLE)
+=============================== */
+function showNoStock(errors) {
+
+    const msgEl = document.getElementById("noStockMessage");
+
+    if (Array.isArray(errors)) {
+
+        msgEl.innerHTML = `
+            <div class="text-start">
+                <p class="fw-semibold mb-2">No stock for:</p>
+                <ul class="mb-0">
+                    ${errors.map(e => `<li>${e}</li>`).join("")}
+                </ul>
+            </div>
+        `;
+
+    } else {
+        msgEl.innerText = errors;
+    }
+
+    const modal = new bootstrap.Modal(
+        document.getElementById("noStockModal")
+    );
+
+    modal.show();
+}
+
+
+/* ===============================
+SUBMIT WAX ISSUE (MERGED)
+=============================== */
+function submitWaxIssue(){
+
+    const order_id = document.getElementById("issueOrderId").value;
+
+    const wax_wt = parseFloat(document.getElementById("wax_wt").value) || 0;
+    const total_gold_wt = parseFloat(document.getElementById("total_gold_wt").value) || 0;
+    const silver_wt = parseFloat(document.getElementById("silver_wt").value) || 0;
+    const alloy_wt = parseFloat(document.getElementById("alloy_wt").value) || 0;
+
+    // ===============================
+    // GET GOLD ROWS
+    // ===============================
+    let gold_rows = [];
+
+    document.querySelectorAll(".gold-row").forEach(row => {
+
+        const gm = parseFloat(row.querySelector('[data-role="gold_gm"]').value) || 0;
+        const kt = row.querySelector('[data-role="gold_kt"]').value;
+
+        if(gm > 0 && kt){
+            gold_rows.push({ gold_gm: gm, gold_kt: kt });
+        }
+
+    });
+
+    // ===============================
+    // GET STYLE DATA
+    // ===============================
+    const selectedStyles = getSelectedStyles();
+
+    const styles = selectedStyles.map(styleNo=>{
+        const s = currentStylesData.find(x=>x.style_no===styleNo);
+        return {
+            style_no: s?.style_no,
+            gold_color: s?.gold_color,
+            gold_purity: s?.gold_purity
+        };
+    });
+
+    // ===============================
+    // API CALL
+    // ===============================
+    fetch("/submit-wax-issue",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({
+            order_id,
+            wax_wt,
+            total_gold_wt,
+            silver_wt,
+            alloy_wt,
+            styles,
+            gold_rows
+        })
+    })
+    .then(res=>res.json())
+    .then(data=>{
+
+        // ❌ MULTIPLE STOCK ERROR HANDLING
+        if(data.status === "no_stock"){
+
+            // backend should send array
+            // ex: ["14K Gold (10g)", "18K Gold (5g)"]
+
+            showNoStock(data.errors || data.message);
+            return;
+        }
+
+        // ✅ SUCCESS
+        if(data.status === "success"){
+
+            // success modal (optional)
+            const msgEl = document.getElementById("noStockMessage");
+            msgEl.innerHTML = `
+                <div class="text-center text-success">
+                    <h5>✅ Issue Created</h5>
+                    <p class="mb-0">${data.issue_code}</p>
+                </div>
+            `;
+
+            const modal = new bootstrap.Modal(
+                document.getElementById("noStockModal")
+            );
+
+            modal.show();
+
+            setTimeout(()=>{
+                location.reload();
+            },1500);
+        }
+
+    })
+    .catch(err=>{
+        console.error("Submit Error:", err);
+        showNoStock("Something went wrong");
+    });
+
+}
+
+</script>
+
+
+
+
+
+
+
+  <!-- ✅  round details JS -->
+  <script>
+    function toNum(v, def = 0) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : def;
+    }
+    // "1.20 x 1.20" -> 1.2 (1 decimal)
+    function sizeTextToMm(sizeText) {
+      const m = String(sizeText || "").match(/(\d+(\.\d+)?)/);
+      if (!m) return null;
+      return Number(parseFloat(m[1]).toFixed(1));
+    }
+    async function openStyleDetails(styleNo) {
+      document.getElementById("modalStyleNo").textContent = styleNo;
+      const img = document.getElementById("modalStyleImage");
+      const hint = document.getElementById("modalImgHint");
+      const tbody = document.getElementById("modalRoundTable");
+      const grossWtEl = document.getElementById("modalGrossWt");
+      const totalPcsEl = document.getElementById("modalTotalPcs");
+      const totalCtEl = document.getElementById("modalTotalCt");
+      const netWtEl = document.getElementById("modalNetWt");
+      // reset UI
+      img.classList.add("d-none");
+      img.src = "";
+      hint.textContent = "Loading image...";
+      hint.classList.remove("d-none");
+      grossWtEl.textContent = "-";
+      totalPcsEl.textContent = "-";
+      totalCtEl.textContent = "-";
+      netWtEl.textContent = "-";
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">Loading...</td></tr>`;
+      // show modal
+      const modal = new bootstrap.Modal(document.getElementById("styleModal"));
+      modal.show();
+      try {
+        // 1) Style API
+        const res = await fetch(`/api/style/${encodeURIComponent(styleNo)}`);
+        const data = await res.json();
+        if (!res.ok || !data?.ok) {
+          hint.textContent = data?.message || "Style not found";
+          tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">No data</td></tr>`;
+          return;
+        }
+        // image
+        if (data.image_url) {
+          img.src = data.image_url;
+          img.classList.remove("d-none");
+          hint.classList.add("d-none");
+        } else {
+          hint.textContent = "No image";
+        }
+        // gross weight
+        const grossWt = toNum(data.gold_wt, 0);
+        grossWtEl.textContent = grossWt ? grossWt.toFixed(3) : "-";
+        // round details
+        let rounds = data.round_details;
+        if (typeof rounds === "string") {
+          try { rounds = JSON.parse(rounds); } catch { rounds = []; }
+        }
+        if (!Array.isArray(rounds)) rounds = [];
+        if (!rounds.length) {
+          tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No round details</td></tr>`;
+          return;
+        }
+        // 2) Render rows + collect mm list + total pcs
+        const mmList = [];
+        let totalPcs = 0;
+        tbody.innerHTML = rounds.map(r => {
+          const size = (r.size ?? "").toString();
+          const pcs = toNum(r.pcs, 0);
+          const shape = (r.shape ?? "").toString();
+          totalPcs += pcs;
+          const mm = sizeTextToMm(size);
+          if (mm !== null) mmList.push(String(mm));
+          const rowClass = pcs === 0 ? "text-muted" : "";
+          return `
+          <tr class="${rowClass}" data-mm="${mm !== null ? mm : ""}">
+            <td>${size}</td>
+            <td>${pcs}</td>
+            <td>${shape}</td>
+            <td class="sieve-range">...</td>
+            <td class="sieve-size">...</td>
+            <td class="ct-per-pc">...</td>
+          </tr>
+        `;
+        }).join("");
+        totalPcsEl.textContent = totalPcs;
+        // 3) Sieve lookup (batch)
+        const uniqueMm = [...new Set(mmList.filter(Boolean))];
+        let sieveMap = {};
+        if (uniqueMm.length) {
+          try {
+            const sres = await fetch("/api/sieve-lookup-batch", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ mm_list: uniqueMm })
+            });
+            sieveMap = await sres.json();
+          } catch (e) {
+            console.error("sieve lookup error:", e);
+            sieveMap = {};
+          }
+        }
+        // 4) Fill sieve columns
+        tbody.querySelectorAll("tr[data-mm]").forEach(tr => {
+          const mm = (tr.getAttribute("data-mm") || "").toString();
+          const info = sieveMap[mm] || null;
+          tr.querySelector(".sieve-range").textContent = info?.sieve_range ?? "-";
+          tr.querySelector(".sieve-size").textContent = info?.sieve_size ?? "-";
+          tr.querySelector(".ct-per-pc").textContent = info?.ct_weight_per_piece ?? "-";
+        });
+        // 5) Total Ct = sum(pcs * ct_per_piece)
+        let totalCt = 0;
+        tbody.querySelectorAll("tr").forEach(tr => {
+          const pcs = toNum(tr.children?.[1]?.textContent, 0);
+          const ctPerPc = toNum(tr.querySelector(".ct-per-pc")?.textContent, 0);
+          totalCt += (pcs * ctPerPc);
+        });
+        totalCtEl.textContent = totalCt.toFixed(3);
+        // 6) Net Weight (gm) = Gold(gm) - (Ct * 0.2)
+        const netWt = grossWt - (totalCt * 0.2);
+        netWtEl.textContent = netWt.toFixed(3);
+      } catch (e) {
+        console.error(e);
+        hint.textContent = "Server / network error";
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error</td></tr>`;
+      }
+    }
+  </script>
+
+<script>
+
+/* ======================================
+GLOBAL VARIABLES
+======================================*/
+let currentStylesData = [];
+let currentOrderIds = [];
+let currentOrderNos = [];
+let manualOverride = false;
+
+
+/* ======================================
+SELECT ALL ORDERS
+======================================*/
+document.addEventListener("DOMContentLoaded", function () {
+
+  const selectAll = document.getElementById("selectAll");
+
+  if (selectAll) {
+    selectAll.addEventListener("change", function () {
+      document.querySelectorAll(".orderCheckbox").forEach(cb => {
+        cb.checked = this.checked;
+      });
+    });
+  }
+
+});
+
+
+/* ======================================
+GET SELECTED ORDERS
+======================================*/
+function getSelectedOrders() {
+
+  const selectedIds = [];
+  const selectedNos = [];
+
+  document.querySelectorAll(".orderCheckbox:checked").forEach(cb => {
+
+    selectedIds.push(cb.value);
+
+    const row = cb.closest("tr");
+    const orderNo = row.querySelector("td:nth-child(4)").innerText;
+
+    selectedNos.push(orderNo);
+  });
+
+  return { ids: selectedIds, nos: selectedNos };
+}
+
+
+/* ======================================
+OPEN MULTI ORDER STYLE LIST
+======================================*/
+async function openMultiOrderStyles() {
+
+  const selected = getSelectedOrders();
+
+  if (!selected.ids.length) {
+    alert("Please select at least one order");
+    return;
+  }
+
+  currentOrderIds = selected.ids;
+  currentOrderNos = selected.nos;
+
+  const modal = new bootstrap.Modal(document.getElementById("styleListModal"));
+  const tbody = document.getElementById("styleListBody");
+  const title = document.getElementById("styleListOrderNo");
+
+  title.textContent = selected.nos.join(", ");
+
+  tbody.innerHTML = `<tr><td colspan="9">Loading...</td></tr>`;
+  modal.show();
+
+  try {
+
+    const res = await fetch("/api/multi-order-styles", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ order_ids: selected.ids })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.ok) throw new Error(data.message);
+
+    currentStylesData = data.styles || [];
+
+    if (!currentStylesData.length) {
+      tbody.innerHTML = `<tr><td colspan="9">No styles found</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = currentStylesData.map(s => `
+      <tr>
+        <td class="text-center">
+          <input type="checkbox" class="style-checkbox" value="${s.style_no}">
+        </td>
+        <td>${s.style_no}</td>
+        <td>${s.pieces}</td>
+        <td>${s.gold_color || "-"}</td>
+        <td class="style-purity">${s.gold_purity || "-"}</td>
+        <td>${s.diamond_clarity || "-"}</td>
+        <td>${s.diamond_color || "-"}</td>
+        <td>${s.remark || "-"}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-outline-primary"
+            onclick="openStyleDetails('${s.style_no}')">
+            View
+          </button>
+        </td>
+      </tr>
+    `).join("");
+
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="9">Error: ${err.message}</td></tr>`;
+  }
+}
+
+
+/* ======================================
+SELECT ALL STYLES
+======================================*/
+function toggleSelectAll(source) {
+  document.querySelectorAll(".style-checkbox").forEach(cb => {
+    cb.checked = source.checked;
+  });
+}
+
+
+/* ======================================
+GET SELECTED STYLES
+======================================*/
+function getSelectedStyles() {
+
+  const selected = [];
+
+  document.querySelectorAll(".style-checkbox:checked").forEach(cb => {
+    selected.push(cb.value);
+  });
+
+  return selected;
+}
+
+
+/* ======================================
+🔥 CALCULATE + SUGGESTION
+======================================*/
+function calculateAll(){
+
+    let pureGold = 0;
+    let issuedGold = 0;
+
+    const purityMap = {
+        "24": 1.00,
+        "22": 0.916,
+        "18": 0.752,
+        "14": 0.585,
+        "9": 0.375
+    };
+
+    document.querySelectorAll(".gold-row").forEach(row => {
+
+        const gm = parseFloat(row.querySelector('[data-role="gold_gm"]')?.value) || 0;
+        const kt = row.querySelector('[data-role="gold_kt"]')?.value;
+
+        if(gm && kt){
+            const purity = purityMap[kt] || 0;
+            pureGold += gm * purity;
+            issuedGold += gm;
+        }
+    });
+
+    const box = document.getElementById("mixSuggestionText");
+
+    if(!pureGold){
+        if(box) box.innerHTML = "No data";
+        return;
+    }
+
+    let target = 1;
+    const text = document.querySelector(".style-purity")?.innerText || "";
+
+    if (text.includes("22")) target = 0.916;
+    else if (text.includes("18")) target = 0.752;
+    else if (text.includes("14")) target = 0.585;
+    else if (text.includes("9")) target = 0.375;
+
+    const finalTotal = pureGold / target;
+
+    const silverWt = finalTotal * 0.01;
+    const alloyWt = finalTotal - issuedGold - silverWt;
+
+    if(!manualOverride){
+        const s = document.getElementById("silver_wt");
+        const a = document.getElementById("alloy_wt");
+        if(s) s.value = silverWt.toFixed(3);
+        if(a) a.value = alloyWt.toFixed(3);
+    }
+
+    const silver = parseFloat(document.getElementById("silver_wt")?.value) || 0;
+    const alloy = parseFloat(document.getElementById("alloy_wt")?.value) || 0;
+
+    const finalEl = document.getElementById("final_total_wt");
+    if(finalEl){
+        finalEl.value = (issuedGold + silver + alloy).toFixed(3);
+    }
+
+if(box){
+
+    const noSilverTotal = pureGold / target;
+    const noSilverAlloy = noSilverTotal - issuedGold;
+
+    box.innerHTML = `
+    <div class="table-responsive">
+
+        <!-- WITH SILVER -->
+        <table class="table table-bordered table-sm text-center mb-2">
+            <thead class="table-light">
+                <tr><th colspan="4">Refinery Mix (With Silver)</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Silver</td>
+                    <td>${silverWt.toFixed(3)}</td>
+                    <td>Alloy</td>
+                    <td>${alloyWt.toFixed(3)}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- WITHOUT SILVER -->
+        <table class="table table-bordered table-sm text-center mb-0">
+            <thead class="table-warning">
+                <tr><th colspan="4">Without Silver (Pure Mix)</th></tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td>Silver</td>
+                    <td>0.000</td>
+                    <td>Alloy</td>
+                    <td>${noSilverAlloy.toFixed(3)}</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>`;
+}
+}
+
+
+/* ======================================
+EVENTS (IMPORTANT)
+======================================*/
+document.addEventListener("input", function(e){
+
+    if(e.target.dataset.role === "gold_gm"){
+        calculateAll();
+    }
+
+    if(e.target.id === "silver_wt" || e.target.id === "alloy_wt"){
+        manualOverride = true;
+        calculateAll();
+    }
+});
+
+document.addEventListener("change", function(e){
+    if(e.target.dataset.role === "gold_kt"){
+        calculateAll();
+    }
+});
+
+
+/* ======================================
+OPEN DIAMOND ISSUE (WITH CT)
+======================================*/
+async function openDiamondIssueForm() {
+
+  const selectedStyles = getSelectedStyles();
+
+  if (!selectedStyles.length) {
+    alert("Please select at least one style");
+    return;
+  }
+
+  document.getElementById("di_order_no").textContent =
+    currentOrderNos.length ? currentOrderNos.join(", ") : "Multiple Orders";
+
+  const tbody = document.getElementById("di_round_body");
+  const totalPcsEl = document.getElementById("di_total_pcs");
+  const totalCtEl = document.getElementById("di_total_ct");
+  const summaryBody = document.getElementById("di_summary_body");
+  const summaryTotalEl = document.getElementById("di_summary_total_qty");
+
+  tbody.innerHTML = `<tr><td colspan="3">Loading...</td></tr>`;
+  summaryBody.innerHTML = `<tr><td colspan="4">Loading...</td></tr>`;
+
+  new bootstrap.Modal(document.getElementById("diamondIssueModal")).show();
+
+  try {
+
+    let allRounds = [];
+    let summaryRows = [];
+    let totalQty = 0;
+
+    for (const styleNo of selectedStyles) {
+
+      const styleData = currentStylesData.find(s => s.style_no == styleNo);
+      if (!styleData) continue;
+
+      const pcs = Number(styleData.pieces || 0);
+      totalQty += pcs;
+
+      summaryRows.push({
+        style_no: styleData.style_no,
+        clarity: styleData.diamond_clarity || "-",
+        color: styleData.diamond_color || "-",
+        pcs
+      });
+
+      const res = await fetch(`/api/style/${encodeURIComponent(styleNo)}`);
+      const data = await res.json();
+
+      if (!res.ok || !data?.ok) continue;
+
+      let rounds = data.round_details;
+
+      if (typeof rounds === "string") {
+        try { rounds = JSON.parse(rounds); } catch { rounds = []; }
+      }
+
+      rounds.forEach(r => {
+        allRounds.push({
+          size: r.size,
+          pcs: Number(r.pcs || 0),
+          qty: pcs
+        });
+      });
+    }
+
+    const merged = {};
+
+    allRounds.forEach(r => {
+      if (!merged[r.size]) merged[r.size] = { size: r.size, pcs: 0 };
+      merged[r.size].pcs += (r.pcs * r.qty);
+    });
+
+    const finalRows = Object.values(merged);
+
+    const mmList = finalRows.map(r => {
+      const match = String(r.size).match(/(\d+(\.\d+)?)/);
+      return match ? Number(parseFloat(match[1]).toFixed(1)) : null;
+    }).filter(Boolean);
+
+    const uniqueMm = [...new Set(mmList.map(String))];
+
+    let sieveMap = {};
+
+    if (uniqueMm.length) {
+      const res = await fetch("/api/sieve-lookup-batch", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ mm_list: uniqueMm })
+      });
+      sieveMap = await res.json();
+    }
+
+    let totalPcs = 0;
+    let totalCt = 0;
+
+    tbody.innerHTML = finalRows.map(r => {
+
+      totalPcs += r.pcs;
+
+      const match = String(r.size).match(/(\d+(\.\d+)?)/);
+      const mm = match ? Number(parseFloat(match[1]).toFixed(1)).toString() : "";
+
+      const ctPerPc = Number(sieveMap[mm]?.ct_weight_per_piece || 0);
+      const rowCt = r.pcs * ctPerPc;
+
+      totalCt += rowCt;
+
+      return `
+        <tr>
+          <td>${r.size}</td>
+          <td>${r.pcs}</td>
+          <td>${ctPerPc ? rowCt.toFixed(3) : "-"}</td>
+        </tr>`;
+    }).join("");
+
+    totalPcsEl.textContent = totalPcs;
+    totalCtEl.textContent = totalCt.toFixed(3);
+
+    summaryBody.innerHTML = summaryRows.map(s => `
+      <tr>
+        <td>${s.style_no}</td>
+        <td>${s.clarity}</td>
+        <td>${s.color}</td>
+        <td>${s.pcs}</td>
+      </tr>
+    `).join("");
+
+    summaryTotalEl.textContent = totalQty;
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+/* ======================================
+OPEN WAX ISSUE MODAL ✅ FIX
+======================================*/
+function openWaxIssueForm() {
+
+  const selectedStyles = getSelectedStyles();
+
+  if (!selectedStyles.length) {
+    alert("Please select styles first");
+    return;
+  }
+
+  if (!currentOrderIds.length) {
+    alert("Please select orders first");
+    return;
+  }
+
+  // Set Order Info
+  document.getElementById("issueOrderId").value = currentOrderIds.join(",");
+  document.getElementById("waxOrderNo").value = currentOrderNos.join(", ");
+
+  // Build style table
+  const selectedData = selectedStyles.map(styleNo =>
+    currentStylesData.find(s => s.style_no === styleNo)
+  );
+
+  document.getElementById("selectedStylesList").innerHTML = `
+    <table class="table table-sm table-bordered text-center mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Style</th>
+          <th>Gold Color</th>
+          <th>Purity</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${selectedData.map(s => `
+          <tr data-order-id="${s?.order_id || ''}">
+            <td>${s?.style_no || "-"}</td>
+            <td class="gold-color">${s?.gold_color || "-"}</td>
+            <td class="style-purity">${s?.gold_purity || "-"}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  // Open Modal
+  new bootstrap.Modal(document.getElementById("waxIssueModal")).show();
+}
+
+/* ======================================
+WAX → GOLD CALCULATION ✅ FIX
+======================================*/
+function calculateGoldTotal(){
+
+    const wax = parseFloat(document.getElementById("wax_wt").value) || 0;
+
+    let factor = 0;
+
+    const text = document.querySelector(".style-purity")?.innerText || "";
+
+    if (text.includes("22")) factor = 18;
+    else if (text.includes("18")) factor = 15;
+    else if (text.includes("14")) factor = 12;
+    else if (text.includes("9")) factor = 8;
+
+    const gold = wax * factor;
+
+    document.getElementById("total_gold_wt").value =
+        gold ? gold.toFixed(3) : "";
+}
+/* ======================================
+ADD GOLD ROW ✅ FIX
+======================================*/
+function addGoldRow(){
+
+    const container = document.getElementById("goldIssueContainer");
+
+    const row = document.createElement("div");
+    row.className = "row mb-2 gold-row g-2 align-items-center";
+
+    row.innerHTML = `
+        <div class="col-md-3">
+            <input type="number"
+                   class="form-control"
+                   placeholder="Gold GM"
+                   data-role="gold_gm">
+        </div>
+
+        <div class="col-md-2">
+            <select class="form-select" data-role="gold_kt">
+                <option value=""> KT</option>
+                <option value="9">9K</option>
+                <option value="14">14K</option>
+                <option value="18">18K</option>
+                <option value="22">22K</option>
+                <option value="24">24K</option>
+            </select>
+        </div>
+                <!-- NEW GOLD COLOR -->
+        <div class="col-md-3">
+            <select class="form-select" data-role="gold_color">
+                <option value="">Color</option>
+                <option value="YELLOW GOLD">Yellow Gold</option>
+                <option value="ROSE GOLD">Rose Gold</option>
+                <option value="WHITE GOLD">White Gold</option>
+            </select>
+        </div>
+
+        <!-- NEW PIECES -->
+        <div class="col-md-2">
+            <input type="number"
+                   class="form-control"
+                   placeholder="Pcs"
+                   min="1"
+                   data-role="pieces">
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-danger w-100" onclick="removeGoldRow(this)">-</button>
+        </div>
+    `;
+
+    container.appendChild(row);
+}
+/* ======================================
+REMOVE GOLD ROW ✅ FIX
+======================================*/
+function removeGoldRow(btn){
+    const row = btn.closest(".gold-row");
+    if(row){
+        row.remove();
+        calculateAll(); // recalc after remove
+    }
+}
+
+</script>
+
+<script>
+/* ======================================
+WAX ISSUE SUBMIT SCRIPT (SEPARATED)
+======================================*/
+
+/* ---------- SAFE NUMBER ---------- */
+function toNum(val, def = 0){
+    const n = parseFloat(val);
+    return isNaN(n) ? def : n;
+}
+
+
+/* ---------- GET GOLD ROWS ---------- */
+function getGoldRows(){
+
+    const rows = [];
+
+    document.querySelectorAll(".gold-row").forEach(row => {
+
+        const gm = toNum(row.querySelector('[data-role="gold_gm"]')?.value);
+        const kt = row.querySelector('[data-role="gold_kt"]')?.value;
+        const color = row.querySelector('[data-role="gold_color"]')?.value;
+        const pcs = parseInt(row.querySelector('[data-role="pieces"]')?.value) || 0;
+
+        if (gm > 0 && kt && color) {
+            rows.push({
+                gold_gm: gm,
+                gold_kt: kt,
+                gold_color: color,
+                pieces: pcs
+            });
+        }
+
+    });
+
+    return rows;
+}
+
+
+/* ---------- GET STYLES ---------- */
+function getWaxStyles(){
+
+    const styles = [];
+
+    document.querySelectorAll("#selectedStylesList tbody tr").forEach(row => {
+
+        const style_no = row.children[0]?.innerText.trim();
+        const gold_color = row.children[1]?.innerText.trim();
+        const gold_purity = row.children[2]?.innerText.trim();
+        const order_id   = row.dataset.orderId;
+
+        if (style_no) {
+            styles.push({
+                style_no,
+                gold_color,
+                gold_purity,
+                order_id
+            });
+        }
+
+    });
+
+
+    return styles;
+}
+
+
+/* ---------- VALIDATION ---------- */
+function validateWaxIssue(payload){
+
+    if (!payload.order_ids.length) {
+        return "Please select order";
+    }
+
+    if (!payload.order_no) {
+        return "Order No missing";
+    }
+
+    if (!payload.gold_rows.length) {
+        return "Enter gold issue data";
+    }
+
+    if (payload.wax_wt <= 0) {
+        return "Enter wax weight";
+    }
+
+    return null;
+}
+
+
+/* ---------- MAIN SUBMIT ---------- */
+async function submitWaxIssue(){
+
+    try {
+
+        const payload = {
+
+            order_ids: currentOrderIds,
+            order_no: currentOrderNos.join(", "),
+
+            wax_wt: toNum(document.getElementById("wax_wt")?.value),
+            total_gold_wt: toNum(document.getElementById("total_gold_wt")?.value),
+            silver_wt: toNum(document.getElementById("silver_wt")?.value),
+            alloy_wt: toNum(document.getElementById("alloy_wt")?.value),
+            final_total_wt: toNum(document.getElementById("final_total_wt")?.value),
+
+            styles: getWaxStyles(),
+            gold_rows: getGoldRows()
+        };
+
+
+        const error = validateWaxIssue(payload);
+
+        if (error) {
+            showNoStock(error);
+            return;
+        }
+
+        const res = await fetch("/submit-wax-issue", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (data.status === "no_stock") {
+            showNoStock(data.message);
+            return;
+        }
+
+        if (data.status === "error") {
+            showNoStock(data.message);
+            return;
+        }
+
+        if (data.status === "success") {
+
+            document.getElementById("noStockMessage").innerHTML = `
+                <div class="text-center text-success">
+                    <h5>✅ Issue Created</h5>
+                    <p>${data.issue_code}</p>
+                </div>
+            `;
+
+            new bootstrap.Modal(
+                document.getElementById("noStockModal")
+            ).show();
+
+            setTimeout(() => location.reload(), 1500);
+        }
+
+    } catch (err) {
+        console.error(err);
+        showNoStock("Network / Server error");
+    }
+}
+</script>
+
+
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  function collectDiamondData(){
+
+    let summary = [];
+    let rounds = [];
+
+    // SUMMARY TABLE
+    document.querySelectorAll("#di_summary_body tr").forEach(row => {
+
+        const cols = row.querySelectorAll("td");
+
+        summary.push({
+            style_no: cols[0].innerText,
+            clarity: cols[1].innerText,
+            color: cols[2].innerText,
+            pcs: parseInt(cols[3].innerText) || 0
+        });
+    });
+
+    // ROUND TABLE
+    document.querySelectorAll("#di_round_body tr").forEach(row => {
+
+        const cols = row.querySelectorAll("td");
+
+        rounds.push({
+            size: cols[0].innerText,
+            pcs: parseInt(cols[1].innerText) || 0,
+            ct: parseFloat(cols[2].innerText) || 0
+        });
+    });
+
+    return {
+        summary,
+        rounds,
+        total_pcs: parseInt(document.getElementById("di_total_pcs").innerText) || 0,
+        total_ct: parseFloat(document.getElementById("di_total_ct").innerText) || 0
+    };
+}
+</script>
+
+<script>
+  async function submitDiamondIssue(){
+
+    const data = collectDiamondData();
+
+    if(!data.summary.length){
+        alert("No diamond data");
+        return;
+    }
+
+    try{
+
+        const res = await fetch("/api/diamond-issue", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                orders: currentOrderIds,
+                ...data
+            })
+        });
+
+        const result = await res.json();
+
+        // ❌ STOCK ERROR HANDLING (UPDATED)
+        if(!res.ok){
+
+            let msg = result.message || "Error";
+
+            if(result.details && result.details.length){
+                msg += "\n\n" + result.details.join("\n");
+            }
+
+            alert(msg);
+            return;
+        }
+
+        // ✅ SUCCESS
+        alert("Diamond Issued Successfully ✅");
+        location.reload();
+
+    }catch(err){
+        alert(err.message);
+    }
+}
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Account - ERP</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+    rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container-fluid position-relative bg-white d-flex p-0">
+
+    {% include 'admin_menu.html' %}
+
+    <div class="content">
+      {% include 'navbar.html' %}
+
+<div class="container-fluid pt-4 px-4">
+
+<!-- GOLD STOCK OVERVIEW -->
+<div class="mb-4">
+
+<div class="d-flex align-items-center mb-3">
+<h4 class="fw-bold mb-0 text ">
+<i class="fa fa-coins text-warning me-2"></i> Gold Stock Overview
+</h4>
+</div>
+
+<div class="row g-3">
+
+<!-- TOTAL WEIGHT -->
+<div class="col-lg-4 col-md-6">
+<div class="card shadow-sm border-0 h-100">
+<div class="card-body d-flex align-items-center">
+
+<div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-3"
+style="width:50px;height:50px;">
+<i class="fa fa-weight"></i>
+</div>
+
+<div>
+<div class="text-muted small">Total Gold Weight</div>
+<h4 class="fw-bold mb-0" id="totalWeight">0 g</h4>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- TOTAL PIECES -->
+<div class="col-lg-4 col-md-6">
+<div class="card shadow-sm border-0 h-100">
+<div class="card-body d-flex align-items-center">
+
+<div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+style="width:50px;height:50px;">
+<i class="fa fa-cubes"></i>
+</div>
+
+<div>
+<div class="text-muted small">Total Pieces</div>
+<h4 class="fw-bold mb-0" id="totalPieces">0</h4>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- PURITY TABLE -->
+<div class="col-lg-4 col-md-12">
+<div class="card shadow-sm border-0 h-100">
+
+<div class="card-body">
+
+<div class="d-flex align-items-center mb-3">
+
+<div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+style="width:50px;height:50px;">
+<i class="fa fa-gem"></i>
+</div>
+
+<div class="text-muted small">Purity Wise Stock</div>
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table table-sm table-bordered align-middle text-center mb-0">
+
+<thead class="table-light">
+<tr>
+<th>Purity</th>
+<th>Weight (g)</th>
+<th>Pieces</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="fw-semibold">24K</td>
+<td id="w24">0 g</td>
+<td id="pcs24">0</td>
+</tr>
+
+<tr>
+<td class="fw-semibold">22K</td>
+<td id="w22">0 g</td>
+<td id="pcs22">0</td>
+</tr>
+
+<tr>
+<td class="fw-semibold">18K</td>
+<td id="w18">0 g</td>
+<td id="pcs18">0</td>
+</tr>
+
+<tr>
+<td class="fw-semibold">14K</td>
+<td id="w14">0 g</td>
+<td id="pcs14">0</td>
+</tr>
+
+<tr>
+<td class="fw-semibold">9K</td>
+<td id="w9">0 g</td>
+<td id="pcs9">0</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- TOTAL SILVER -->
+<div class="col-lg-4 col-md-6">
+<div class="card shadow-sm border-0 h-100">
+<div class="card-body d-flex align-items-center">
+
+<div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+style="width:50px;height:50px;">
+<i class="fa fa-coins"></i>
+</div>
+
+<div>
+<div class="text-muted small">Total Silver</div>
+<h4 class="fw-bold mb-0" id="totalSilver">0 g</h4>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- TOTAL ALLOY -->
+<div class="col-lg-4 col-md-6">
+<div class="card shadow-sm border-0 h-100">
+<div class="card-body d-flex align-items-center">
+
+<div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+style="width:50px;height:50px;">
+<i class="fa fa-cubes"></i>
+</div>
+
+<div>
+<div class="text-muted small">Total Alloy</div>
+<h4 class="fw-bold mb-0" id="totalAlloy">0 g</h4>
+</div>
+
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<br>
+<br>
+<!-- ADD STOCK + STOCK TABLE -->
+
+
+<div class="row g-4">
+
+<!-- ADD STOCK -->
+<div class="col-lg-4">
+
+<div class="card shadow-sm border-0">
+
+<div class="card-header bg-warning text-dark fw-bold">
+<i class="fa fa-boxes me-2"></i> Add Gold Stock
+</div>
+
+<div class="card-body">
+
+<div class="mb-3">
+<label class="form-label">Gold Type</label>
+<select id="gold_type" class="form-select">
+<option>Yellow Gold</option>
+<option>White Gold</option>
+<option>Rose Gold</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Purity</label>
+<select id="purity" class="form-select">
+<option>24K</option>
+<option>22K</option>
+<option>18K</option>
+<option>14K</option>
+<option>9K</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label class="form-label">Weight (grams)</label>
+<input type="number" step="0.001" id="weight" class="form-control" placeholder="Enter Weight">
+</div>
+
+<div class="mb-3">
+<label class="form-label">Pieces</label>
+<input type="number" id="pieces" class="form-control" placeholder="Enter Pieces">
+</div>
+
+<button id="addBtn" class="btn btn-warning w-100" onclick="addStock()">
+
+<span id="btnText">
+<i class="fa fa-plus"></i> Add Stock
+</span>
+
+<span id="btnLoading" class="spinner-border spinner-border-sm d-none"></span>
+
+</button>
+
+</div>
+</div>
+
+</div>
+
+
+<!-- STOCK LIST -->
+<div class="col-lg-8">
+
+<div class="card shadow-sm border-0">
+
+<div class="card-header bg-dark text-white fw-bold">
+<i class="fa fa-warehouse me-2"></i> Gold Stock List
+</div>
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-hover table-bordered align-middle">
+
+<thead class="table-dark">
+<tr>
+<th>ID</th>
+<th>Gold Type</th>
+<th>Purity</th>
+<th>Weight (g)</th>
+<th>Pieces</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody id="stockTable"></tbody>
+
+</table>
+
+</div>
+
+<!-- PAGINATION -->
+<div class="d-flex justify-content-between align-items-center mt-3">
+
+<button class="btn btn-secondary btn-sm" onclick="prevPage()">Previous</button>
+
+<span id="pageInfo" class="fw-bold"></span>
+
+<button class="btn btn-secondary btn-sm" onclick="nextPage()">Next</button>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<br>
+<br>
+<!-- SUCCESS MODAL -->
+<div class="modal fade" id="successModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-body text-center p-4">
+
+<i class="fa fa-check-circle text-success" style="font-size:50px;"></i>
+
+<h5 class="mt-3">Gold Stock Added</h5>
+
+<p class="text-muted mb-0">
+Gold stock added successfully.
+</p>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<div class="container-fluid pt-4 px-4">
+
+<div class="row g-4">
+
+<!-- LEFT SIDE : ADD METAL FORM -->
+<div class="col-lg-4 col-md-12">
+
+<div class="card shadow-sm border-0">
+
+<div class="card-header bg-dark text-white fw-bold">
+<i class="fa fa-coins me-2"></i> Add Metal Stock
+</div>
+
+<div class="card-body">
+
+<div class="mb-3">
+
+<label class="form-label">Metal Type</label>
+
+<select id="metal_type" class="form-select">
+<option value="">Select Metal</option>
+<option value="silver">Silver</option>
+<option value="alloy">Alloy</option>
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Weight (grams)</label>
+
+<input type="number"
+id="metal_weight"
+class="form-control"
+step="0.001"
+placeholder="Enter grams">
+
+</div>
+
+<button id="metalBtn" class="btn btn-dark w-100" onclick="addMetal()">
+
+<span id="metalBtnText">
+<i class="fa fa-plus"></i> Add Metal
+</span>
+
+<span id="metalLoading" class="spinner-border spinner-border-sm d-none"></span>
+
+</button>
+
+</div>
+</div>
+
+</div>
+
+
+<!-- RIGHT SIDE : METAL STOCK TABLE -->
+<div class="col-lg-8 col-md-12">
+
+<div class="card shadow-sm border-0">
+
+<div class="card-header bg-secondary text-white fw-bold">
+<i class="fa fa-table me-2"></i> Metal Stock List
+</div>
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover align-middle text-center">
+
+<thead class="table-dark">
+
+<tr>
+<th>ID</th>
+<th>Metal Type</th>
+<th>Weight (g)</th>
+<th>Date</th>
+</tr>
+
+</thead>
+
+<tbody id="metalTable">
+
+<tr>
+<td colspan="4">No Data</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+</div>
+<div class="d-flex justify-content-between mt-3">
+
+<button class="btn btn-secondary btn-sm" onclick="prevMetalPage()">
+Previous
+</button>
+
+<span id="metalPageInfo"></span>
+
+<button class="btn btn-secondary btn-sm" onclick="nextMetalPage()">
+Next
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="modal fade" id="metalSuccessModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-body text-center p-4">
+
+<i class="fa fa-check-circle text-success" style="font-size:50px;"></i>
+
+<h5 class="mt-3">Metal Stored Successfully</h5>
+
+<p class="text-muted mb-0">
+Silver / Alloy stock saved successfully
+</p>
+
+</div>
+
+</div>
+</div>
+</div>
+<br>
+<br>
+
+<div class="container-fluid pt-4 px-4">
+
+<div class="row g-4">
+
+<!-- LEFT SIDE : ADD DIAMOND FORM -->
+<div class="col-lg-4 col-md-12">
+
+<div class="card shadow-sm border-0">
+
+<div class="card-header bg-dark text-white fw-bold">
+<i class="fa fa-gem me-2"></i> Add Diamond Details
+</div>
+
+<div class="card-body">
+
+<!-- Diamond Size -->
+<div class="mb-3">
+<label class="form-label fw-semibold">Diamond Size</label>
+
+<select id="diamond_size" class="form-select">
+  <option value="">Select Size</option>
+  <option value="0.8*0.8">0.80 * 0.80</option>
+  <option value="0.9*0.9">0.90 * 0.90</option>
+  <option value="1.0*1.0">1.0 * 1.0</option>
+  <option value="1.1*1.1">1.10 * 1.10</option>
+  <option value="1.2*1.2">1.20 * 1.20</option>
+  <option value="1.3*1.3">1.30 * 1.30</option>
+  <option value="1.35*1.35">1.35 * 1.35</option>
+  <option value="1.4*1.4">1.40 * 1.40</option>
+  <option value="1.5*1.5">1.50 * 1.50</option>
+  <option value="1.55*1.55">1.55 * 1.55</option>
+  <option value="1.6*1.6">1.60 * 1.60</option>
+  <option value="1.7*1.7">1.70 * 1.70</option>
+  <option value="1.8*1.8">1.80 * 1.80</option>
+  <option value="1.9*1.9">1.90 * 1.90</option>
+  <option value="2.0*2.0">2.0 * 2.0</option>
+  <option value="2.1*2.1">2.10 * 2.10</option>
+  <option value="2.2*2.2">2.20 * 2.20</option>
+  <option value="2.3*2.3">2.30 * 2.30</option>
+  <option value="2.4*2.4">2.40 * 2.40</option>
+  <option value="2.5*2.5">2.50 * 2.50</option>
+  <option value="2.6*2.6">2.60 * 2.60</option>
+  <option value="2.7*2.7">2.70 * 2.70</option>
+  <option value="2.8*2.8">2.80 * 2.80</option>
+  <option value="2.9*2.9">2.90 * 2.90</option>
+  <option value="3.0*3.0">3.0 * 3.0</option>
+  <option value="3.1*3.1">3.10 * 3.10</option>
+  <option value="3.2*3.2">3.20 * 3.20</option>
+  <option value="1.75*1.75">1.75 * 1.75</option>
+</select>
+</div>
+
+
+<!-- Diamond Clarity -->
+<div class="mb-3">
+
+<label class="form-label fw-semibold">Diamond Clarity</label>
+
+<select id="diamond_clarity" class="form-select">
+<option value="">Diamond Clarity</option>
+<option value="VVS">VVS</option>
+<option value="VS">VS</option>
+<option value="SI">SI</option>
+<option value="IJ">IJ</option>
+</select>
+
+</div>
+
+
+<!-- Diamond Color -->
+<div class="mb-3">
+
+<label class="form-label fw-semibold">Diamond Color</label>
+
+<select id="diamond_color" class="form-select">
+<option value="">Diamond Color</option>
+<option value="EF">EF</option>
+<option value="FG">FG</option>
+<option value="GH">GH</option>
+<option value="HI">HI</option>
+<option value="IJ">IJ</option>
+</select>
+
+</div>
+
+
+<!-- Pieces -->
+<div class="mb-3">
+
+<label class="form-label fw-semibold">Pieces</label>
+
+<input type="number"
+id="diamond_pieces"
+class="form-control"
+placeholder="Enter pieces (example: 1234)">
+
+</div>
+
+
+<button id="diamondBtn" class="btn btn-dark w-100" onclick="addDiamond()">
+
+<span id="diamondBtnText">
+<i class="fa fa-plus"></i> Add Diamond
+</span>
+
+<span id="diamondLoading" class="spinner-border spinner-border-sm d-none"></span>
+
+</button>
+
+</div>
+</div>
+
+</div>
+
+
+<!-- RIGHT SIDE : DIAMOND TABLE -->
+<div class="col-lg-8 col-md-12">
+
+<div class="card shadow-sm border-0">
+
+<div class="card-header bg-secondary text-white fw-bold">
+<i class="fa fa-table me-2"></i> Diamond Stock List
+</div>
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover align-middle text-center">
+
+<thead class="table-dark">
+
+<tr>
+<th>ID</th>
+<th>Size</th>
+<th>Clarity</th>
+<th>Color</th>
+<th>Pieces</th>
+<th>Date</th>
+</tr>
+
+</thead>
+
+<tbody id="diamondTable">
+
+<tr>
+<td colspan="6">No Data</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+<div class="d-flex justify-content-between mt-3">
+    <button class="btn btn-secondary btn-sm" onclick="prevDiamondPage()">Previous</button>
+    <span id="diamondPageInfo"></span>
+    <button class="btn btn-secondary btn-sm" onclick="nextDiamondPage()">Next</button>
+</div>
+
+
+
+</div>
+
+</div>
+
+</div>
+<div class="modal fade" id="diamondSuccessModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<div class="modal-body text-center p-4">
+
+<i class="fa fa-check-circle text-success" style="font-size:50px;"></i>
+
+<h5 class="mt-3">Diamond Stored Successfully</h5>
+
+<p class="text-muted mb-0">
+Diamond stock saved successfully
+</p>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+
+
+      {% include 'footer.html' %}
+    </div>
+  </div>
+
+  <!-- JS Libraries -->
+
+  <!-- gold add and render json -->
+<script>
+
+/* ================================
+GLOBAL PAGINATION
+================================ */
+let currentPage = 1
+let metalPage = 1
+
+
+/* ================================
+ADD GOLD STOCK
+================================ */
+function addStock(){
+
+let gold_type = document.getElementById("gold_type").value
+let purity = document.getElementById("purity").value
+let weight = parseFloat(document.getElementById("weight").value) || 0
+let pieces = parseInt(document.getElementById("pieces").value) || 0
+
+// ✅ VALIDATION
+if(!gold_type || !purity || weight <= 0 || pieces <= 0){
+  alert("Please fill all fields correctly")
+  return
+}
+
+// LOADING
+document.getElementById("btnText").classList.add("d-none")
+document.getElementById("btnLoading").classList.remove("d-none")
+document.getElementById("addBtn").disabled = true
+
+fetch("/add-gold-stock",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ gold_type, purity, weight, pieces })
+})
+.then(res=>{
+if(!res.ok) throw new Error("Server Error")
+return res.json()
+})
+.then(data=>{
+
+// SUCCESS MODAL
+let modal = new bootstrap.Modal(document.getElementById('successModal'))
+modal.show()
+setTimeout(()=> modal.hide(), 2000)
+
+// CLEAR INPUT
+document.getElementById("weight").value=""
+document.getElementById("pieces").value=""
+
+// RESET BUTTON
+document.getElementById("btnText").classList.remove("d-none")
+document.getElementById("btnLoading").classList.add("d-none")
+document.getElementById("addBtn").disabled = false
+
+// REFRESH
+loadStock()
+loadSummary()
+
+})
+.catch(err=>{
+alert("Error adding stock")
+console.error(err)
+
+// RESET BUTTON
+document.getElementById("btnText").classList.remove("d-none")
+document.getElementById("btnLoading").classList.add("d-none")
+document.getElementById("addBtn").disabled = false
+})
+
+}
+
+
+/* ================================
+LOAD GOLD STOCK TABLE
+================================ */
+function loadStock(){
+
+fetch(`/get-gold-stock?page=${currentPage}`)
+.then(res=>res.json())
+.then(data=>{
+
+let table=""
+
+data.data.forEach(item=>{
+table += `
+<tr>
+<td>${item.id}</td>
+<td>${item.gold_type || "-"}</td>
+<td>${item.purity || "-"}</td>
+<td>${item.weight || 0}</td>
+<td>${item.pieces || 0}</td>
+<td>${item.date}</td>
+</tr>
+`
+})
+
+document.getElementById("stockTable").innerHTML = table
+
+document.getElementById("pageInfo").innerText =
+"Page "+data.page+" of "+data.total_pages
+
+})
+
+}
+
+
+/* ================================
+PAGINATION
+================================ */
+function nextPage(){
+currentPage++
+loadStock()
+}
+
+function prevPage(){
+if(currentPage>1){
+currentPage--
+loadStock()
+}
+}
+
+
+/* ================================
+LOAD SUMMARY
+================================ */
+function loadSummary(){
+
+fetch("/gold-stock-summary")
+.then(res=>res.json())
+.then(data=>{
+
+document.getElementById("totalWeight").innerText = data.total_weight
+document.getElementById("totalPieces").innerText = data.total_pieces
+
+document.getElementById("w24").innerText = data.weight24
+document.getElementById("pcs24").innerText = data.pieces24
+
+document.getElementById("w22").innerText = data.weight22
+document.getElementById("pcs22").innerText = data.pieces22
+
+document.getElementById("w18").innerText = data.weight18
+document.getElementById("pcs18").innerText = data.pieces18
+
+document.getElementById("w14").innerText = data.weight14
+document.getElementById("pcs14").innerText = data.pieces14
+
+document.getElementById("w9").innerText = data.weight9
+document.getElementById("pcs9").innerText = data.pieces9
+
+})
+
+}
+
+
+/* ================================
+ADD METAL (SILVER / ALLOY)
+================================ */
+function addMetal(){
+
+let metal_type = document.getElementById("metal_type").value
+let weight = parseFloat(document.getElementById("metal_weight").value) || 0
+
+if(!metal_type || weight <= 0){
+  alert("Enter valid metal weight")
+  return
+}
+
+// LOADING
+document.getElementById("metalBtnText").classList.add("d-none")
+document.getElementById("metalLoading").classList.remove("d-none")
+document.getElementById("metalBtn").disabled = true
+
+fetch("/add-metal",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({ metal_type, weight })
+})
+.then(res=>{
+if(!res.ok) throw new Error("Server Error")
+return res.json()
+})
+.then(data=>{
+
+// RESET BUTTON
+document.getElementById("metalBtnText").classList.remove("d-none")
+document.getElementById("metalLoading").classList.add("d-none")
+document.getElementById("metalBtn").disabled = false
+
+// SUCCESS MODAL
+let modal = new bootstrap.Modal(
+document.getElementById("metalSuccessModal")
+)
+modal.show()
+setTimeout(()=> modal.hide(), 2000)
+
+// CLEAR INPUT
+document.getElementById("metal_weight").value=""
+
+// REFRESH
+loadMetalStock()
+
+})
+.catch(err=>{
+alert("Error adding metal")
+console.error(err)
+})
+
+}
+
+
+/* ================================
+LOAD METAL STOCK
+================================ */
+function loadMetalStock(){
+
+fetch(`/get-metal-stock?page=${metalPage}`)
+.then(res => res.json())
+.then(data => {
+
+let table=""
+
+data.data.forEach(item=>{
+table += `
+<tr>
+<td>${item.id}</td>
+<td>${item.metal_type}</td>
+<td>${item.weight} g</td>
+<td>${item.date}</td>
+</tr>
+`
+})
+
+document.getElementById("metalTable").innerHTML = table
+
+document.getElementById("metalPageInfo").innerText =
+"Page " + data.page + " of " + data.total_pages
+
+document.getElementById("totalSilver").innerText =
+data.total_silver + " g"
+
+document.getElementById("totalAlloy").innerText =
+data.total_alloy + " g"
+
+})
+
+}
+
+
+/* ================================
+INITIAL LOAD
+================================ */
+loadStock()
+loadSummary()
+loadMetalStock()
+
+</script>
+
+<script>
+
+function addDiamond(){
+
+let size = document.getElementById("diamond_size").value
+let clarity = document.getElementById("diamond_clarity").value
+let color = document.getElementById("diamond_color").value
+let pieces = document.getElementById("diamond_pieces").value
+
+// validation
+if(!size || !clarity || !color || !pieces){
+alert("Please fill all fields")
+return
+}
+
+// start spinner
+document.getElementById("diamondBtnText").classList.add("d-none")
+document.getElementById("diamondLoading").classList.remove("d-none")
+
+fetch("/add-diamond",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify({
+size:size,
+clarity:clarity,
+color:color,
+pieces:pieces
+})
+})
+.then(response => response.json())
+.then(data => {
+
+// stop spinner
+document.getElementById("diamondBtnText").classList.remove("d-none")
+document.getElementById("diamondLoading").classList.add("d-none")
+
+// show success popup
+let modalElement = document.getElementById("diamondSuccessModal")
+let successModal = new bootstrap.Modal(modalElement)
+successModal.show()
+
+// auto close popup
+setTimeout(function(){
+successModal.hide()
+},2000)
+
+// clear form
+document.getElementById("diamond_pieces").value=""
+
+// reload table
+loadDiamondStock()
+
+})
+.catch(error => {
+
+// stop spinner if error
+document.getElementById("diamondBtnText").classList.remove("d-none")
+document.getElementById("diamondLoading").classList.add("d-none")
+
+alert("Error saving diamond")
+
+console.log(error)
+
+})
+
+}
+
+</script>
+
+<script>
+let diamondPage = 1; // current page
+
+function loadDiamondStock() {
+    fetch(`/get-diamond-stock?page=${diamondPage}`)
+    .then(res => res.json())
+    .then(data => {
+        let table = "";
+
+        if(data.data.length === 0) {
+            table = `<tr><td colspan="6">No Data</td></tr>`;
+        } else {
+            data.data.forEach(item => {
+                table += `
+                <tr>
+                    <td>${item.id}</td>
+                    <td>${item.size}</td>
+                    <td>${item.clarity}</td>
+                    <td>${item.color}</td>
+                    <td>${item.pieces}</td>
+                    <td>${item.date}</td>
+                </tr>`;
+            });
+        }
+
+        document.getElementById("diamondTable").innerHTML = table;
+
+        document.getElementById("diamondPageInfo").innerText =
+            "Page " + data.page + " of " + data.total_pages;
+    })
+}
+
+// Next page
+function nextDiamondPage() {
+    diamondPage++;
+    loadDiamondStock();
+}
+
+// Previous page
+function prevDiamondPage() {
+    if(diamondPage > 1) {
+        diamondPage--;
+        loadDiamondStock();
+    }
+}
+
+// Initial load
+loadDiamondStock();
+</script>
+
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

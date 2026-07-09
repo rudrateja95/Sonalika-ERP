@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>KYC Print</title>
+
+<style>
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+body{
+  font-family: Arial;
+  font-size:12px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:10px;
+}
+
+td,th{
+  border:1px solid #000;
+  padding:5px;
+}
+
+.center{text-align:center;}
+.bold{font-weight:bold;}
+
+/* PAGE BREAK */
+.page-break{
+  page-break-before: always;
+  break-before: page;
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+/* FOOTER */
+.footer{
+  position:fixed;
+  bottom:10px;
+  width:100%;
+  text-align:center;
+  font-size:10px;
+}
+
+/* IMAGE */
+.doc-img{
+  display:block;
+  margin:auto;
+  max-width:90%;
+  max-height:85vh;
+  object-fit:contain;
+}
+
+@media print{
+  body{ margin:0; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="printArea"></div>
+
+<script>
+
+// GET PARAMS
+const params = new URLSearchParams(window.location.search);
+const clientCode = params.get("client_code");
+const docs = (params.get("docs") || "").split(",");
+
+// FETCH DATA
+fetch("/search-client-kyc", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ client_code: clientCode })
+})
+.then(res => res.json())
+.then(data => {
+
+let html = ``;
+
+/* =========================
+   PAGE 1 - KYC DETAILS
+========================= */
+
+html += `
+<table>
+<tr>
+<td class="bold">Client Code</td>
+<td>${data.client_code || ""}</td>
+</tr>
+
+<tr>
+<td class="bold">Company Name</td>
+<td>${data.company_name || ""}</td>
+</tr>
+
+<tr>
+<td class="bold">Address</td>
+<td>${data.address || ""}</td>
+</tr>
+
+<tr>
+<td class="bold">GST</td>
+<td>${data.gst_number || ""}</td>
+</tr>
+
+<tr>
+<td class="bold">Company PAN</td>
+<td>${data.company_pan || ""}</td>
+</tr>
+
+<tr>
+<td class="bold">MSME</td>
+<td>${data.msme || ""}</td>
+</tr>
+
+<tr>
+<td class="bold">IEC Code</td>
+<td>${data.iec_code || ""}</td>
+</tr>
+</table>
+`;
+
+// OWNERS
+if(data.owners && data.owners.length){
+html += `
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>PAN</th>
+<th>Aadhaar</th>
+<th>Contact</th>
+<th>Email</th>
+</tr>
+</thead>
+<tbody>
+`;
+
+data.owners.forEach(o=>{
+html += `
+<tr>
+<td>${o.full_name||""}</td>
+<td>${o.pan_number||""}</td>
+<td>${o.aadhar_number||""}</td>
+<td>${o.phone_number||""}</td>
+<td>${o.email_id||""}</td>
+</tr>
+`;
+});
+
+html += `</tbody></table>`;
+}
+
+// BANK
+html += `
+<table>
+<tr><td class="bold">Bank</td><td>${data.bank_name||""}</td></tr>
+<tr><td class="bold">Account</td><td>${data.account_number||""}</td></tr>
+<tr><td class="bold">IFSC</td><td>${data.ifsc_code||""}</td></tr>
+<tr><td class="bold">Branch</td><td>${data.branch||""}</td></tr>
+</table>
+`;
+
+// SIGNATURE (ONLY FIRST PAGE)
+html += `
+<br><br>
+<table>
+<tr>
+<td class="center">Authorized Signature</td>
+</tr>
+</table>
+`;
+
+
+/* =========================
+   DOCUMENT PAGES
+========================= */
+
+docs.forEach((d, idx) => {
+
+    if(!d) return;
+
+    let url = "";
+    let label = d.toUpperCase();
+
+    if(d.includes("owner_")){
+        const parts = d.split("_");
+        const type = parts[1];
+        const index = parts[2];
+
+        const owner = data.owners[index-1];
+        if(owner){
+            url = `/view-owner-doc/${type}/${owner.id}`;
+            label = `OWNER ${index} ${type.toUpperCase()}`;
+        }
+    } else {
+        url = `/view-doc/${d}/${clientCode}`;
+    }
+
+    // 🔥 IMPORTANT: detect file type
+    html += `
+    <div class="doc-block ${idx > 0 ? 'page-break' : ''}">
+        <h4>${label}</h4>
+
+        <div class="center">
+            <iframe src="${url}" 
+                    style="width:100%; height:700px; border:none;">
+            </iframe>
+        </div>
+    </div>
+    `;
+});
+
+
+document.getElementById("printArea").innerHTML = html;
+
+// AUTO PRINT
+window.print();
+
+});
+</script>
+
+</body>
+</html>

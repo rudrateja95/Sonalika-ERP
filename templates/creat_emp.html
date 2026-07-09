@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Account - ERP</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+    rel="stylesheet">
+
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container-fluid position-relative bg-white d-flex p-0">
+
+    {% include 'admin_menu.html' %}
+
+    <div class="content">
+      {% include 'navbar.html' %}
+
+
+<div class="container mt-4">
+
+  <h4 class="fw-bold text-primary mb-3">Employee Master</h4>
+
+  <!-- ADD EMPLOYEE CARD -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+      <div id="employeeContainer">
+
+        <div class="row g-2 mb-2 emp-row">
+
+          <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Employee Name" data-role="name">
+          </div>
+
+          <div class="col-md-3">
+            <input type="text" class="form-control" placeholder="Phone" data-role="phone">
+          </div>
+
+          <div class="col-md-3">
+            <select class="form-control" data-role="role">
+              <option value="">Select Role</option>
+              <option>PRE FILLING</option>
+              <option>FILLING EP</option>
+              <option>FINAL FILLING</option>
+              <option>POLISHING EP</option>
+              <option>PRE POLISHING</option>
+              <option>SETTING</option>
+              <option>DIAMOND/STONE WEIGHT</option>
+              <option>FINAL POLISHING</option>
+              <option>IGI/HM/DIA.WT./QC</option>
+              <option>TAGING/PACKING/BILLING</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <button class="btn btn-success w-100" onclick="addEmployeeRow()">+</button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <button class="btn btn-primary mt-2 w-100" onclick="saveEmployees()">
+        Save Employees
+      </button>
+
+    </div>
+  </div>
+
+  <!-- EMPLOYEE LIST -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white fw-semibold">
+      Employee List
+    </div>
+
+    <div class="card-body p-2">
+
+      <div class="table-responsive">
+
+        <table class="table table-bordered table-hover text-center align-middle mb-0">
+
+          <thead class="table-light">
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Role</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="employeeTableBody">
+            <tr>
+              <td colspan="5" class="text-muted">Loading...</td>
+            </tr>
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+
+      {% include 'footer.html' %}
+    </div>
+  </div>
+
+  <!-- JS Libraries -->
+
+
+<script>
+
+// ADD ROW
+function addEmployeeRow() {
+
+  const container = document.getElementById("employeeContainer");
+
+  const row = document.createElement("div");
+  row.className = "row g-2 mb-2 emp-row";
+
+  row.innerHTML = `
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Employee Name" data-role="name">
+    </div>
+
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Phone" data-role="phone">
+    </div>
+
+<div class="col-md-3">
+  <select class="form-control" data-role="role" required>
+    <option value="">Select Role</option>
+    <option>PRE FILLING</option>
+    <option>FILLING EP</option>
+    <option>FINAL FILLING</option>
+    <option>POLISHING EP</option>
+    <option>PRE POLISHING</option>
+    <option>SETTING</option>
+    <option>DIAMOND/STONE WEIGHT</option>
+    <option>FINAL POLISHING</option>
+    <option>IGI/HM/DIA.WT./QC</option>
+    <option>TAGING/PACKING/BILLING</option>
+  </select>
+</div>
+
+    <div class="col-md-3">
+      <button class="btn btn-danger w-100" onclick="removeEmployeeRow(this)">-</button>
+    </div>
+  `;
+
+  container.appendChild(row);
+}
+
+
+// REMOVE ROW
+function removeEmployeeRow(btn) {
+  btn.closest(".emp-row").remove();
+}
+
+
+// SAVE JSON
+async function saveEmployees() {
+
+  const rows = document.querySelectorAll(".emp-row");
+
+  let employees = [];
+
+  rows.forEach(r => {
+
+    const name = r.querySelector("[data-role='name']").value;
+    const phone = r.querySelector("[data-role='phone']").value;
+    const role = r.querySelector("[data-role='role']").value;
+
+    if (name) {
+      employees.push({ name, phone, role });
+    }
+  });
+
+  if (!employees.length) {
+    alert("Enter at least one employee");
+    return;
+  }
+
+  const res = await fetch("/api/employees", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ employees })
+  });
+
+  const data = await res.json();
+
+  if (data.ok) {
+    alert("Saved Successfully");
+    location.reload();
+  } else {
+    alert("Error saving");
+  }
+}
+
+</script>
+<script>
+
+// LOAD EMPLOYEES
+async function loadEmployees() {
+
+  const tbody = document.getElementById("employeeTableBody");
+
+  try {
+    const res = await fetch("/api/employees");
+    const data = await res.json();
+
+    if (!data.ok || !data.employees.length) {
+      tbody.innerHTML = `<tr><td colspan="5">No employees</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.employees.map(e => `
+      <tr>
+        <td>${e.emp_code}</td>
+        <td>${e.name}</td>
+        <td>${e.phone}</td>
+        <td>${e.role}</td>
+        <td>
+          <button class="btn btn-sm btn-danger"
+            onclick="deleteEmployee(${e.id})">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `).join("");
+
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="5">Error</td></tr>`;
+  }
+}
+
+
+// DELETE
+async function deleteEmployee(id) {
+
+  if (!confirm("Delete this employee?")) return;
+
+  const res = await fetch(`/api/employees/${id}`, {
+    method: "DELETE"
+  });
+
+  const data = await res.json();
+
+  if (data.ok) {
+    loadEmployees();
+  } else {
+    alert("Delete failed");
+  }
+}
+
+
+// LOAD ON PAGE START
+document.addEventListener("DOMContentLoaded", loadEmployees);
+
+</script>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>ERP - Styles</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+  <!-- Favicon -->
+  <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon" />
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Icon Font Stylesheet -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Libraries Stylesheet -->
+  <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+    rel="stylesheet" />
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
+
+  <!-- Template Stylesheet -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container-fluid position-relative bg-white d-flex p-0">
+
+    <!-- Spinner Start -->
+    <div id="spinner"
+      class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Sidebar Start -->
+    {% include 'admin_menu.html' %}
+    <!-- Sidebar End -->
+
+    <!-- Content Start -->
+    <div class="content">
+
+      <!-- Navbar Start -->
+      {% include 'navbar.html' %}
+      <!-- Navbar End -->
+
+      <!-- Styles Table Start -->
+
+
+<div class="container-fluid pt-4 px-4">
+  <div class="bg-light rounded shadow-sm p-4">
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0">Styles</h4>
+      <span class="badge bg-primary">Total: {{ styles|length }}</span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center mb-0">
+        
+        <thead class="table-dark text-white">
+          <tr>
+            <th style="width:60px;">#</th>
+            <th style="width:150px;">Style No</th>
+            <th style="width:150px;">Image</th>
+            <th style="width:100px;">Gold Wt</th>
+            <th style="width:120px;">Size</th>
+            <th style="width:100px;">PCS</th>
+            <th style="width:100px;">Details</th>
+          </tr>
+        </thead>
+
+<tbody id="styleTableBody" class="bg-white">
+  {% for s in styles %}
+    {% set s_no = loop.index %}
+    {% set rowspan = (s.size_rows|length) if (s.size_rows and (s.size_rows|length) > 0) else 1 %}
+
+    {% if s.size_rows and (s.size_rows|length) > 0 %}
+      {% for it in s.size_rows %}
+      <tr class="{% if loop.last %}style-divider{% endif %}">
+
+        {% if loop.first %}
+          <td rowspan="{{ rowspan }}" class="fw-bold align-middle">{{ s_no }}</td>
+
+          <td rowspan="{{ rowspan }}" class="align-middle">
+            <span class="fw-semibold text-primary">{{ s.style_no }}</span>
+          </td>
+
+          <td rowspan="{{ rowspan }}" class="align-middle">
+            {% if s.img_b64 %}
+              <img src="data:image/jpeg;base64,{{ s.img_b64 }}"
+                   class="img-fluid rounded shadow-sm"
+                   style="max-width:200px; height:auto;">
+            {% else %}
+              <span class="badge bg-secondary">No image</span>
+            {% endif %}
+          </td>
+
+          <td rowspan="{{ rowspan }}"
+              class="align-middle fw-semibold"
+              style="border-right: 2px solid #0d6dfd73;">
+            {{ s.gold_wt if s.gold_wt is not none else "-" }}
+          </td>
+        {% endif %}
+
+        <!-- size + pcs (every row) -->
+        <td class="fw-semibold">{{ it.size if it.size else "-" }}</td>
+        <td>{{ it.pcs if it.pcs is not none else "-" }}</td>
+
+        {% if loop.first %}
+          <!-- ✅ DETAILS BUTTON (only once per style) -->
+          <td rowspan="{{ rowspan }}" class="align-middle">
+            {% if s.img_b64 %}
+<button type="button"
+        class="btn btn-sm btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#imgModal"
+        data-style="{{ s.style_no }}"
+        data-img="data:image/jpeg;base64,{{ s.img_b64 }}"
+        data-gold="{{ s.gold_wt }}">
+  View
+</button>
+            {% else %}
+              <button type="button" class="btn btn-sm btn-secondary" disabled>No Image</button>
+            {% endif %}
+          </td>
+        {% endif %}
+
+      </tr>
+      {% endfor %}
+
+    {% else %}
+      <!-- style with no size rows -->
+      <tr class="style-divider">
+        <td class="fw-bold">{{ s_no }}</td>
+        <td class="fw-semibold text-primary">{{ s.style_no }}</td>
+
+        <td>
+          {% if s.img_b64 %}
+            <img src="data:image/jpeg;base64,{{ s.img_b64 }}"
+                 class="img-fluid rounded shadow-sm"
+                 style="max-width:200px; height:auto;">
+          {% else %}
+            <span class="badge bg-secondary">No image</span>
+          {% endif %}
+        </td>
+
+        <td class="fw-semibold" style="border-right: 2px solid #0d6dfd73;">
+          {{ s.gold_wt if s.gold_wt is not none else "-" }}
+        </td>
+
+        <td>-</td>
+        <td>-</td>
+
+        <td class="align-middle">
+          {% if s.img_b64 %}
+<button type="button"
+        class="btn btn-sm btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#imgModal"
+        data-style="{{ s.style_no }}"
+        data-img="data:image/jpeg;base64,{{ s.img_b64 }}"
+        data-gold="{{ s.gold_wt }}">
+  View
+</button>
+          {% else %}
+            <button type="button" class="btn btn-sm btn-secondary" disabled>No Image</button>
+          {% endif %}
+        </td>
+      </tr>
+    {% endif %}
+  {% endfor %}
+</tbody>
+
+    </table>
+    </div>
+<div class="d-flex justify-content-between align-items-center mt-3">
+  {% if page > 1 %}
+    <a class="btn btn-outline-primary" href="{{ url_for('styles', page=page-1) }}">Prev</a>
+  {% else %}
+    <button class="btn btn-outline-secondary" disabled>Prev</button>
+  {% endif %}
+
+  <span>Page {{ page }}</span>
+
+  {% if has_next %}
+    <a class="btn btn-outline-primary" href="{{ url_for('styles', page=page+1) }}">Next</a>
+  {% else %}
+    <button class="btn btn-outline-secondary" disabled>Next</button>
+  {% endif %}
+</div>
+  </div>
+</div>
+
+<!-- ✅ Image + Gold + Sizes Modal -->
+<div class="modal fade" id="imgModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Style: <span id="modalStyleNo">-</span></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="text-center mb-4">
+          <img id="modalImg" src="" class="img-fluid rounded shadow" style="max-height:40vh;">
+        </div>
+
+        <!-- Gold update -->
+
+
+        <!-- Add sizes -->
+        <div class="bg-light border rounded p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="mb-0">Add Sizes</h6>
+            <button type="button" class="btn btn-sm btn-outline-primary" id="addSizeRowBtn">+ Add Row</button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle mb-2">
+              <thead class="table-dark">
+                <tr>
+                  <th style="width:60px;">#</th>
+                  <th>Size</th>
+                  <th style="width:120px;">PCS</th>
+                  <th style="width:90px;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="sizeRowsBody"></tbody>
+            </table>
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-primary" id="saveSizesBtn">Save Sizes</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+  </div>
+</div>
+      <!-- Styles Table End -->
+
+      <!-- Footer Start -->
+      {% include 'footer.html' %}
+      <!-- Footer End -->
+
+    </div>
+    <!-- Content End -->
+
+
+  </div>
+
+  <!-- JavaScript Libraries -->
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+  <!-- Template Javascript -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  <!-- OPTIONAL: Client-side search filter -->
+ 
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const modal = document.getElementById("imgModal");
+  if (!modal) { console.error("imgModal not found"); return; }
+
+  const modalImg = document.getElementById("modalImg");
+  const modalStyleNo = document.getElementById("modalStyleNo");
+  const modalGoldWt = document.getElementById("modalGoldWt");
+
+  const updateGoldBtn = document.getElementById("updateGoldBtn");
+  const sizeRowsBody = document.getElementById("sizeRowsBody");
+  const addBtn = document.getElementById("addSizeRowBtn");
+  const saveBtn = document.getElementById("saveSizesBtn");
+
+  function renumber() {
+    Array.from(sizeRowsBody.querySelectorAll("tr")).forEach((tr, i) => {
+      tr.querySelector(".row-no").innerText = i + 1;
+    });
+  }
+
+  function addRow() {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td class="row-no fw-semibold text-center"></td>
+      <td><input type="text" class="form-control form-control-sm size-input" placeholder="1.55x1.55"></td>
+      <td><input type="number" class="form-control form-control-sm pcs-input" min="0" placeholder="0"></td>
+      <td class="text-center"><button type="button" class="btn btn-sm btn-danger remove-row">X</button></td>
+    `;
+    sizeRowsBody.appendChild(tr);
+    renumber();
+  }
+
+  modal.addEventListener("show.bs.modal", function (event) {
+    const btn = event.relatedTarget;
+    if (!btn) return;
+
+    modalStyleNo.textContent = btn.getAttribute("data-style") || "-";
+    modalImg.src = btn.getAttribute("data-img") || "";
+    modalGoldWt.value = btn.getAttribute("data-gold") || "";
+
+    sizeRowsBody.innerHTML = "";
+    addRow();
+  });
+
+  addBtn.addEventListener("click", addRow);
+
+  sizeRowsBody.addEventListener("click", function (e) {
+    if (e.target.classList.contains("remove-row")) {
+      e.target.closest("tr").remove();
+      renumber();
+    }
+  });
+
+  updateGoldBtn.addEventListener("click", function () {
+    console.log("Update Gold:", modalStyleNo.textContent, modalGoldWt.value);
+    alert("Gold update ready for API");
+  });
+
+  saveBtn.addEventListener("click", function () {
+    const payload = Array.from(sizeRowsBody.querySelectorAll("tr"))
+      .map(tr => ({
+        size: tr.querySelector(".size-input").value.trim(),
+        pcs: tr.querySelector(".pcs-input").value.trim()
+      }))
+      .filter(x => x.size && x.pcs);
+
+    console.log("Save Sizes:", modalStyleNo.textContent, payload);
+    alert("Sizes ready for API");
+  });
+
+});
+</script>
+
+
+
+</body>
+
+</html>

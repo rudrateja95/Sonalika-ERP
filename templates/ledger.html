@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Sonalika - ADMIN</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+<link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+<!-- Google Web Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Icon Font Stylesheet -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Libraries Stylesheet -->
+<link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
+
+<!-- Customized Bootstrap Stylesheet -->
+<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+<!-- Template Stylesheet -->
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; }
+.page { padding: 16px; }
+.header { background: #2E4A7D; color: #fff; text-align: center; font-weight: 500; font-size: 15px; padding: 7px; border-radius: 6px 6px 0 0; letter-spacing: 1px; }
+.dept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; padding: 14px 0; }
+.dept-btn { background: var(--color-background-primary); border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 12px 8px; text-align: center; cursor: pointer; transition: background 0.15s; }
+.dept-btn:hover { background: var(--color-background-secondary); }
+.dept-btn.active { border: 2px solid #2E4A7D; background: #E6F1FB; }
+.dept-icon { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; }
+.dept-label { font-size: 11px; font-weight: 500; color: var(--color-text-primary); line-height: 1.3; }
+.card-area { display: none; }
+.card-area.visible { display: block; }
+.card-title { background: #2E4A7D; color: #fff; font-weight: 500; font-size: 13px; padding: 6px 10px; border-radius: 6px 6px 0 0; display: flex; justify-content: space-between; align-items: center; }
+.close-btn { cursor: pointer; font-size: 16px; line-height: 1; color: #fff; background: none; border: none; padding: 0 4px; }
+.tbl-wrap { overflow-x: auto; border: 0.5px solid var(--color-border-secondary); border-top: none; border-radius: 0 0 6px 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 11px; min-width: 700px; }
+th, td { border: 1px solid #aaa; padding: 4px 5px; text-align: center; white-space: nowrap; }
+.th-main { background: #2E4A7D; color: #fff; font-weight: 500; }
+.th-sub { background: #d9d9d9; color: #222; font-weight: 500; }
+.sl-col { background: #8EA9DB; font-weight: 500; color: #042C53; }
+tbody td { height: 24px; }
+tbody td:not(:first-child) input { width: 100%; border: none; background: transparent; font-size: 11px; text-align: center; outline: none; color: var(--color-text-primary); }
+tbody td:not(:first-child) input:focus { background: #EEF4FF; }
+.add-row-btn { margin: 8px 0 4px; font-size: 11px; padding: 4px 10px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-secondary); cursor: pointer; color: var(--color-text-secondary); }
+.add-row-btn:hover { background: var(--color-background-tertiary); }
+</style>
+
+</head>
+
+
+<body>
+    <div class="container-fluid position-relative bg-white d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+{% include 'admin_menu.html' %}
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+             {% include 'navbar.html' %}
+            <!-- Navbar End -->
+
+
+
+
+
+<div class="page">
+  <div class="header">SONALIKA JEWELLERS — Department Job Cards</div>
+  <div class="dept-grid" id="deptGrid"></div>
+  <div id="cardArea" class="card-area">
+    <div class="card-title">
+      <span id="cardTitle">—</span>
+      <button class="close-btn" onclick="closeCard()">✕</button>
+    </div>
+    <div class="tbl-wrap">
+      <table id="jobTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- JavaScript Libraries -->
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+<!-- Template Javascript -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+<script>
+  const DEPTS = [
+  { id:'pf', label:'Pre Filling',             color:'#185FA5', bg:'#E6F1FB', short:'PF' },
+  { id:'fe', label:'Filling EP',              color:'#0F6E56', bg:'#E1F5EE', short:'FE' },
+  { id:'ff', label:'Final Filling',           color:'#854F0B', bg:'#FAEEDA', short:'FF' },
+  { id:'pe', label:'Polishing EP',            color:'#993556', bg:'#FBEAF0', short:'PE' },
+  { id:'pp', label:'Pre Polishing',           color:'#534AB7', bg:'#EEEDFE', short:'PP' },
+  { id:'st', label:'Setting',                 color:'#3B6D11', bg:'#EAF3DE', short:'ST' },
+  { id:'ds', label:'Diamond/Stone Wt.',       color:'#993C1D', bg:'#FAECE7', short:'DS' },
+  { id:'fp', label:'Final Polishing',         color:'#185FA5', bg:'#E6F1FB', short:'FP' },
+  { id:'iq', label:'IGI/HM/Dia.Wt./QC',      color:'#0F6E56', bg:'#E1F5EE', short:'IQ' },
+  { id:'tp', label:'Tagging/Packing/Billing', color:'#5F5E5A', bg:'#F1EFE8', short:'TP' },
+];
+
+const SCHEMAS = {
+  // Used by: PF, FE, FF, PE, PP, FP
+  default: {
+    groups: [
+      { label: 'DEPARTMENT', cols: ['CO', 'DATE', 'J.CARD', 'PURITY', 'DESIGN #'] },
+      { label: 'ISSUE',      cols: ['DATE', 'WEIGHT', 'PC'] },
+      { label: 'RECEIVE',    cols: ['DATE', 'WEIGHT', 'PC'] },
+      { label: 'DUST',       cols: ['WEIGHT', 'PC'] },
+    ],
+    single: ['WASTAGE', 'REMARK']
+  },
+
+  // Setting — DIA PC, DIA CT, DIA GM in Issue
+  st: {
+    groups: [
+      { label: 'DEPARTMENT', cols: ['CO', 'DATE', 'J.CARD', 'PURITY', 'DESIGN #'] },
+      { label: 'ISSUE',      cols: ['DIA PC', 'DIA CT', 'DIA GM', 'WEIGHT', 'PC'] },
+      { label: 'RECEIVE',    cols: ['WEIGHT', 'PC'] },
+    ],
+    single: ['DUST W.T.', 'WASTAGE', 'REMARK']
+  },
+
+  // Diamond / Stone Weight
+  ds: {
+    groups: [
+      { label: 'DEPARTMENT', cols: ['CO', 'DATE', 'J.CARD', 'PURITY', 'DESIGN #'] },
+      { label: 'ISSUE',      cols: ['DATE', 'WEIGHT', 'PC'] },
+      { label: 'RECEIVE',    cols: ['DATE', 'WEIGHT', 'PC'] },
+    ],
+    single: ['STONE WT', 'DIA WT', 'REMARK']
+  },
+
+  // IGI / HM / Dia.Wt. / QC
+  iq: {
+    groups: [
+      { label: 'DEPARTMENT', cols: ['CO', 'DATE', 'J.CARD', 'PURITY', 'DESIGN #'] },
+      { label: 'ISSUE',      cols: ['DATE', 'WEIGHT', 'PC'] },
+      { label: 'RECEIVE',    cols: ['DATE', 'WEIGHT', 'PC'] },
+    ],
+    single: ['WASTAGE', 'IGI CERTI', 'IGI STAMP', 'HUID STAMP', 'DIA STAMP', 'FINAL QC']
+  },
+
+  // Tagging / Packing / Billing
+  tp: {
+    groups: [
+      { label: 'DEPARTMENT', cols: ['CO', 'DATE', 'J.CARD', 'PURITY', 'DESIGN #'] },
+      { label: 'ISSUE',      cols: ['DATE', 'PC'] },
+      { label: 'RECEIVE',    cols: ['DATE', 'PC'] },
+    ],
+    single: ['TAG NO', 'INVOICE NO', 'REMARK']
+  }
+};
+
+let currentDept = null;
+
+/* ─── Build department button grid ─────────────────────────────────── */
+function buildGrid() {
+  const grid = document.getElementById('deptGrid');
+  grid.innerHTML = '';
+  DEPTS.forEach(d => {
+    const btn = document.createElement('div');
+    btn.className = 'dept-btn';
+    btn.id = 'btn_' + d.id;
+    btn.onclick = () => openCard(d.id);
+    btn.innerHTML = `
+      <div class="dept-icon" style="background:${d.bg};color:${d.color}">${d.short}</div>
+      <div class="dept-label">${d.label}</div>
+    `;
+    grid.appendChild(btn);
+  });
+}
+
+/* ─── Open job card for a department ───────────────────────────────── */
+function openCard(id) {
+  // Deactivate previous button
+  if (currentDept) {
+    document.getElementById('btn_' + currentDept).classList.remove('active');
+  }
+  currentDept = id;
+  document.getElementById('btn_' + id).classList.add('active');
+
+  const dept   = DEPTS.find(d => d.id === id);
+  const schema = SCHEMAS[id] || SCHEMAS.default;
+
+  document.getElementById('cardTitle').textContent = dept.label + ' — Job Card';
+
+  /* ── Build thead ── */
+  const head = document.getElementById('tableHead');
+  head.innerHTML = '';
+
+  // Row 1: SL (rowspan 2) + group labels + single cols (rowspan 2)
+  const r1 = document.createElement('tr');
+
+  const slTh = document.createElement('th');
+  slTh.className = 'th-main';
+  slTh.rowSpan = 2;
+  slTh.textContent = 'SL';
+  r1.appendChild(slTh);
+
+  schema.groups.forEach(g => {
+    const th = document.createElement('th');
+    th.className = 'th-main';
+    th.colSpan = g.cols.length;
+    th.textContent = g.label;
+    r1.appendChild(th);
+  });
+
+  schema.single.forEach(s => {
+    const th = document.createElement('th');
+    th.className = 'th-main';
+    th.rowSpan = 2;
+    th.textContent = s;
+    r1.appendChild(th);
+  });
+
+  head.appendChild(r1);
+
+  // Row 2: sub-column names for each group
+  const r2 = document.createElement('tr');
+  schema.groups.forEach(g => {
+    g.cols.forEach(c => {
+      const th = document.createElement('th');
+      th.className = 'th-sub';
+      th.textContent = c;
+      r2.appendChild(th);
+    });
+  });
+  head.appendChild(r2);
+
+  /* ── Build tbody — 20 blank rows ── */
+  const totalDataCols =
+    schema.groups.reduce((sum, g) => sum + g.cols.length, 0) +
+    schema.single.length;
+
+  const body = document.getElementById('tableBody');
+  body.innerHTML = '';
+
+  for (let i = 1; i <= 20; i++) {
+    const tr = document.createElement('tr');
+
+    const sl = document.createElement('td');
+    sl.className = 'sl-col';
+    sl.textContent = i;
+    tr.appendChild(sl);
+
+    for (let j = 0; j < totalDataCols; j++) {
+      tr.appendChild(document.createElement('td'));
+    }
+    body.appendChild(tr);
+  }
+
+  /* ── Show card and scroll to it ── */
+  document.getElementById('cardArea').classList.add('visible');
+  document.getElementById('cardArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ─── Close job card ────────────────────────────────────────────────── */
+function closeCard() {
+  document.getElementById('cardArea').classList.remove('visible');
+  if (currentDept) {
+    document.getElementById('btn_' + currentDept).classList.remove('active');
+  }
+  currentDept = null;
+}
+
+/* ─── Init ──────────────────────────────────────────────────────────── */
+buildGrid();
+</script>
+
+</body>
+</html>

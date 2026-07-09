@@ -241,7 +241,7 @@
 }
 
 .bootstrap-datetimepicker-widget table td.today::before {
-    border-bottom-color: var(--primary);
+    border-bottom-color: var(--dark);
 }
 
 
@@ -274,4 +274,11 @@
 .testimonial-carousel .owl-dot.active {
     background: var(--dark);
     border-color: var(--primary);
+}
+
+
+
+/* Strong separator between different styles */
+.style-divider {
+    border-bottom: 2px solid #0d6dfd70 !important;
 }

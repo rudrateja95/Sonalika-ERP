@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>KYC + MOU Print</title>
+
+<style>
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
+body {
+  font-family: Arial;
+  font-size: 12px;
+}
+
+h3, h4 {
+  text-align: center;
+  margin: 5px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+td, th {
+  border: 1px solid #000;
+  padding: 5px;
+}
+
+.bold { font-weight: bold; }
+.center { text-align: center; }
+
+.page-break {
+  page-break-before: always;
+}
+
+.doc-img {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+.doc-frame {
+  width: 100%;
+  height: 1100px;  /* 🔥 better for full PDF */
+  border: none;
+}
+
+@media print {
+  body { margin: 0; }
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="printArea"></div>
+
+<script>
+
+// ==============================
+// GET PARAMS
+// ==============================
+const params = new URLSearchParams(window.location.search);
+const clientCode = params.get("client_code");
+const docs = (params.get("docs") || "").split(",");
+
+// ==============================
+// FETCH BOTH APIs
+// ==============================
+Promise.all([
+
+    fetch("/search-client-kyc", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ client_code: clientCode })
+    }).then(res => res.json()),
+
+    fetch("/fetch-client-mou", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ client_code: clientCode })
+    }).then(res => res.json())
+
+])
+.then(([kyc, mou]) => {
+
+let html = "";
+
+// ==============================
+// HEADER
+// ==============================
+html += `
+<h3>SONALIKA JEWELLERS</h3>
+<h4>CLIENT KYC</h4>
+`;
+
+// ==============================
+// COMPANY DETAILS
+// ==============================
+html += `
+<table>
+<tr><td class="bold">Client Code</td><td>${kyc.client_code || ""}</td></tr>
+<tr><td class="bold">Company Name</td><td>${kyc.company_name || ""}</td></tr>
+<tr><td class="bold">GST</td><td>${kyc.gst_number || ""}</td></tr>
+<tr><td class="bold">PAN</td><td>${kyc.company_pan || ""}</td></tr>
+<tr><td class="bold">Address</td><td>${kyc.address || ""}</td></tr>
+</table>
+`;
+
+// ==============================
+// OWNERS
+// ==============================
+if (kyc.owners && kyc.owners.length) {
+html += `
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>PAN</th>
+<th>Aadhaar</th>
+<th>Contact</th>
+<th>Email</th>
+</tr>
+</thead>
+<tbody>
+`;
+
+kyc.owners.forEach(o => {
+html += `
+<tr>
+<td>${o.full_name || ""}</td>
+<td>${o.pan_number || ""}</td>
+<td>${o.aadhar_number || ""}</td>
+<td>${o.phone_number || ""}</td>
+<td>${o.email_id || ""}</td>
+</tr>
+`;
+});
+
+html += `</tbody></table>`;
+}
+
+// ==============================
+// BANK DETAILS
+// ==============================
+html += `
+<table>
+<tr><td class="bold">Bank Name</td><td>${kyc.bank_name || ""}</td></tr>
+<tr><td class="bold">Account Number</td><td>${kyc.account_number || ""}</td></tr>
+<tr><td class="bold">IFSC</td><td>${kyc.ifsc_code || ""}</td></tr>
+<tr><td class="bold">Branch</td><td>${kyc.branch || ""}</td></tr>
+</table>
+`;
+
+// ==============================
+// MOU PAGE
+// ==============================
+html += `<div class="page-break"></div>`;
+
+html += `
+<h4>CLIENT MOU</h4>
+
+<table>
+<tr><td>Making Charges</td><td>${mou.making_charges || ""}</td></tr>
+<tr><td>Chain Charges</td><td>${mou.chain_charges || ""}</td></tr>
+<tr><td>Synthetic Stone</td><td>${mou.synthetic_stone_charges || ""}</td></tr>
+<tr><td>Minimum Labour</td><td>${mou.minimum_labour_rule || ""}</td></tr>
+<tr><td>Nose Pin Labour</td><td>${mou.nose_pin_labour || ""}</td></tr>
+</table>
+
+<table>
+<tr><td>Gold Days</td><td>${mou.gold_credit_days || ""}</td></tr>
+<tr><td>Labour Days</td><td>${mou.labour_credit_days || ""}</td></tr>
+<tr><td>Diamond Days</td><td>${mou.diamond_credit_days || ""}</td></tr>
+<tr><td>Chain Days</td><td>${mou.chain_credit_days || ""}</td></tr>
+<tr><td>Hallmark Charges</td><td>${mou.certificate_hallmark_days || ""}</td></tr>
+</table>
+
+<table>
+<tr><td>Gold Labour %</td><td>${mou.gold_labour_percent || ""}</td></tr>
+<tr><td>Diamond Clarity</td><td>${mou.diamond_clarity || ""}</td></tr>
+<tr><td>Diamond Color</td><td>${mou.diamond_color || ""}</td></tr>
+<tr><td>Rate (-2)</td><td>${mou.diamond_rate_2 || ""}</td></tr>
+<tr><td>Rate (-6.5)</td><td>${mou.diamond_rate_6_5 || ""}</td></tr>
+<tr><td>Rate (-11)</td><td>${mou.diamond_rate_11 || ""}</td></tr>
+</table>
+`;
+
+// ==============================
+// DOCUMENTS (MULTI PAGE) - SIMPLE FIX
+// ==============================
+docs.forEach(d => {
+
+    if (!d) return;
+
+    let url = "";
+
+    if (d.includes("owner_")) {
+        const parts = d.split("_");
+        const type = parts[1];
+        const index = parts[2];
+
+        const owner = kyc.owners[index - 1];
+        if (owner) {
+            url = `/view-owner-doc/${type}/${owner.id}`;
+        }
+    } else {
+        url = `/view-doc/${d}/${clientCode}`;
+    }
+
+    html += `<div class="page-break"></div>`;
+    html += `<h4>${d.toUpperCase()}</h4>`;
+
+    // ✅ Detect PDF
+    if (url.toLowerCase().includes(".pdf")) {
+
+        html += `
+            <p style="color:red;text-align:center;">
+                PDF Document - Opened in new tab for printing
+            </p>
+        `;
+
+        // 👉 OPEN PDF
+        window.open(url, "_blank");
+
+    } else {
+
+        // ✅ IMAGE PRINT
+        html += `
+            <img src="${url}" style="max-width:100%;height:auto;">
+        `;
+    }
+
+});
+
+
+
+
+// ==============================
+// RENDER + PRINT
+// ==============================
+document.getElementById("printArea").innerHTML = html;
+
+setTimeout(() => {
+    window.print();
+}, 500);
+
+});
+</script>
+
+</body>
+</html>

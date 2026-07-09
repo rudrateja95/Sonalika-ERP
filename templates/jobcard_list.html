@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Sonalika - ADMIN</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+<link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+<!-- Google Web Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Icon Font Stylesheet -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<!-- Libraries Stylesheet -->
+<link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet">
+
+<!-- Customized Bootstrap Stylesheet -->
+<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+<!-- Template Stylesheet -->
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+<style>
+body {
+  background: #f4f6f9;
+  font-family: Arial;
+  padding: 20px;
+}
+
+/* PAGE TITLE */
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #2E74B5;
+}
+
+
+
+/* JOB CARD WRAPPER (reuse your style) */
+.job-card {
+  background: #fff;
+  border: 2px solid #116d74;
+  padding: 10px;
+}
+
+/* HEADER */
+.job-header {
+  background: #2E74B5;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+/* TABLE STYLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+td, th {
+  border: 1px solid #000;
+  padding: 3px;
+  text-align: center;
+}
+
+.th-blue {
+  background: #2E74B5;
+  color: #fff;
+}
+
+.th-light {
+  background: #BDD7EE;
+  font-weight: bold;
+}
+
+/* IMAGE */
+.design-img {
+  width: 100%;
+  max-height: 120px;
+  object-fit: contain;
+  margin-top: 5px;
+}
+
+/* ACTIONS */
+.actions {
+  text-align: center;
+  margin-top: 5px;
+}
+
+button {
+  padding: 4px 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.view { background: #17a2b8; color: #fff; }
+.print { background: #28a745; color: #fff; }
+
+</style>
+
+</head>
+
+
+<body>
+    <div class="container-fluid position-relative bg-white d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+{% include 'admin_menu.html' %}
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+             {% include 'navbar.html' %}
+            <!-- Navbar End -->
+
+
+
+
+
+
+
+
+
+
+<div class="job-list">
+
+  <!-- ================= JOB CARD 1 ================= -->
+
+  <div class="job-card">
+
+
+<div class="job-header">SONALIKA JEWELLERS - JOBCARD LIST</div>
+
+<table>
+  <tr>
+    <td class="th-blue">JOB CARD #</td>
+    <td>JC1001</td>
+    <td class="th-blue">GOLD</td>
+    <td>18Kt</td>
+    <td class="th-blue">CLIENT</td>
+    <td>C001</td>
+  </tr>
+  <tr>
+    <td class="th-blue">DESIGN #</td>
+    <td>D450</td>
+    <td class="th-blue">DIAMOND</td>
+    <td>VVS-EF</td>
+    <td class="th-blue">DATE</td>
+    <td>24-04-2026</td>
+  </tr>
+</table>
+
+<!-- MINI DEPARTMENT SUMMARY -->
+<table style="margin-top:5px;">
+  <tr>
+    <th class="th-light">Dept</th>
+    <th class="th-light">Name</th>
+    <th class="th-light">Date</th>
+    <th class="th-light">Issue Wt</th>
+    <th class="th-light">Issue pc</th>
+    <th class="th-light">Recv Date</th>
+    <th class="th-light">Recv Wt</th>
+    <th class="th-light">Recv pc</th>
+    <th class="th-light">Dust</th>
+    <th class="th-light">EXT.METL</th>
+    <th class="th-light">Wastage</th>
+  </tr>
+  <tr>
+    <td>PRE FILLING</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.250</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>0.150</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>FINAL EP</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>FINAL FILLING</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>POLISHING EP</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>PRE POLISHING</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>SETTING</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>DIAMOND/STONE WEIGHT</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>
+     <div style="display:flex; flex-direction:column;">
+       <span style="border-bottom:1px solid #000;">10.100</span>
+
+       <span>9.980</span>
+     </div>
+    </td>
+        <td>
+     <div style="display:flex; flex-direction:column;">
+       <span style="border-bottom:1px solid #000;">11</span>
+
+       <span>11</span>
+     </div>
+    </td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>FINAL POLISHING</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>IGI/HM/DIA.WT./QC</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>TAGING/PACKING/BILLING</td>
+    <td>Emp1</td>
+    <td>24-04-2026</td>
+    <td>10.100</td>
+    <td>11</td>
+    <td>24-04-2026</td>
+    <td>9.980</td>
+    <td>11</td>
+    <td>0.120</td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <th class="th-light">Weight</th>
+    <th class="th-light"> pc</th>
+    <th class="th-light">C-Gram</th>
+    <th class="th-light">MM</th>
+    <th class="th-light">Caret</th>
+    <th class="th-light">Pice</th>
+    <th class="th-light">D-Gram</th>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+ <tr>
+    <td>1</td>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>5</td>
+    <td>6</td>
+    <td>7</td>
+ </tr>
+  
+</table>
+
+<!-- IMAGE -->
+<center><img src="https://via.placeholder.com/300x120"
+     class="design-img"></center>
+
+<!-- ACTIONS -->
+<div class="actions">
+  <button class="view">Preview</button>
+  <button class="print">Next</button>
+</div>
+
+
+  </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+ <!-- Footer Start -->
+             {% include 'footer.html' %}
+            <!-- Footer End -->
+        </div>
+        <!-- Content End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+<!-- Sieve js-->
+
+
+
+
+
+<!-- JavaScript Libraries -->
+
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+<script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+<!-- Template Javascript -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
