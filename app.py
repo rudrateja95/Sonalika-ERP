@@ -202,6 +202,9 @@ class StyleNo(db.Model):
     net_wt = db.Column(db.Float)
     dia_wt = db.Column(db.Float)
     dia_pc = db.Column(db.Integer)
+        # New Columns
+    cstn_pc = db.Column(db.Integer)
+    cstn_wt = db.Column(db.Float)
 
     brand = db.Column(db.String(100))
 
@@ -437,6 +440,10 @@ class DiamondIssueRound(db.Model):
 def ledger():
     return render_template("ledger.html")
 
+@app.route("/sales_er")
+def sales_er():
+    return render_template("sales_er.html")
+
 @app.route("/sales_nk")
 def sales_nk():
     return render_template("sales_nk.html")
@@ -454,27 +461,64 @@ def sales_lr():
 def sales_pd():
     return render_template("sales_pd.html")
 
-@app.route("/sales_tnk")
-def sales_tnk():
-    return render_template("sales_tnk.html")
+@app.route("/sales_tbrl")
+def sales_tbrl():
+    return render_template("sales_tbrl.html")
 
 @app.route("/sales_ter")
 def sales_ter():
     return render_template("sales_ter.html")
-from flask import jsonify
-import base64
+
+@app.route("/sales_tlr")
+def sales_tlr():
+    return render_template("sales_tlr.html")
+
+@app.route("/sales_tnk")
+def sales_tnk():
+    return render_template("sales_tnk.html")
+
+@app.route("/sales_tpd")
+def sales_tpd():
+    return render_template("sales_tpd.html")
+
 
 @app.route("/api/styles", methods=["GET"])
 def api_styles():
 
-    styles = StyleNo.query.all()
+    brand = request.args.get("brand", "").strip()
+    category = request.args.get("category", "").strip()
+    page = int(request.args.get("page", 1))
 
-    data = []
+    PER_PAGE = 10
+
+    query = StyleNo.query
+
+    # Filter by Brand
+    if brand:
+        query = query.filter(StyleNo.brand.ilike(brand))
+
+    # Filter by Category
+    if category:
+        query = query.filter(StyleNo.category.ilike(category))
+
+    total = query.count()
+
+    styles = (
+        query
+        .order_by(StyleNo.id)
+        .offset((page - 1) * PER_PAGE)
+        .limit(PER_PAGE)
+        .all()
+    )
+
+    products = []
 
     for style in styles:
-        data.append({
+
+        products.append({
             "id": style.id,
             "style_no": style.style_no,
+            "category": style.category,
             "gold_wt": style.gold_wt,
             "net_wt": style.net_wt,
             "dia_wt": style.dia_wt,
@@ -483,19 +527,12 @@ def api_styles():
             "image": base64.b64encode(style.image).decode("utf-8") if style.image else ""
         })
 
-    return jsonify(data)
-
-@app.route("/sales_tlr")
-def sales_tlr():
-    return render_template("sales_tlr.html")
-
-@app.route("/sales_tpd")
-def sales_tpd():
-    return render_template("sales_tpd.html")
-
-@app.route("/sales_tbrl")
-def sales_tbrl():
-    return render_template("sales_tbrl.html")
+    return jsonify({
+        "page": page,
+        "per_page": PER_PAGE,
+        "total": total,
+        "products": products
+    })
 
 @app.route("/jobcard_list")
 def jobcard_list():
@@ -2204,6 +2241,8 @@ def style_excel_upload():
         "net_wt",
         "dia_wt",
         "dia_pc",
+        "cstn_pc",
+        "cstn_wt",
         "brand"
     ]
 
@@ -2263,6 +2302,16 @@ def style_excel_upload():
             dia_pc = int(get("dia_pc")) if get("dia_pc") not in (None, "") else None
         except:
             dia_pc = None
+            
+        try:
+            cstn_pc = int(get("cstn_pc")) if get("cstn_pc") not in ("", None) else None
+        except:
+            cstn_pc = None
+        
+        try:
+            cstn_wt = float(get("cstn_wt")) if get("cstn_wt") not in ("", None) else None
+        except:
+            cstn_wt = None
 
         brand = str(get("brand") or "").strip()
 
@@ -2276,6 +2325,8 @@ def style_excel_upload():
             net_wt=net_wt,
             dia_wt=dia_wt,
             dia_pc=dia_pc,
+            cstn_pc=cstn_pc,
+            cstn_wt=cstn_wt,
             brand=brand,
             image=image_data,
             gem_chart=gem_chart_data
@@ -2424,9 +2475,7 @@ def upload_docs():
 def portal():
     return render_template("portal.html")
 
-@app.route("/sales_er")
-def sales_er():
-    return render_template("sales_er.html")
+
 
 @app.route("/")
 def home():
