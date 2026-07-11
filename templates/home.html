@@ -29,11 +29,11 @@
     background:url("static/img-land/sl-2.jpeg") center center/cover no-repeat;
     position:relative;
     padding:120px 0;
-    color:#fff;
+    color:#161515;
 }
 
 .cta-section .overlay{
-    background:rgba(0,0,0,.72);
+    background:rgba(119, 129, 219, 0.432);
     padding:120px 0;
 }
 
@@ -52,12 +52,12 @@
 
 .cta-box i{
     font-size:40px;
-    color:#FFD700;
+    color:#0d2872;
     margin-bottom:15px;
 }
 
 .cta-box h5{
-    color:#fff;
+    color:#777171;
     margin:0;
 }
 
@@ -66,7 +66,7 @@
 .cta-section h4,
 .cta-section h5,
 .cta-section p{
-    color:#fff;
+    color:#5c5656;
 }
 
 @media (max-width:768px){
@@ -106,20 +106,8 @@
 
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav ml-auto">
-                        <a href="index.html" class="nav-item nav-link active">Home</a>
-                        <a href="about.html" class="nav-item nav-link">About</a>
-                        <a href="feature.html" class="nav-item nav-link">Feature</a>
-                        <a href="team.html" class="nav-item nav-link">Chef</a>
-                        <a href="menu.html" class="nav-item nav-link">Menu</a>
-                        <a href="booking.html" class="nav-item nav-link">Booking</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
-                            <div class="dropdown-menu">
-                                <a href="blog.html" class="dropdown-item">Blog Grid</a>
-                                <a href="single.html" class="dropdown-item">Blog Detail</a>
-                            </div>
-                        </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        <a href="index" class="nav-item nav-link">Home</a>
+                        <a href="sales_er" class="nav-item nav-link">Collections</a>
                     </div>
                 </div>
             </div>
@@ -135,42 +123,49 @@
             <!-- Slide 1 -->
             <div class="carousel-item">
                 <div class="carousel-img">
-                    <img src="{{ url_for('static', filename='img-land/sl-6.jpeg') }}" alt="Sonalika Jewellers">
+                    <img src="{{ url_for('static', filename='img-land/scl-1.jpeg') }}" alt="Sonalika Jewellers">
                 </div>
                 <div class="carousel-text">
                     <h1>Welcome to <span>Sonalika</span> Jewellers</h1>
-                    <p>Crafting timeless jewellery that celebrates elegance, beauty, and every special moment.</p>
-                    <div class="carousel-btn">
-                        <a class="btn custom-btn" href="#">Explore Collection</a>
-                    </div>
                 </div>
             </div>
 
             <!-- Slide 2 -->
             <div class="carousel-item">
                 <div class="carousel-img">
-                    <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}" alt="Premium Jewellery">
+                    <img src="{{ url_for('static', filename='img-land/scl-2.jpeg') }}" alt="Premium Jewellery">
                 </div>
                 <div class="carousel-text">
                     <h1>Elegant <span>Designs</span></h1>
-                    <p>Premium craftsmanship with lightweight comfort and luxurious finishing.</p>
-                    <div class="carousel-btn">
-                        <a class="btn custom-btn" href="#">View Collection</a>
-                    </div>
+
                 </div>
             </div>
 
             <!-- Slide 3 -->
             <div class="carousel-item">
                 <div class="carousel-img">
+                    <img src="{{ url_for('static', filename='img-land/scl-3.jpeg') }}" alt="Diamond Jewellery">
+                </div>
+                <div class="carousel-text">
+                    <h1>Diamond <span>Brilliance</span></h1>
+                </div>
+            </div>
+            <!-- Slide 4 -->
+            <div class="carousel-item">
+                <div class="carousel-img">
+                    <img src="{{ url_for('static', filename='img-land/scl-4.jpeg') }}" alt="Diamond Jewellery">
+                </div>
+                <div class="carousel-text">
+                    <h1>Diamond <span>Brilliance</span></h1>
+                </div>
+            </div>
+            <!-- Slide 5 -->
+            <div class="carousel-item">
+                <div class="carousel-img">
                     <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}" alt="Diamond Jewellery">
                 </div>
                 <div class="carousel-text">
                     <h1>Diamond <span>Brilliance</span></h1>
-                    <p>Exceptional quality, precision craftsmanship, and designs you'll cherish forever.</p>
-                    <div class="carousel-btn">
-                        <a class="btn custom-btn" href="#">Discover More</a>
-                    </div>
                 </div>
             </div>
 
@@ -406,51 +401,7 @@
             <h2>Discover Luxury Crafted for Every Occasion</h2>
         </div>
 
-        <div class="row align-items-center">
 
-            <!-- Diamond Collection -->
-            <div class="col-md-4">
-                <div class="food-item">
-                    <i class="fa fa-gem"></i>
-                    <h2>Diamond Collection</h2>
-                    <p>
-                        Discover our premium collection of Diamond Necklaces, Rings,
-                        Earrings, Pendants, and Bracelets crafted with exceptional
-                        brilliance and timeless elegance.
-                    </p>
-                    <a href="#">Explore Collection</a>
-                </div>
-            </div>
-
-            <!-- Bridal Collection -->
-            <div class="col-md-4">
-                <div class="food-item">
-                    <i class="fa fa-ring"></i>
-                    <h2>Bridal Collection</h2>
-                    <p>
-                        Celebrate your special day with exquisite Bridal Jewellery,
-                        elegant Bangles, and luxurious wedding masterpieces designed
-                        to create unforgettable memories.
-                    </p>
-                    <a href="#">Explore Collection</a>
-                </div>
-            </div>
-
-            <!-- Luxury Collection -->
-            <div class="col-md-4">
-                <div class="food-item">
-                    <i class="fa fa-crown"></i>
-                    <h2>Luxury Collection</h2>
-                    <p>
-                        Explore Cocktail Jewellery, Daily Wear Luxury, and
-                        Custom Designed Jewellery created for every occasion
-                        with unmatched comfort and brilliance.
-                    </p>
-                    <a href="#">Explore Collection</a>
-                </div>
-            </div>
-
-        </div>
 
         <!-- Collection List -->
         <div class="row mt-5">
@@ -460,24 +411,24 @@
                 <div class="row">
 
                     <div class="col-md-4">
-                        <p><i class="fa fa-check text-warning"></i> Diamond Necklaces</p>
-                        <p><i class="fa fa-check text-warning"></i> Diamond Rings</p>
-                        <p><i class="fa fa-check text-warning"></i> Earrings</p>
-                        <p><i class="fa fa-check text-warning"></i> Pendants</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Diamond Necklaces</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Diamond Rings</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Earrings</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Pendants</p>
                     </div>
 
                     <div class="col-md-4">
-                        <p><i class="fa fa-check text-warning"></i> Bridal Jewellery</p>
-                        <p><i class="fa fa-check text-warning"></i> Bracelets</p>
-                        <p><i class="fa fa-check text-warning"></i> Bangles</p>
-                        <p><i class="fa fa-check text-warning"></i> Cocktail Jewellery</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Bridal Jewellery</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Bracelets</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Bangles</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Cocktail Jewellery</p>
                     </div>
 
                     <div class="col-md-4">
-                        <p><i class="fa fa-check text-warning"></i> Daily Wear Luxury</p>
-                        <p><i class="fa fa-check text-warning"></i> Custom Designed Jewellery</p>
-                        <p><i class="fa fa-check text-warning"></i> Premium Diamond Collections</p>
-                        <p><i class="fa fa-check text-warning"></i> Exclusive TASO LUMI 5D Designs</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Daily Wear Luxury</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Custom Designed Jewellery</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Premium Diamond Collections</p>
+                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Exclusive TASO LUMI 5D Designs</p>
                     </div>
 
                 </div>
@@ -723,7 +674,7 @@
                 <div class="col-lg-8 text-center">
 
                     <h3 class="mb-3">
-                        When You Wear <span class="text-warning">TASO LUMI 5D</span>
+                        When You Wear <span  style="color: #0d2872;">TASO LUMI 5D</span>
                     </h3>
 
                     <p>
@@ -745,7 +696,7 @@
 
                     <h2>SONALIKA JEWELLERS PRIVATE LIMITED</h2>
 
-                    <h4 class="text-warning mb-3">
+                    <h4 class="mb-3" style="color: #0d2872;">
                         Crafting Elegance in Gold & Diamonds
                     </h4>
 
@@ -985,7 +936,7 @@
             </p>
 
             <p>
-                Crafted with ❤️ for Luxury Jewellery Excellence.
+                Crafted with  for Luxury Jewellery Excellence.
             </p>
 
         </div>
