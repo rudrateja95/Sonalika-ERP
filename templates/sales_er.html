@@ -13,7 +13,8 @@
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome (CDN - No changes needed) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -24,37 +25,34 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url_for('static', filename='css_ec/style.css') }}" rel="stylesheet">
     <style>
+        .table td,
+        .table th {
+            padding: 6px;
+            vertical-align: middle;
+        }
 
-.table td,
-.table th{
-    padding:6px;
-    vertical-align:middle;
-}
+        .card {
+            border-radius: 12px;
+        }
 
-.card{
-    border-radius:12px;
-}
-.product-bg{
-    background: url("/static/img_ec/bg-ec.jpg") no-repeat center center;
-    background-size: cover;
-    background-attachment: fixed;
-    min-height: 100vh;
-    padding-top: 40px;
-    padding-bottom: 40px;
-}
+        .product-bg {
+            background: url("") no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
 
-.product-item{
-    background: rgba(255,255,255,0.95);
-    border-radius: 12px;
-    overflow: hidden;
-}
-h6{
-    color:whitesmoke
-}
+        .product-item {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            overflow: hidden;
+        }
 
-
-
-
+        h6 {
+            color: whitesmoke
+        }
     </style>
 </head>
 
@@ -64,12 +62,10 @@ h6{
     <div class="container-fluid">
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-<a  class="text-decoration-none">
-                        <img  
-                       src="{{ url_for('static', filename='img/SonalikaLogo.png') }}" 
-                       alt="User Profile" 
-                       style="width: 80%; height: 50px;" >
-</a>
+                <a class="text-decoration-none">
+                    <img src="{{ url_for('static', filename='img/SonalikaLogo.png') }}" alt="User Profile"
+                        style="width: 80%; height: 50px;">
+                </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
                 <form action="">
@@ -101,112 +97,92 @@ h6{
     <!-- Navbar Start -->
     <div class="container-fluid mb-5">
         <div class="row border-top px-xl-5">
-            <div class="col-lg-3 d-none d-lg-block">
-                <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100" data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
-<h6 class="m-0">
-    <i class="fas fa-crown text-warning mr-2"></i>
-    SONALIKA COLLECTIONS
-</h6>
-                    
-                </a>
-            <nav class="navbar navbar-light bg-white border rounded shadow-sm p-0">
-
-    <div class="w-100">
-
-        <a href="/sales_er" class="nav-link py-3 border-bottom">
-            <i class="fa fa-gem text-primary mr-2"></i>
-            EAR RINGS
-        </a>
-
-        <a href="sales_nk" class="nav-link py-3 border-bottom">
-            <i class="fa fa-circle text-success mr-2"></i>
-            NECKLACE
-        </a>
-
-        <a href="sales_ns" class="nav-link py-3 border-bottom">
-            <i class="fa fa-dot-circle text-danger mr-2"></i>
-            NOSE PIN
-        </a>
-
-        <a href="sales_pd" class="nav-link py-3 border-bottom">
-            <i class="fa fa-heart text-warning mr-2"></i>
-            PENDANTS
-        </a>
-
-        <a href="sales_lr" class="nav-link py-3 border-bottom">
-            <i class="fa fa-ring text-info mr-2"></i>
-            LADIES RING
-        </a>
-
-        <div class="dropdown">
-
-            <button class="btn btn-dark btn-block rounded-0 text-left py-3"
-                    data-toggle="dropdown">
-
-                <i class="fa fa-crown mr-2"></i>
-
-                TASSO COLLECTION
-
-                <i class="fa fa-chevron-down float-right mt-1"></i>
-
-            </button>
-
-            <div class="dropdown-menu w-100 shadow">
-
-                <a class="dropdown-item" href="sales_ter">
-                    💎 TASSO Ear Rings
-                </a>
-
-                <a class="dropdown-item" href="sales_tnk">
-                    💎 TASSO Necklace
-                </a>
-
-                <a href="sales_tbrl" class="nav-item nav-link">
-                    💎 TASSO BRACELET
-                </a>
-
-                <a class="dropdown-item" href="sales_tpd">
-                    💎 TASSO Pendants
-                </a>
-
-                <a class="dropdown-item" href="sales_tlr">
-                    💎 TASSO Ladies Ring
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-            </nav>
-            </div>
-            <div class="col-lg-9">
+            <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                    <a href="" class="text-decoration-none d-block d-lg-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
-                    </a>
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                        <div class="navbar-nav mr-auto py-0">
-                            <a href="index.html" class="nav-item nav-link active">Home</a>
-                            <a href="shop.html" class="nav-item nav-link">Shop</a>
-                            <a href="cart.html" class="nav-item nav-link">Shop Cart</a>
-                            <a href="checkout.html" class="nav-item nav-link">Checkout</a>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                    <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
+
+                        <div class="dropdown mr-2">
+
+                            <button class="btn text-left py-3" data-toggle="dropdown"
+                                style="background-color: rgb(7, 7, 58); border-radius: 10px; color: white;">
+                                Sonalika Collections
+                                <i class="fa fa-chevron-down float-right mt-1 ml-2"></i>
+                            </button>
+
+                            <div class="dropdown-menu w-100 shadow pb-3">
+
+                                <a class="dropdown-item" href="sales_er">
+                                     Sonalika Ear Rings
+                                </a>
+
+                                <a class="dropdown-item" href="sales_nk">
+                                     Sonalika Necklace
+                                </a>
+
+                                <a class="dropdown-item" href="sales_ns">
+                                     Sonalika Nosepin
+                                </a>
+
+                                <a class="dropdown-item" href="sales_pd">
+                                     Sonalika Pendants
+                                </a>
+
+                                <a class="dropdown-item" href="sales_lr">
+                                     Sonalika Ladies Ring
+                                </a>
+
+                            </div>
+
                         </div>
-                        <div class="navbar-nav ml-auto py-0">
-                            <a href="" class="nav-item nav-link">Login</a>
-                            <a href="" class="nav-item nav-link">Register</a>
+
+                        <div class="navbar-nav  py-0 pb-3 pt-3">
+
+                            <div class="dropdown">
+
+                                <button class="btn text-left py-3" data-toggle="dropdown"
+                                    style="background-color: rgb(7, 7, 58); border-radius: 10px;color: white;">
+                                    
+                                    TASO COLLECTION  <i class="fa fa-chevron-down float-right mt-1 ml-2"></i>
+                                    
+                                </button>
+
+                                <div class="dropdown-menu w-100 shadow">
+
+                                    <a class="dropdown-item" href="sales_ter">
+                                         TASO Ear Rings
+                                    </a>
+
+                                    <a class="dropdown-item" href="sales_tnk">
+                                         TASO Necklace
+                                    </a>
+
+                                    <a class="dropdown-item" href="sales_tbrl" >
+                                         TASO BRACELET
+                                    </a>
+
+                                    <a class="dropdown-item" href="sales_tpd">
+                                         TASO Pendants
+                                    </a>
+
+                                    <a class="dropdown-item" href="sales_tlr">
+                                         TASO Ladies Ring
+                                    </a>
+
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
                 </nav>
                 <div id="header-carousel" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner"style="border-radius : 20px">
-                        <div class="carousel-item active" style="height: 410px;">
-                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/tr-1.png') }}" alt="Image">
+                    <div class="carousel-inner" style="border-radius : 20px">
+                        <div class="carousel-item active" style="height: 500px;">
+                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/ter-1.png') }}"
+                                alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
@@ -214,8 +190,9 @@ h6{
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/tr-2.png') }}" alt="Image">
+                        <div class="carousel-item" style="height: 500px;">
+                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/ter-2.png') }}"
+                                alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
@@ -223,8 +200,9 @@ h6{
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/tr-3.png') }}" alt="Image">
+                        <div class="carousel-item" style="height: 500px;">
+                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/ter-3.png') }}"
+                                alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
@@ -232,8 +210,9 @@ h6{
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/tr-4.png') }}" alt="Image">
+                        <div class="carousel-item" style="height: 500px;">
+                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/ter-4.png') }}"
+                                alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
@@ -241,8 +220,9 @@ h6{
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item" style="height: 410px;">
-                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/tr-5.png') }}" alt="Image">
+                        <div class="carousel-item" style="height: 500px;">
+                            <img class="img-fluid" src="{{ url_for('static', filename='img_ec/tsld/ter-5.png') }}"
+                                alt="Image">
                             <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
                                 <div class="p-3" style="max-width: 700px;">
                                     <h4 class="text-light text-uppercase font-weight-medium mb-3"></h4>
@@ -299,38 +279,38 @@ h6{
     <script src="js_ec/main.js"></script>
     <script>
 
-let page = 1;
-let loading = false;
-let finished = false;
+        let page = 1;
+        let loading = false;
+        let finished = false;
 
-loadProducts();
+        loadProducts();
 
-async function loadProducts(){
+        async function loadProducts() {
 
-    if(loading || finished) return;
+            if (loading || finished) return;
 
-    loading = true;
+            loading = true;
 
-    document.getElementById("loader").style.display="block";
+            document.getElementById("loader").style.display = "block";
 
-    const response = await fetch(`/api/styles?brand=SONALIKA&category=ear ring&page=${page}`);
+            const response = await fetch(`/api/styles?brand=SONALIKA&category=ear ring&page=${page}`);
 
-    const data = await response.json();
+            const data = await response.json();
 
-    if(data.products.length==0){
+            if (data.products.length == 0) {
 
-        finished=true;
+                finished = true;
 
-        document.getElementById("loader").innerHTML="<h6>No More Products</h6>";
+                document.getElementById("loader").innerHTML = "<h6>No More Products</h6>";
 
-        return;
-    }
+                return;
+            }
 
-    let html="";
+            let html = "";
 
-    data.products.forEach(product=>{
+            data.products.forEach(product => {
 
-        html +=`
+                html += `
 
 <div class="col-lg-3 col-md-6 col-sm-12 mb-4" >
 
@@ -360,22 +340,22 @@ async function loadProducts(){
                 <tbody>
 
                     <tr>
-                        <th>Gold</th>
+                        <th>Gross wt</th>
                         <td>${product.gold_wt ?? "-"}</td>
                     </tr>
 
                     <tr>
-                        <th>Net</th>
+                        <th>Gold Net wt</th>
                         <td>${product.net_wt ?? "-"}</td>
                     </tr>
 
                     <tr>
-                        <th>Diamond</th>
+                        <th>Diamond wt</th>
                         <td>${product.dia_wt ?? "-"}</td>
                     </tr>
 
                     <tr>
-                        <th>Pieces</th>
+                        <th>Diamond Pieces</th>
                         <td>${product.dia_pc ?? "-"}</td>
                     </tr>
 
@@ -405,29 +385,29 @@ async function loadProducts(){
 
         `;
 
-    });
+            });
 
-    document.getElementById("products").insertAdjacentHTML("beforeend",html);
+            document.getElementById("products").insertAdjacentHTML("beforeend", html);
 
-    page++;
+            page++;
 
-    loading=false;
+            loading = false;
 
-    document.getElementById("loader").style.display="none";
+            document.getElementById("loader").style.display = "none";
 
-}
+        }
 
-window.addEventListener("scroll",()=>{
+        window.addEventListener("scroll", () => {
 
-    if(window.innerHeight+window.scrollY>=document.body.offsetHeight-300){
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
 
-        loadProducts();
+                loadProducts();
 
-    }
+            }
 
-});
+        });
 
-</script>
+    </script>
 </body>
 
 </html>

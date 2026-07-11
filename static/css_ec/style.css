@@ -3035,10 +3035,10 @@ input[type="button"].btn-block {
   padding: 0.5rem 0;
   margin: 0.125rem 0 0;
   font-size: 1rem;
-  color: #6F6F6F;
+  color: #f5f3f3;
   text-align: left;
   list-style: none;
-  background-color: #fff;
+  background-color: #ffffff00;
   background-clip: padding-box;
   border: 1px solid rgba(0, 0, 0, 0.15);
 }
@@ -3201,7 +3201,7 @@ input[type="button"].btn-block {
   padding: 0.25rem 1.5rem;
   clear: both;
   font-weight: 400;
-  color: #212529;
+  color: #f8f8f5;
   text-align: inherit;
   white-space: nowrap;
   background-color: transparent;
@@ -3209,9 +3209,9 @@ input[type="button"].btn-block {
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
-  color: #16181b;
+  color: #f4f6f8;
   text-decoration: none;
-  background-color: #f8f9fa;
+  background-color: #0407305b;
 }
 
 .dropdown-item.active, .dropdown-item:active {
@@ -7241,7 +7241,7 @@ button.bg-dark:focus {
 }
 
 .shadow-sm {
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+  box-shadow: 0 6px 15px rgba(7, 7, 58, 0.6) !important;
 }
 
 .shadow {
