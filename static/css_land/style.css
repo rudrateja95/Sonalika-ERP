@@ -430,7 +430,7 @@ a:focus {
 }
 
 .section-header p {
-    color: #719a0a;
+    color: #095092;
     margin-bottom: 5px;
     position: relative;
     font-size: 20px;
@@ -839,7 +839,7 @@ a:focus {
     font-size: 60px;
     line-height: 60px;
     margin-bottom: 15px;
-    background-image: linear-gradient(#719a0a, #0d2872);
+    background-image: linear-gradient(#675dbb, #0d2872);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -889,7 +889,7 @@ a:focus {
 .menu .menu-tab .nav.nav-pills .nav-link:hover,
 .menu .menu-tab .nav.nav-pills .nav-link.active {
     color: #ffffff;
-    background: #719a0a;
+    background: #0a659a;
 }
 
 .menu .menu-tab .tab-content {
@@ -1776,7 +1776,7 @@ a:focus {
 .contact .contact-text h3 {
     font-size: 18px;
     font-weight: 700;
-    color: #719a0a;
+    color: #08408ab9;
 }
 
 .contact .contact-text p {

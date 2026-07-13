@@ -288,34 +288,26 @@ let page = 1;
 let loading = false;
 let finished = false;
 
+let preloadedProducts = [];
+
+// First load
 loadProducts();
 
-async function loadProducts(){
-
-    if(loading || finished) return;
-
-    loading = true;
-
-    document.getElementById("loader").style.display="block";
+async function fetchPage(pageNo) {
 
     const response = await fetch(`/api/styles?brand=SONALIKA&category=NOSEPIN&page=${page}`);
+    return await response.json();
 
-    const data = await response.json();
+}
 
-    if(data.products.length==0){
+function renderProducts(products) {
 
-        finished=true;
+    let html = "";
 
-        document.getElementById("loader").innerHTML="<h6>No More Products</h6>";
+    products.forEach(product => {
 
-        return;
-    }
+        html += `
 
-    let html="";
-
-    data.products.forEach(product=>{
-
-        html +=`
 
 <div class="col-lg-3 col-md-6 col-sm-12 mb-4" >
 
@@ -392,19 +384,59 @@ async function loadProducts(){
 
     });
 
-    document.getElementById("products").insertAdjacentHTML("beforeend",html);
-
-    page++;
-
-    loading=false;
-
-    document.getElementById("loader").style.display="none";
+    document.getElementById("products").insertAdjacentHTML("beforeend", html);
 
 }
 
-window.addEventListener("scroll",()=>{
+async function loadProducts() {
 
-    if(window.innerHeight+window.scrollY>=document.body.offsetHeight-300){
+    if (loading || finished) return;
+
+    loading = true;
+
+    document.getElementById("loader").style.display = "block";
+
+    // Use preloaded data if available
+    if (preloadedProducts.length > 0) {
+
+        renderProducts(preloadedProducts);
+
+        preloadedProducts = [];
+
+    } else {
+
+        const data = await fetchPage(page);
+
+        if (data.products.length == 0) {
+
+            finished = true;
+            document.getElementById("loader").innerHTML = "No More Products";
+            return;
+
+        }
+
+        renderProducts(data.products);
+
+    }
+
+    page++;
+
+    loading = false;
+
+    document.getElementById("loader").style.display = "none";
+
+    // Preload next page in background
+    fetchPage(page).then(data => {
+
+        preloadedProducts = data.products;
+
+    });
+
+}
+
+window.addEventListener("scroll", () => {
+
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
 
         loadProducts();
 

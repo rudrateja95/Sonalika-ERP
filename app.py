@@ -30,6 +30,7 @@ import random
 import zipfile
 from xml.etree import ElementTree as ET
 import io
+from flask_mail import Mail, Message
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
@@ -53,8 +54,19 @@ EXT_TO_MIME = {
 app = Flask(__name__)
 app.secret_key='7527488f33cd3a731909c7d6e8aa8194d85e893f02a7d8548cb4b16aec47f64f'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/sonalika'
+# Mail Configuration
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'sonalikajewellers2021@gmail.com'
+app.config['MAIL_PASSWORD'] = 'amag epeg aaez mklf'
+app.config['MAIL_DEFAULT_SENDER'] = 'sonalikajewellers2021@gmail.com'
+
+mail = Mail(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sonalika:1234@localhost/sonalika'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -435,6 +447,50 @@ class DiamondIssueRound(db.Model):
 # ======================================
 # 🔧 GETTING DIAMOND DETAILS FROM DB
 # ======================================
+@app.route("/contact", methods=["POST"])
+def contact():
+
+    data = request.get_json()
+
+    name = data.get("name")
+    email = data.get("email")
+    subject = data.get("subject")
+    message = data.get("message")
+
+    msg = Message(
+        subject=f"Website Contact - {subject}",
+        recipients=["sonalikajewellers2021@gmail.com"]
+    )
+
+    msg.body = f"""
+Name : {name}
+
+Email : {email}
+
+Subject : {subject}
+
+Message :
+{message}
+"""
+
+    try:
+
+        mail.send(msg)
+
+        return jsonify({
+            "success": True,
+            "message": "Message sent successfully."
+        })
+
+    except Exception as e:
+
+        print(e)
+
+        return jsonify({
+            "success": False,
+            "message": "Failed to send message."
+        }),500
+
 
 @app.route("/ledger")
 def ledger():

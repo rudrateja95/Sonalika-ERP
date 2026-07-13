@@ -1,963 +1,1004 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Sonalika Jewellers</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="Jewellery, Gold, Diamond, Silver, Sonalika Jewellers" name="keywords">
-        <meta content="Sonalika Jewellers - Premium Gold, Diamond & Silver Jewellery Collection" name="description">
-    
-        <!-- Favicon -->
-        <link rel="icon" href="{{ url_for('static', filename='img/SonalikaLogo.png') }}">
-    
-        <!-- Google Fonts -->
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Nunito:600,700" rel="stylesheet">
-    
-        <!-- CSS Libraries -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
-    
-        <link rel="stylesheet" href="{{ url_for('static', filename='lib_land/animate/animate.min.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='lib_land/owlcarousel/assets/owl.carousel.min.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='lib_land/flaticon/font/flaticon.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='lib_land/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}">
-    
-        <!-- Template Stylesheet -->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css_land/style.css') }}">
-        <style>
-            .cta-section{
-    background:url("static/img-land/sl-2.jpeg") center center/cover no-repeat;
-    position:relative;
-    padding:120px 0;
-    color:#161515;
-}
 
-.cta-section .overlay{
-    background:rgba(16, 23, 85, 0.568);
-    padding:120px 0;
-}
+<head>
+    <meta charset="utf-8">
+    <title>Sonalika Jewellers</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Jewellery, Gold, Diamond, Silver, Sonalika Jewellers" name="keywords">
+    <meta content="Sonalika Jewellers - Premium Gold, Diamond & Silver Jewellery Collection" name="description">
 
-.cta-box{
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.15);
-    border-radius:12px;
-    padding:30px 20px;
-    transition:.4s;
-}
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='img/SonalikaLogo.png') }}">
 
-.cta-box:hover{
-    transform:translateY(-8px);
-    background:rgba(255,215,0,.15);
-}
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400|Nunito:600,700" rel="stylesheet">
 
-.cta-box i{
-    font-size:40px;
-    color:#0d2872;
-    margin-bottom:15px;
-}
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css">
 
-.cta-box h5{
-    color:#f8f7f7;
-    margin:0;
-}
+    <link rel="stylesheet" href="{{ url_for('static', filename='lib_land/animate/animate.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='lib_land/owlcarousel/assets/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='lib_land/flaticon/font/flaticon.css') }}">
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='lib_land/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}">
 
-.cta-section h2,
-.cta-section h3,
-.cta-section h4,
-.cta-section h5,
-.cta-section p{
-    color:#faf6f6;
-}
+    <!-- Template Stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css_land/style.css') }}">
+    <style>
+        .cta-section {
+            background: url("static/img-land/sl-2.jpeg") center center/cover no-repeat;
+            position: relative;
+            padding: 120px 0;
+            color: #161515;
+        }
 
-@media (max-width:768px){
+        .cta-section .overlay {
+            background: rgba(16, 23, 85, 0.568);
+            padding: 120px 0;
+        }
 
-    .cta-section{
-        padding:70px 0;
-    }
+        .cta-box {
+            background: rgba(255, 255, 255, .08);
+            border: 1px solid rgba(255, 255, 255, .15);
+            border-radius: 12px;
+            padding: 30px 20px;
+            transition: .4s;
+        }
 
-    .cta-section .overlay{
-        padding:70px 15px;
-    }
+        .cta-box:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 215, 0, .15);
+        }
 
-    .cta-section h2{
-        font-size:32px;
-    }
+        .cta-box i {
+            font-size: 40px;
+            color: #0d2872;
+            margin-bottom: 15px;
+        }
 
-    .cta-section h3{
-        font-size:24px;
-    }
+        .cta-box h5 {
+            color: #f8f7f7;
+            margin: 0;
+        }
 
-    .cta-section p{
-        font-size:15px;
-    }
+        .cta-section h2,
+        .cta-section h3,
+        .cta-section h4,
+        .cta-section h5,
+        .cta-section p {
+            color: #faf6f6;
+        }
 
-}
-        </style>
-    </head>
+        @media (max-width:768px) {
 
-    <body>
-        <!-- Nav Bar Start -->
-        <div class="navbar navbar-expand-lg bg-light navbar-light">
-            <div class="container-fluid">
-                <img src="{{ url_for('static', filename='img-land/SonalikaLogo.png') }}" alt="Image" style="width: 250px;">
-                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            .cta-section {
+                padding: 70px 0;
+            }
 
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav ml-auto">
-                        <a href="index" class="nav-item nav-link">Home</a>
-                        <a href="sales_er" class="nav-item nav-link">Collections</a>
+            .cta-section .overlay {
+                padding: 70px 15px;
+            }
+
+            .cta-section h2 {
+                font-size: 32px;
+            }
+
+            .cta-section h3 {
+                font-size: 24px;
+            }
+
+            .cta-section p {
+                font-size: 15px;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Nav Bar Start -->
+    <div class="navbar navbar-expand-lg bg-light navbar-light">
+        <div class="container-fluid">
+            <img src="{{ url_for('static', filename='img-land/SonalikaLogo.png') }}" alt="Image" style="width: 250px;">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+                    <a href="" class="nav-item nav-link">Home</a>
+                    <a href="#about" class="nav-item nav-link">About</a>
+                    <a href="#location" class="nav-item nav-link">Location</a>
+                    <a href="#contact" class="nav-item nav-link">Contact</a>
+                    <a href="{{ url_for('sales_er') }}" class="nav-item nav-link">Collections</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Nav Bar End -->
+
+
+    <!-- Carousel Start -->
+    <div class="carousel">
+        <div class="container-fluid">
+            <div class="owl-carousel">
+
+                <!-- Slide 1 -->
+                <div class="carousel-item">
+                    <div class="carousel-img">
+                        <img src="{{ url_for('static', filename='img-land/scl-1.jpeg') }}" alt="Sonalika Jewellers">
+                    </div>
+                    <div class="carousel-text">
+                        <h1>Welcome to <span>Sonalika</span> Jewellers</h1>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                    <div class="carousel-img">
+                        <img src="{{ url_for('static', filename='img-land/scl-2.jpeg') }}" alt="Premium Jewellery">
+                    </div>
+                    <div class="carousel-text">
+                        <h1>Elegant <span>Designs</span></h1>
+
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                    <div class="carousel-img">
+                        <img src="{{ url_for('static', filename='img-land/scl-3.jpeg') }}" alt="Diamond Jewellery">
+                    </div>
+                    <div class="carousel-text">
+                        <h1>Diamond <span>Brilliance</span></h1>
+                    </div>
+                </div>
+                <!-- Slide 4 -->
+                <div class="carousel-item">
+                    <div class="carousel-img">
+                        <img src="{{ url_for('static', filename='img-land/scl-4.jpeg') }}" alt="Diamond Jewellery">
+                    </div>
+                    <div class="carousel-text">
+                        <h1>Diamond <span>Brilliance</span></h1>
+                    </div>
+                </div>
+                <!-- Slide 5 -->
+                <div class="carousel-item">
+                    <div class="carousel-img">
+                        <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}" alt="Diamond Jewellery">
+                    </div>
+                    <div class="carousel-text">
+                        <h1>Diamond <span>Brilliance</span></h1>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Carousel End -->
+
+
+    <!-- About Start -->
+    <div class="booking" id="about">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-lg-7">
+                    <div class="booking-content">
+                        <div class="section-header">
+                            <p>About Us</p>
+                            <h2>Welcome to Sonalika Jewellers Private Limited</h2>
+                        </div>
+
+                        <div class="about-text">
+                            <p>
+                                At Sonalika Jewellers, we believe jewellery is more than an ornament—it is a symbol of
+                                love, success, confidence, and individuality.
+                            </p>
+
+                            <p>
+                                Our passion for elegant design, premium craftsmanship, and precision manufacturing
+                                allows us to create lightweight jewellery with exceptional diamond brilliance and
+                                lasting beauty.
+                            </p>
+
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <p><i class="fa fa-check"></i> Elegant Designs</p>
+                                    <p><i class="fa fa-check"></i> Premium Craftsmanship</p>
+                                    <p><i class="fa fa-check"></i> Lightweight Luxury</p>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <p><i class="fa fa-check"></i> Diamond Brilliance</p>
+                                    <p><i class="fa fa-check"></i> Precision Manufacturing</p>
+                                    <p><i class="fa fa-check"></i> Customer Satisfaction</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="booking-form text-center p-4">
+                        <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}"
+                            class="img-fluid rounded shadow" alt="Sonalika Jewellers">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- About Start -->
+    <div class="about">
+        <div class="container">
+            <div class="row align-items-center">
+
+                <div class="col-lg-6">
+                    <div class="about-img">
+                        <img src="{{ url_for('static', filename='img-land/sl-6.jpeg') }}"
+                            alt="LUMI 5D Diamond Jewellery">
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="about-content">
+                        <div class="section-header">
+                            <p>LUMI 5D Technology</p>
+                            <h2>What is LUMI 5D Diamond Jewellery?</h2>
+                        </div>
+
+                        <div class="about-text">
+                            <p>
+                                LUMI 5D Diamond Jewellery is designed to reflect light from multiple
+                                directions, creating extraordinary brilliance, sparkle, and visual depth
+                                that makes every piece stand out.
+                            </p>
+
+                            <p>
+                                Using advanced engineering and precision diamond setting, LUMI 5D
+                                enhances light performance, making jewellery appear larger, brighter,
+                                and more luxurious than traditional designs.
+                            </p>
+
+                            <a class="btn custom-btn" href="#">Explore Collection</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- Video Modal Start-->
+    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <!-- 16:9 aspect ratio -->
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="" id="video" allowscriptaccess="always"
+                            allow="autoplay"></iframe>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Nav Bar End -->
-
-
-<!-- Carousel Start -->
-<div class="carousel">
-    <div class="container-fluid">
-        <div class="owl-carousel">
-
-            <!-- Slide 1 -->
-            <div class="carousel-item">
-                <div class="carousel-img">
-                    <img src="{{ url_for('static', filename='img-land/scl-1.jpeg') }}" alt="Sonalika Jewellers">
-                </div>
-                <div class="carousel-text">
-                    <h1>Welcome to <span>Sonalika</span> Jewellers</h1>
-                </div>
-            </div>
-
-            <!-- Slide 2 -->
-            <div class="carousel-item">
-                <div class="carousel-img">
-                    <img src="{{ url_for('static', filename='img-land/scl-2.jpeg') }}" alt="Premium Jewellery">
-                </div>
-                <div class="carousel-text">
-                    <h1>Elegant <span>Designs</span></h1>
-
-                </div>
-            </div>
-
-            <!-- Slide 3 -->
-            <div class="carousel-item">
-                <div class="carousel-img">
-                    <img src="{{ url_for('static', filename='img-land/scl-3.jpeg') }}" alt="Diamond Jewellery">
-                </div>
-                <div class="carousel-text">
-                    <h1>Diamond <span>Brilliance</span></h1>
-                </div>
-            </div>
-            <!-- Slide 4 -->
-            <div class="carousel-item">
-                <div class="carousel-img">
-                    <img src="{{ url_for('static', filename='img-land/scl-4.jpeg') }}" alt="Diamond Jewellery">
-                </div>
-                <div class="carousel-text">
-                    <h1>Diamond <span>Brilliance</span></h1>
-                </div>
-            </div>
-            <!-- Slide 5 -->
-            <div class="carousel-item">
-                <div class="carousel-img">
-                    <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}" alt="Diamond Jewellery">
-                </div>
-                <div class="carousel-text">
-                    <h1>Diamond <span>Brilliance</span></h1>
-                </div>
-            </div>
-
-        </div>
     </div>
-</div>
-<!-- Carousel End -->
-        
-        
-<!-- About Start -->
-<div class="booking">
-    <div class="container">
-        <div class="row align-items-center">
+    <!-- Video Modal End -->
 
-            <div class="col-lg-7">
-                <div class="booking-content">
+
+    <!-- Feature Start -->
+    <div class="feature">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-5">
                     <div class="section-header">
-                        <p>About Us</p>
-                        <h2>Welcome to Sonalika Jewellers Private Limited</h2>
+                        <p>Why Choose Us</p>
+                        <h2>The TASO Difference</h2>
                     </div>
 
-                    <div class="about-text">
-                        <p>
-                            At Sonalika Jewellers, we believe jewellery is more than an ornament—it is a symbol of love, success, confidence, and individuality.
-                        </p>
-
-                        <p>
-                            Our passion for elegant design, premium craftsmanship, and precision manufacturing allows us to create lightweight jewellery with exceptional diamond brilliance and lasting beauty.
-                        </p>
-
-                        <div class="row mt-4">
-                            <div class="col-md-6">
-                                <p><i class="fa fa-check text-warning"></i> Elegant Designs</p>
-                                <p><i class="fa fa-check text-warning"></i> Premium Craftsmanship</p>
-                                <p><i class="fa fa-check text-warning"></i> Lightweight Luxury</p>
-                            </div>
-
-                            <div class="col-md-6">
-                                <p><i class="fa fa-check text-warning"></i> Diamond Brilliance</p>
-                                <p><i class="fa fa-check text-warning"></i> Precision Manufacturing</p>
-                                <p><i class="fa fa-check text-warning"></i> Customer Satisfaction</p>
+                    <div class="feature-text">
+                        <div class="feature-img">
+                            <div class="row">
+                                <div class="col-6">
+                                    <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}" alt="img1">
+                                </div>
+                                <div class="col-6">
+                                    <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}" alt="img2">
+                                </div>
+                                <div class="col-6">
+                                    <img src="{{ url_for('static', filename='img-land/sl-3.jpeg') }}" alt="img3">
+                                </div>
+                                <div class="col-6">
+                                    <img src="{{ url_for('static', filename='img-land/sl-4.jpeg') }}" alt="img4">
+                                </div>
                             </div>
                         </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-5">
-                <div class="booking-form text-center p-4">
-                    <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}"
-                         class="img-fluid rounded shadow"
-                         alt="Sonalika Jewellers">
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-<!-- About End -->
-        
-
-<!-- About Start -->
-<div class="about">
-    <div class="container">
-        <div class="row align-items-center">
-
-            <div class="col-lg-6">
-                <div class="about-img">
-                    <img src="{{ url_for('static', filename='img-land/sl-6.jpeg') }}" alt="LUMI 5D Diamond Jewellery">
-                </div>
-            </div>
-
-            <div class="col-lg-6">
-                <div class="about-content">
-                    <div class="section-header">
-                        <p>LUMI 5D Technology</p>
-                        <h2>What is LUMI 5D Diamond Jewellery?</h2>
-                    </div>
-
-                    <div class="about-text">
-                        <p>
-                            LUMI 5D Diamond Jewellery is designed to reflect light from multiple
-                            directions, creating extraordinary brilliance, sparkle, and visual depth
-                            that makes every piece stand out.
-                        </p>
 
                         <p>
-                            Using advanced engineering and precision diamond setting, LUMI 5D
-                            enhances light performance, making jewellery appear larger, brighter,
-                            and more luxurious than traditional designs.
+                            TASO represents innovation in jewellery design. Through advanced engineering,
+                            intelligent stone placement, and lightweight construction, every piece delivers
+                            exceptional brilliance, comfort, and luxury.
                         </p>
 
-                        <a class="btn custom-btn" href="#">Explore Collection</a>
-                    </div>
-                </div>
-            </div>
 
-        </div>
-    </div>
-</div>
-<!-- About End -->
-        
-        
-        <!-- Video Modal Start-->
-        <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>        
-                        <!-- 16:9 aspect ratio -->
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="" id="video"  allowscriptaccess="always" allow="autoplay"></iframe>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> 
-        <!-- Video Modal End -->
-        
-        
-<!-- Feature Start -->
-<div class="feature">
-    <div class="container">
-        <div class="row">
-
-            <div class="col-lg-5">
-                <div class="section-header">
-                    <p>Why Choose Us</p>
-                    <h2>The TASO Difference</h2>
-                </div>
-
-                <div class="feature-text">
-                    <div class="feature-img">
-                        <div class="row">
-                            <div class="col-6">
-                                <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}" alt="img1">
-                            </div>
-                            <div class="col-6">
-                                <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}" alt="img2">
-                            </div>
-                            <div class="col-6">
-                                <img src="{{ url_for('static', filename='img-land/sl-3.jpeg') }}" alt="img3">
-                            </div>
-                            <div class="col-6">
-                                <img src="{{ url_for('static', filename='img-land/sl-4.jpeg') }}" alt="img4">
-                            </div>
-                        </div>
-                    </div>
-
-                    <p>
-                        TASO represents innovation in jewellery design. Through advanced engineering,
-                        intelligent stone placement, and lightweight construction, every piece delivers
-                        exceptional brilliance, comfort, and luxury.
-                    </p>
-
-                  
-                </div>
-            </div>
-
-            <div class="col-lg-7">
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="feature-item">
-                            <i class="fa fa-gem"></i>
-                            <h3>Innovation First</h3>
-                            <p>Exclusive TASO LUMI 5D technology for unmatched brilliance.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="feature-item">
-                            <i class="fa fa-star"></i>
-                            <h3>Premium Craftsmanship</h3>
-                            <p>Every jewellery piece is crafted with precision and advanced technology.</p>
-                        </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="feature-item">
-                            <i class="fa fa-feather-alt"></i>
-                            <h3>Lightweight Luxury</h3>
-                            <p>Elegant jewellery designed for everyday comfort without extra weight.</p>
-                        </div>
-                    </div>
+                <div class="col-lg-7">
 
-                    <div class="col-sm-6">
-                        <div class="feature-item">
-                            <i class="fa fa-sun"></i>
-                            <h3>Exceptional Brilliance</h3>
-                            <p>Multi-directional light reflection creates dazzling sparkle.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="feature-item">
-                            <i class="fa fa-drafting-compass"></i>
-                            <h3>Precision Setting</h3>
-                            <p>Every diamond is positioned for maximum visibility and light performance.</p>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-6">
-                        <div class="feature-item">
-                            <i class="fa fa-award"></i>
-                            <h3>Trusted Quality</h3>
-                            <p>Superior craftsmanship with timeless elegance and lasting value.</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-</div>
-<!-- Feature End -->
-        
-        
-<!-- Our Collections Start -->
-<div class="food">
-    <div class="container">
-
-        <div class="section-header text-center">
-            <p>Our Collections</p>
-            <h2>Discover Luxury Crafted for Every Occasion</h2>
-        </div>
-
-
-
-        <!-- Collection List -->
-        <div class="row mt-5">
-            <div class="col-lg-12 text-center">
-                <h3 class="mb-4">Our Signature Collections</h3>
-
-                <div class="row">
-
-                    <div class="col-md-4">
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Diamond Necklaces</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Diamond Rings</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Earrings</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Pendants</p>
-                    </div>
-
-                    <div class="col-md-4">
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Bridal Jewellery</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Bracelets</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Bangles</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Cocktail Jewellery</p>
-                    </div>
-
-                    <div class="col-md-4">
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Daily Wear Luxury</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Custom Designed Jewellery</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Premium Diamond Collections</p>
-                        <p><i class="fa fa-check " style="color: #0d2872;"></i> Exclusive TASO LUMI 5D Designs</p>
-                    </div>
-
-                </div>
-
-                <p class="mt-4">
-                    Every collection is thoughtfully crafted to combine
-                    <strong>Elegance</strong>,
-                    <strong>Premium Craftsmanship</strong>,
-                    <strong>Lightweight Comfort</strong>, and
-                    <strong>Exceptional Brilliance</strong>,
-                    making every piece a timeless expression of luxury.
-                </p>
-            </div>
-        </div>
-
-    </div>
-</div>
-<!-- Our Collections End -->
-        
-        
-<!-- Why Customers Love Us Start -->
-<div class="menu">
-    <div class="container">
-
-        <div class="section-header text-center">
-            <p>Why Choose Us</p>
-            <h2>Why Customers Love Sonalika Jewellers</h2>
-        </div>
-
-        <div class="menu-tab">
-            <ul class="nav nav-pills justify-content-center">
-                <li class="nav-item">
-                    <a class="nav-link active" data-toggle="pill" href="#craftsmanship">Craftsmanship</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#quality">Quality</a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" data-toggle="pill" href="#luxury">Luxury</a>
-                </li>
-            </ul>
-
-            <div class="tab-content">
-
-                <!-- Craftsmanship -->
-                <div id="craftsmanship" class="container tab-pane active">
                     <div class="row">
-
-                        <div class="col-lg-7">
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Elegant Craftsmanship</span></h3>
-                                    <p>Beautifully crafted jewellery with exceptional attention to detail.</p>
-                                </div>
+                        <div class="col-sm-6">
+                            <div class="feature-item">
+                                <i class="fa fa-gem"></i>
+                                <h3>Innovation First</h3>
+                                <p>Exclusive TASO LUMI 5D technology for unmatched brilliance.</p>
                             </div>
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-4.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Premium Finishing</span></h3>
-                                    <p>Luxurious finishing that enhances every jewellery design.</p>
-                                </div>
-                            </div>
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-3.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Precision Engineering</span></h3>
-                                    <p>Advanced engineering ensures beauty, durability, and perfection.</p>
-                                </div>
-                            </div>
-
                         </div>
 
-                        <div class="col-lg-3 d-none d-lg-block">
-                            <img src="{{ url_for('static', filename='img-land/sl-6.jpeg') }}" class="img-fluid rounded">
+                        <div class="col-sm-6">
+                            <div class="feature-item">
+                                <i class="fa fa-star"></i>
+                                <h3>Premium Craftsmanship</h3>
+                                <p>Every jewellery piece is crafted with precision and advanced technology.</p>
+                            </div>
                         </div>
-
                     </div>
-                </div>
 
-                <!-- Quality -->
-                <div id="quality" class="container tab-pane fade">
                     <div class="row">
-
-                        <div class="col-lg-7">
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-4.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Exceptional Brilliance</span></h3>
-                                    <p>Designed to maximize sparkle from every angle.</p>
-                                </div>
+                        <div class="col-sm-6">
+                            <div class="feature-item">
+                                <i class="fa fa-feather-alt"></i>
+                                <h3>Lightweight Luxury</h3>
+                                <p>Elegant jewellery designed for everyday comfort without extra weight.</p>
                             </div>
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-5.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Fine Quality Diamonds</span></h3>
-                                    <p>Premium diamonds selected for superior brilliance and beauty.</p>
-                                </div>
-                            </div>
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Trusted Workmanship</span></h3>
-                                    <p>Every piece reflects our commitment to excellence.</p>
-                                </div>
-                            </div>
-
                         </div>
 
-                        <div class="col-lg-3 d-none d-lg-block">
-                            <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}" class="img-fluid rounded">
+                        <div class="col-sm-6">
+                            <div class="feature-item">
+                                <i class="fa fa-sun"></i>
+                                <h3>Exceptional Brilliance</h3>
+                                <p>Multi-directional light reflection creates dazzling sparkle.</p>
+                            </div>
                         </div>
-
                     </div>
-                </div>
 
-                <!-- Luxury -->
-                <div id="luxury" class="container tab-pane fade">
                     <div class="row">
-
-                        <div class="col-lg-7">
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-3.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Lightweight Comfort</span></h3>
-                                    <p>Luxury jewellery designed for effortless everyday wear.</p>
-                                </div>
+                        <div class="col-sm-6">
+                            <div class="feature-item">
+                                <i class="fa fa-drafting-compass"></i>
+                                <h3>Precision Setting</h3>
+                                <p>Every diamond is positioned for maximum visibility and light performance.</p>
                             </div>
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-6.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Exclusive Designs</span></h3>
-                                    <p>Unique collections inspired by elegance and innovation.</p>
-                                </div>
-                            </div>
-
-                            <div class="menu-item">
-                                <div class="menu-img">
-                                    <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}" alt="">
-                                </div>
-                                <div class="menu-text">
-                                    <h3><span>Modern Luxury</span></h3>
-                                    <p>Timeless beauty crafted to celebrate life's precious moments.</p>
-                                </div>
-                            </div>
-
                         </div>
 
-                        <div class="col-lg-3 d-none d-lg-block">
-                            <img src="{{ url_for('static', filename='img-land/sl-5.jpeg') }}" class="img-fluid rounded">
+                        <div class="col-sm-6">
+                            <div class="feature-item">
+                                <i class="fa fa-award"></i>
+                                <h3>Trusted Quality</h3>
+                                <p>Superior craftsmanship with timeless elegance and lasting value.</p>
+                            </div>
                         </div>
-
                     </div>
+
                 </div>
 
             </div>
         </div>
-
     </div>
-</div>
-<!-- Why Customers Love Us End -->
-        
-        
-<!-- Buying Experience & Footer Banner Start -->
-<section class="cta-section">
-    <div class="overlay">
+    <!-- Feature End -->
+
+
+    <!-- Our Collections Start -->
+    <div class="food">
         <div class="container">
 
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-9">
-
-                    <h5 class="text-uppercase">The Buying Experience</h5>
-
-                    <h2>Every Diamond Tells Your Story</h2>
-
-                    <p class="lead">
-                        A diamond is more than jewellery—it is an investment in
-                        memories, milestones, and timeless elegance.
-                    </p>
-
-                </div>
+            <div class="section-header text-center">
+                <p>Our Collections</p>
+                <h2>Discover Luxury Crafted for Every Occasion</h2>
             </div>
 
-            <div class="row mt-5 text-center">
 
-                <div class="col-md-3 col-6 mb-4">
-                    <div class="cta-box">
-                        <i class="fa fa-gem"></i>
-                        <h5>Luxury Design</h5>
+
+            <!-- Collection List -->
+            <div class="row mt-5">
+                <div class="col-lg-12 text-center">
+                    <h3 class="mb-4">Our Signature Collections</h3>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Diamond Necklaces</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Diamond Rings</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Earrings</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Pendants</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Bridal Jewellery</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Bracelets</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Bangles</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Cocktail Jewellery</p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Daily Wear Luxury</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Custom Designed Jewellery</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Premium Diamond Collections</p>
+                            <p><i class="fa fa-check " style="color: #0d2872;"></i> Exclusive TASO LUMI 5D Designs</p>
+                        </div>
+
                     </div>
-                </div>
-
-                <div class="col-md-3 col-6 mb-4">
-                    <div class="cta-box">
-                        <i class="fa fa-star"></i>
-                        <h5>Superior Brilliance</h5>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-6 mb-4">
-                    <div class="cta-box">
-                        <i class="fa fa-heart"></i>
-                        <h5>Perfect Gift</h5>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-6 mb-4">
-                    <div class="cta-box">
-                        <i class="fa fa-crown"></i>
-                        <h5>Timeless Luxury</h5>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row justify-content-center mt-4">
-                <div class="col-lg-8 text-center">
-
-                    <h3 class="mb-3">
-                        When You Wear <span  style="color: #0d2872;">TASO LUMI 5D</span>
-                    </h3>
-
-                    <p>
-                        People notice. They admire. They remember.<br>
-                        Because true brilliance creates confidence.
-                    </p>
-
-                    <a href="#" class="btn custom-btn mt-3">
-                        Explore Our Collection
-                    </a>
-
-                </div>
-            </div>
-
-            <hr class="bg-light my-5">
-
-            <div class="row justify-content-center text-center">
-                <div class="col-lg-10">
-
-                    <h2>SONALIKA JEWELLERS PRIVATE LIMITED</h2>
-
-                    <h4 class="mb-3" style="color: #0d2872;">
-                        Crafting Elegance in Gold & Diamonds
-                    </h4>
-
-                    <h3 class="mb-3">
-                        TASO – Beyond Brilliance
-                    </h3>
-
-                    <h4>LUMI 5D Diamond Jewellery</h4>
 
                     <p class="mt-4">
-                        Experience brilliance beyond imagination with jewellery
-                        engineered for extraordinary sparkle, exceptional elegance,
-                        and timeless luxury.
+                        Every collection is thoughtfully crafted to combine
+                        <strong>Elegance</strong>,
+                        <strong>Premium Craftsmanship</strong>,
+                        <strong>Lightweight Comfort</strong>, and
+                        <strong>Exceptional Brilliance</strong>,
+                        making every piece a timeless expression of luxury.
                     </p>
-
-                    <h5 class="mt-4">
-                        Luxury • Innovation • Trust • Elegance
-                    </h5>
-
-                    <h3 class="mt-3 font-weight-bold">
-                        Crafted to Shine. Designed to Inspire.
-                    </h3>
-
                 </div>
             </div>
 
         </div>
     </div>
-</section>
-<!-- Buying Experience & Footer Banner End -->
-        
-        
-<!-- Contact Start -->
-<div class="contact">
-    <div class="container">
-
-        <div class="section-header text-center">
-            <p>Contact Us</p>
-            <h2>We're Here to Help</h2>
-            <p>
-                We value the connection with our customers and are always happy to
-                assist you. Reach out to us through any of the following channels.
-            </p>
-        </div>
-
-        <div class="row align-items-center contact-information">
-
-            <div class="col-md-6 col-lg-4">
-                <div class="contact-info">
-                    <div class="contact-icon">
-                        <i class="fa fa-map-marker-alt"></i>
-                    </div>
-                    <div class="contact-text">
-                        <h3>Address</h3>
-                        <p>
-                            #15, 2nd Cross,<br>
-                            Cheluvadipalya,<br>
-                            Dr. TCM Royan Road,<br>
-                            Goodshed Road,<br>
-                            Bangalore - 560053
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="contact-info">
-                    <div class="contact-icon">
-                        <i class="fa fa-phone-alt"></i>
-                    </div>
-                    <div class="contact-text">
-                        <h3>Call Us</h3>
-                        <p>+91 99004 72995</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-lg-4">
-                <div class="contact-info">
-                    <div class="contact-icon">
-                        <i class="fa fa-envelope"></i>
-                    </div>
-                    <div class="contact-text">
-                        <h3>Email Us</h3>
-                        <p>sonalikajewellers2021@gmail.com</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row contact-form">
-
-            <div class="col-md-6">
-
-                <!-- Replace with your Google Maps Embed Link -->
-                <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15553.060876236532!2d77.5734042!3d12.954873349999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1783579292089!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"
-                    frameborder="0"
-                    style="border:0;width:100%;height:450px;"
-                    allowfullscreen>
-                </iframe>
-
-            </div>
-
-            <div class="col-md-6">
-
-                <form action="#" method="POST">
-
-                    <div class="control-group">
-                        <input type="text" class="form-control" name="name"
-                               placeholder="Your Name" required>
-                    </div>
-
-                    <div class="control-group">
-                        <input type="email" class="form-control" name="email"
-                               placeholder="Your Email" required>
-                    </div>
-
-                    <div class="control-group">
-                        <input type="text" class="form-control" name="subject"
-                               placeholder="Subject" required>
-                    </div>
-
-                    <div class="control-group">
-                        <textarea class="form-control"
-                                  name="message"
-                                  rows="5"
-                                  placeholder="Comment or Message"
-                                  required></textarea>
-                    </div>
-
-                    <button class="btn custom-btn" type="submit">
-                        Send Message
-                    </button>
-
-                </form>
-
-                <div class="contact-social mt-4 text-center">
-
-                    <h5>Follow Us</h5>
-
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-</div>
-<!-- Contact End -->
+    <!-- Our Collections End -->
 
 
-
-<!-- Footer Start -->
-<div class="footer">
-    <div class="container">
-        <div class="row">
-
-            <!-- Company Info -->
-            <div class="col-lg-5 col-md-6">
-                <div class="footer-contact">
-                    <h2>Sonalika Jewellers</h2>
-
-                    <p>
-                        <i class="fa fa-map-marker-alt"></i>
-                        #15, 2nd Cross, Cheluvadipalya,<br>
-                        Dr. TCM Royan Road, Goodshed Road,<br>
-                        Bangalore - 560053
-                    </p>
-
-                    <p>
-                        <i class="fa fa-phone-alt"></i>
-                        +91 99004 72995
-                    </p>
-
-                    <p>
-                        <i class="fa fa-envelope"></i>
-                        sonalikajewellers2021@gmail.com
-                    </p>
-
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-pinterest-p"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                    </div>
-
-                </div>
-            </div>
-
-            <!-- Quick Links -->
-            <div class="col-lg-3 col-md-6">
-                <div class="footer-link">
-                    <h2>Quick Links</h2>
-
-                    <a href="#home">Home</a>
-                    <a href="#about">About Us</a>
-                    <a href="#collections">Collections</a>
-                    <a href="#contact">Contact Us</a>
-                    <a href="#">Privacy Policy</a>
-                </div>
-            </div>
-
-            <!-- Brand -->
-            <div class="col-lg-4">
-                <div class="footer-newsletter">
-
-                    <h2>TASO – Beyond Brilliance</h2>
-
-                    <p>
-                        Experience the elegance of <strong>LUMI 5D Diamond Jewellery</strong>,
-                        where innovation meets timeless craftsmanship.
-                        Every masterpiece is designed to deliver exceptional brilliance,
-                        lightweight luxury, and unforgettable beauty.
-                    </p>
-
-
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Copyright -->
-    <div class="copyright">
+    <!-- Why Customers Love Us Start -->
+    <div class="menu">
         <div class="container">
 
-            <p>
-                &copy; 2026 <strong>Sonalika Jewellers Private Limited</strong>.
-                All Rights Reserved.
-            </p>
+            <div class="section-header text-center">
+                <p>Why Choose Us</p>
+                <h2>Why Customers Love Sonalika Jewellers</h2>
+            </div>
 
-            <p>
-                Crafted with  for Luxury Jewellery Excellence.
-            </p>
+            <div class="menu-tab">
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="pill" href="#craftsmanship">Craftsmanship</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#quality">Quality</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="pill" href="#luxury">Luxury</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+
+                    <!-- Craftsmanship -->
+                    <div id="craftsmanship" class="container tab-pane active">
+                        <div class="row">
+
+                            <div class="col-lg-7">
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Elegant Craftsmanship</span></h3>
+                                        <p>Beautifully crafted jewellery with exceptional attention to detail.</p>
+                                    </div>
+                                </div>
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-4.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Premium Finishing</span></h3>
+                                        <p>Luxurious finishing that enhances every jewellery design.</p>
+                                    </div>
+                                </div>
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-3.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Precision Engineering</span></h3>
+                                        <p>Advanced engineering ensures beauty, durability, and perfection.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 d-none d-lg-block">
+                                <img src="{{ url_for('static', filename='img-land/sl-6.jpeg') }}"
+                                    class="img-fluid rounded">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Quality -->
+                    <div id="quality" class="container tab-pane fade">
+                        <div class="row">
+
+                            <div class="col-lg-7">
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-4.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Exceptional Brilliance</span></h3>
+                                        <p>Designed to maximize sparkle from every angle.</p>
+                                    </div>
+                                </div>
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-5.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Fine Quality Diamonds</span></h3>
+                                        <p>Premium diamonds selected for superior brilliance and beauty.</p>
+                                    </div>
+                                </div>
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-7.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Trusted Workmanship</span></h3>
+                                        <p>Every piece reflects our commitment to excellence.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 d-none d-lg-block">
+                                <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}"
+                                    class="img-fluid rounded">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Luxury -->
+                    <div id="luxury" class="container tab-pane fade">
+                        <div class="row">
+
+                            <div class="col-lg-7">
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-3.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Lightweight Comfort</span></h3>
+                                        <p>Luxury jewellery designed for effortless everyday wear.</p>
+                                    </div>
+                                </div>
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-6.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Exclusive Designs</span></h3>
+                                        <p>Unique collections inspired by elegance and innovation.</p>
+                                    </div>
+                                </div>
+
+                                <div class="menu-item">
+                                    <div class="menu-img">
+                                        <img src="{{ url_for('static', filename='img-land/sl-1.jpeg') }}" alt="">
+                                    </div>
+                                    <div class="menu-text">
+                                        <h3><span>Modern Luxury</span></h3>
+                                        <p>Timeless beauty crafted to celebrate life's precious moments.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-3 d-none d-lg-block">
+                                <img src="{{ url_for('static', filename='img-land/sl-5.jpeg') }}"
+                                    class="img-fluid rounded">
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
         </div>
     </div>
+    <!-- Why Customers Love Us End -->
+
+
+    <!-- Buying Experience & Footer Banner Start -->
+    <section class="cta-section">
+        <div class="overlay">
+            <div class="container">
+
+                <div class="row justify-content-center text-center">
+                    <div class="col-lg-9">
+
+                        <h5 class="text-uppercase">The Buying Experience</h5>
+
+                        <h2>Every Diamond Tells Your Story</h2>
+
+                        <p class="lead">
+                            A diamond is more than jewellery—it is an investment in
+                            memories, milestones, and timeless elegance.
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="row mt-5 text-center">
+
+                    <div class="col-md-3 col-6 mb-4">
+                        <div class="cta-box">
+                            <i class="fa fa-gem"></i>
+                            <h5>Luxury Design</h5>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-6 mb-4">
+                        <div class="cta-box">
+                            <i class="fa fa-star"></i>
+                            <h5>Superior Brilliance</h5>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-6 mb-4">
+                        <div class="cta-box">
+                            <i class="fa fa-heart"></i>
+                            <h5>Perfect Gift</h5>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-6 mb-4">
+                        <div class="cta-box">
+                            <i class="fa fa-crown"></i>
+                            <h5>Timeless Luxury</h5>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row justify-content-center mt-4">
+                    <div class="col-lg-8 text-center">
+
+                        <h3 class="mb-3">
+                            When You Wear <span style="color: #0d2872;">TASO LUMI 5D</span>
+                        </h3>
+
+                        <p>
+                            People notice. They admire. They remember.<br>
+                            Because true brilliance creates confidence.
+                        </p>
+
+                        <a href="#" class="btn custom-btn mt-3">
+                            Explore Our Collection
+                        </a>
+
+                    </div>
+                </div>
+
+                <hr class="bg-light my-5">
+
+                <div class="row justify-content-center text-center">
+                    <div class="col-lg-10">
+
+                        <h2>SONALIKA JEWELLERS PRIVATE LIMITED</h2>
+
+                        <h4 class="mb-3" style="color: #0d2872;">
+                            Crafting Elegance in Gold & Diamonds
+                        </h4>
+
+                        <h3 class="mb-3">
+                            TASO – Beyond Brilliance
+                        </h3>
+
+                        <h4>LUMI 5D Diamond Jewellery</h4>
+
+                        <p class="mt-4">
+                            Experience brilliance beyond imagination with jewellery
+                            engineered for extraordinary sparkle, exceptional elegance,
+                            and timeless luxury.
+                        </p>
+
+                        <h5 class="mt-4">
+                            Luxury • Innovation • Trust • Elegance
+                        </h5>
+
+                        <h3 class="mt-3 font-weight-bold">
+                            Crafted to Shine. Designed to Inspire.
+                        </h3>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- Buying Experience & Footer Banner End -->
+
+
+    <!-- Contact Start -->
+    <div class="contact">
+        <div class="container" id="location">
+
+            <div class="section-header text-center">
+                <p>Contact Us</p>
+                <h2>We're Here to Help</h2>
+                <p>
+                    We value the connection with our customers and are always happy to
+                    assist you. Reach out to us through any of the following channels.
+                </p>
+            </div>
+
+            <div class="row align-items-center contact-information">
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="contact-info">
+                        <div class="contact-icon">
+                            <i class="fa fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Address</h3>
+                            <p>
+                                #15, 2nd Cross,<br>
+                                Cheluvadipalya,<br>
+                                Dr. TCM Royan Road,<br>
+                                Goodshed Road,<br>
+                                Bangalore - 560053
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="contact-info">
+                        <div class="contact-icon">
+                            <i class="fa fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Call Us</h3>
+                            <p>+91 99004 72995</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="contact-info">
+                        <div class="contact-icon">
+                            <i class="fa fa-envelope"></i>
+                        </div>
+                        <div class="contact-text">
+                            <h3>Email Us</h3>
+                            <p>sonalikajewellers2021@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row contact-form">
+
+                <div class="col-md-6">
+
+                    <!-- Replace with your Google Maps Embed Link -->
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15553.060876236532!2d77.5734042!3d12.954873349999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1783579292089!5m2!1sen!2sin"
+                        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="strict-origin-when-cross-origin" frameborder="0"
+                        style="border:0;width:100%;height:450px;" allowfullscreen>
+                    </iframe>
+
+                </div>
+
+<div class="col-lg-6">
+
+    <form id="contactForm">
+
+        <div class="form-group mb-3">
+            <label><i class="fas fa-user mr-2"></i>Full Name</label>
+            <input type="text" class="form-control rounded-pill" id="name" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label><i class="fas fa-envelope mr-2"></i>Email Address</label>
+            <input type="email" class="form-control rounded-pill" id="email" required>
+        </div>
+
+        <div class="form-group mb-3">
+            <label><i class="fas fa-tag mr-2"></i>Subject</label>
+            <input type="text" class="form-control rounded-pill" id="subject" required>
+        </div>
+
+        <div class="form-group mb-4">
+            <label><i class="fas fa-comment-alt mr-2"></i>Message</label>
+            <textarea class="form-control rounded" id="message" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block rounded-pill">
+            <i class="fas fa-paper-plane mr-2"></i>
+            Send Message
+        </button>
+
+    </form>
+
 </div>
-<!-- Footer End -->
 
-        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+            </div>
 
-        <!-- JavaScript Libraries -->
+        </div>
+    </div>
+    <!-- Contact End -->
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
-<script src="{{ url_for('static', filename='lib_land/easing/easing.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib_land/owlcarousel/owl.carousel.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib_land/tempusdominus/js/moment.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib_land/tempusdominus/js/moment-timezone.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib_land/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
-<!-- Template Javascript -->
-<script src="{{ url_for('static', filename='js_land/main.js') }}"></script>
-    </body>
+    <!-- Footer Start -->
+    <div class="footer" id="contact">
+        <div class="container">
+            <div class="row">
+
+                <!-- Company Info -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="footer-contact">
+                        <h2>Sonalika Jewellers</h2>
+
+                        <p>
+                            <i class="fa fa-map-marker-alt"></i>
+                            #15, 2nd Cross, Cheluvadipalya,<br>
+                            Dr. TCM Royan Road, Goodshed Road,<br>
+                            Bangalore - 560053
+                        </p>
+
+                        <p>
+                            <i class="fa fa-phone-alt"></i>
+                            +91 99004 72995
+                        </p>
+
+                        <p>
+                            <i class="fa fa-envelope"></i>
+                            sonalikajewellers2021@gmail.com
+                        </p>
+
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-link">
+                        <h2>Quick Links</h2>
+
+                        <a href="#home">Home</a>
+                        <a href="#about">About Us</a>
+                        <a href="#collections">Collections</a>
+                        <a href="#contact">Contact Us</a>
+                        <a href="#">Privacy Policy</a>
+                    </div>
+                </div>
+
+                <!-- Brand -->
+                <div class="col-lg-4">
+                    <div class="footer-newsletter">
+
+                        <h2>TASO – Beyond Brilliance</h2>
+
+                        <p>
+                            Experience the elegance of <strong>LUMI 5D Diamond Jewellery</strong>,
+                            where innovation meets timeless craftsmanship.
+                            Every masterpiece is designed to deliver exceptional brilliance,
+                            lightweight luxury, and unforgettable beauty.
+                        </p>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="copyright">
+            <div class="container">
+
+                <p>
+                    &copy; 2026 <strong>Sonalika Jewellers Private Limited</strong>.
+                    All Rights Reserved.
+                </p>
+
+                <p>
+                    Crafted with for Luxury Jewellery Excellence.
+                </p>
+
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <script src="{{ url_for('static', filename='lib_land/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib_land/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib_land/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib_land/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script
+        src="{{ url_for('static', filename='lib_land/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{{ url_for('static', filename='js_land/main.js') }}"></script>
+    <script>
+
+document.getElementById("contactForm").addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        subject: document.getElementById("subject").value,
+        message: document.getElementById("message").value
+    };
+
+    const response = await fetch("/contact",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(data)
+
+    });
+
+    const result = await response.json();
+
+    alert(result.message);
+
+    if(result.success){
+
+        document.getElementById("contactForm").reset();
+
+    }
+
+});
+
+</script>
+</body>
+
 </html>
