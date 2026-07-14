@@ -35,7 +35,7 @@
         }
 
         .cta-section .overlay {
-            background: rgba(16, 23, 85, 0.568);
+            background: rgba(48, 63, 197, 0.5);
             padding: 120px 0;
         }
 
@@ -94,6 +94,23 @@
             }
 
         }
+        /* Default (Transparent Navbar) */
+        #logo-white {
+            display: block;
+        }
+        
+        #logo-color {
+            display: none;
+        }
+        
+        /* Sticky Navbar */
+        .navbar.nav-sticky #logo-white {
+            display: none;
+        }
+        
+        .navbar.nav-sticky #logo-color {
+            display: block;
+        }
     </style>
 </head>
 
@@ -101,7 +118,19 @@
     <!-- Nav Bar Start -->
     <div class="navbar navbar-expand-lg bg-light navbar-light">
         <div class="container-fluid">
-            <img src="{{ url_for('static', filename='img-land/SonalikaLogo.png') }}" alt="Image" style="width: 250px;">
+        <a  class="navbar-brand p-0">
+
+            <!-- White Logo (Before Scroll) -->
+            <img id="logo-white"
+                 src="{{ url_for('static', filename='img-land/SonalikaLogo-white.png') }}"
+                 alt="Sonalika Logo" >
+
+            <!-- Normal Logo (After Scroll) -->
+            <img id="logo-color"
+                 src="{{ url_for('static', filename='img-land/SonalikaLogo.png') }}"
+                 alt="Sonalika Logo">
+
+        </a>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>

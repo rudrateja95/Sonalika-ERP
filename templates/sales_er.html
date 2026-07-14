@@ -59,35 +59,21 @@
 
 <body>
     <!-- Topbar Start -->
-    <div class="container-fluid">
-        <div class="row align-items-center py-3 px-xl-5">
-            <div class="col-lg-3 d-none d-lg-block">
-                <a class="text-decoration-none">
-                    <img src="{{ url_for('static', filename='img/SonalikaLogo.png') }}" alt="User Profile"
-                        style="width: 80%; height: 50px;">
-                </a>
-            </div>
-            <div class="col-lg-6 col-6 text-left">
-                <form action="">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products">
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-lg-3 col-6 text-right">
-                <a href="" class="btn border">
-                    <i class="fas fa-heart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
-                <a href="" class="btn border">
-                    <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
+    <div class="navbar navbar-expand-lg bg-light navbar-light">
+        <div class="container-fluid">
+            <img src="{{ url_for('static', filename='img-land/SonalikaLogo.png') }}" alt="Image" style="width: 250px;">
+            <button type="button" class="navbar-toggler ml-0" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon" ></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+                   <a href="{{ url_for('home') }}" class="nav-item nav-link">Home</a>
+                   <a href="{{ url_for('home') }}#about" class="nav-item nav-link">About</a>
+                   <a href="{{ url_for('home') }}#location" class="nav-item nav-link">Location</a>
+                   <a href="{{ url_for('home') }}#contact" class="nav-item nav-link">Contact</a>
+                   <a href="{{ url_for('sales_er') }}" class="nav-item nav-link">Collections</a>
+                </div>
             </div>
         </div>
     </div>
@@ -99,9 +85,6 @@
         <div class="row border-top px-xl-5">
             <div class="col-lg-12">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
                     <div class="collapse navbar-collapse justify-content-center" id="navbarCollapse">
 
                         <div class="dropdown mr-2">
@@ -290,7 +273,7 @@
 
         async function fetchPage(pageNo) {
 
-            const response = await fetch(`/api/styles?brand=SONALIKA&category= TOPS&page=${pageNo}`);
+            const response = await fetch(`/api/styles?brand=SONALIKA&category=ear ring&page=${pageNo}`);
             return await response.json();
 
         }

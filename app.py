@@ -66,7 +66,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'sonalikajewellers2021@gmail.com'
 mail = Mail(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sonalika:1234@localhost/sonalika'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024
+app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024 * 1024  # 1 GB
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

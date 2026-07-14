@@ -153,7 +153,7 @@ a:focus {
     
     .navbar.nav-sticky {
         padding: 10px 60px;
-        background: #ffffff !important;
+        background: #ffffff83 !important;
     }
     
     .navbar .navbar-brand {
@@ -192,7 +192,7 @@ a:focus {
 @media (max-width: 991.98px) {   
     .navbar {
         padding: 15px;
-        background: #ffffff !important;
+        background: #536cb357 !important;
     }
     
     .navbar .navbar-brand {
