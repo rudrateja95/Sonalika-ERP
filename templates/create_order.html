@@ -264,11 +264,222 @@ data-role="pieces">
 </div>
 
       <!-- ADD ITEM -->
-    <div class="d-grid d-md-flex justify-content-md-center gap-2 mb-4">
-        <button type="button" class="btn btn-outline-primary btn-lg px-4" onclick="addOrder()">
-          + Add New Order Item
-        </button>
-      </div>
+<!-- Order Modal -->
+<div class="modal fade" id="selectModal" tabindex="-1" aria-hidden="true">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+
+        <div class="modal-content border-0 shadow-lg rounded-4">
+
+            <!-- Header -->
+            <div class="modal-header bg-primary text-white rounded-top-4">
+
+                <h4 class="modal-title">
+                    <i class="fas fa-gem me-2"></i>
+                    Create Order
+                </h4>
+
+                <button type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal"></button>
+
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body p-4">
+
+                <form id="selectForm">
+
+                    <!-- Style -->
+                    <div class="mb-4">
+
+                        <label class="form-label fw-bold">
+                            Style Number
+                        </label>
+
+                        <input type="text"
+                               id="styleNo"
+                               class="form-control form-control-lg"
+                               readonly>
+
+                    </div>
+
+                    <!-- Customer -->
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Customer Name
+                            </label>
+
+                            <input type="text"
+                                   id="customerName"
+                                   class="form-control"
+                                   placeholder="Enter customer name">
+
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Phone Number
+                            </label>
+
+                            <input type="tel"
+                                   id="phone"
+                                   class="form-control"
+                                   placeholder="Enter mobile number">
+
+                        </div>
+
+                    </div>
+
+                    <hr>
+
+                    <h5 class="mb-3 text-primary">
+                        Jewellery Details
+                    </h5>
+
+                    <div class="row">
+
+                        <!-- Diamond Clarity -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Diamond Clarity
+                            </label>
+
+                            <select class="form-select" data-role="diamond_clarity">
+
+                                <option value="">Select</option>
+                                <option value="VVS">VVS</option>
+                                <option value="VS">VS</option>
+                                <option value="SI">SI</option>
+                                <option value="IJ">IJ</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- Diamond Color -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Diamond Color
+                            </label>
+
+                            <select class="form-select" data-role="diamond_color">
+
+                                <option value="">Select</option>
+                                <option value="EF">EF</option>
+                                <option value="FG">FG</option>
+                                <option value="GH">GH</option>
+                                <option value="HI">HI</option>
+                                <option value="IJ">IJ</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- Gold Color -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Gold Color
+                            </label>
+
+                            <select class="form-select" data-role="gold_color">
+
+                                <option value="">Select</option>
+                                <option value="YELLOW GOLD">Yellow Gold</option>
+                                <option value="ROSE GOLD">Rose Gold</option>
+                                <option value="WHITE GOLD">White Gold</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- Gold Purity -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="form-label fw-semibold">
+                                Gold Purity
+                            </label>
+
+                            <select class="form-select" data-role="goldPurity">
+
+                                <option value="">Select</option>
+                                <option value="0.38">9 KT</option>
+                                <option value="0.59">14 KT</option>
+                                <option value="0.76">18 KT</option>
+                                <option value="0.96">22 KT</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Remark -->
+                    <div class="mb-4">
+
+                        <label class="form-label fw-semibold">
+                            Remark
+                        </label>
+
+                        <textarea class="form-control"
+                                  rows="4"
+                                  placeholder="Enter order remarks..."
+                                  data-role="Style_remark"></textarea>
+
+                    </div>
+
+                    <!-- Add Order -->
+                    <div class="text-center mb-3">
+
+                        <button type="button"
+                                class="btn btn-outline-primary rounded-pill px-4"
+                                onclick="addOrder()">
+
+                            <i class="fas fa-plus-circle me-2"></i>
+                            Add New Order Item
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+
+                <button type="button"
+                        class="btn btn-secondary rounded-pill px-4"
+                        data-bs-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button type="submit"
+                        form="selectForm"
+                        class="btn btn-primary rounded-pill px-5">
+
+                    <i class="fas fa-check-circle me-2"></i>
+                    Submit Order
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
       <hr class="my-4">
 

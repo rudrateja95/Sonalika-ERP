@@ -40,6 +40,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  border-radius: 20px;
 }
 
 html {
@@ -1883,7 +1884,7 @@ pre code {
   color: #495057;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #EDF1FF;
+  border: 1px solid #9aaff8;
   border-radius: 0;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -6139,7 +6140,7 @@ a.close.disabled {
 }
 
 .bg-primary {
-  background-color: #4b5cd9 !important;
+  background-color: #1d287b66 !important;
 }
 
 a.bg-primary:hover, a.bg-primary:focus,

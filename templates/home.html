@@ -111,6 +111,117 @@
         .navbar.nav-sticky #logo-color {
             display: block;
         }
+        .wa-widget{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    z-index:9999;
+}
+
+.wa-button{
+
+    width:65px;
+    height:65px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#25D366;
+    color:#fff;
+
+    font-size:34px;
+
+    cursor:pointer;
+
+    box-shadow:0 6px 15px rgba(0,0,0,.25);
+
+}
+
+.wa-box{
+
+    width:330px;
+
+    background:#fff;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    margin-bottom:15px;
+
+    display:none;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+
+}
+
+.wa-header{
+
+    background:#25D366;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+
+    padding:15px;
+
+}
+
+.wa-logo{
+
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    margin-right:10px;
+
+    background:#fff;
+
+}
+
+.wa-header h6{
+
+    margin:0;
+    font-weight:bold;
+
+}
+
+.wa-header small{
+
+    color:#f3f3f3;
+
+}
+
+.wa-body{
+
+    padding:20px;
+
+    background:#ECE5DD;
+
+}
+
+.wa-message{
+
+    background:#fff;
+
+    padding:15px;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    box-shadow:0 2px 5px rgba(0,0,0,.1);
+
+}
+
+.wa-footer{
+
+    padding:15px;
+
+}
     </style>
 </head>
 
@@ -882,7 +993,63 @@
         </div>
     </div>
     <!-- Contact End -->
+     
+<!-- WhatsApp Widget -->
+<div class="wa-widget">
 
+    <div class="wa-box" id="waBox">
+
+        <div class="wa-header">
+
+            <img src="{{ url_for('static', filename='img-land/Sonalikaicon.png') }}" class="wa-logo">
+
+            <div>
+
+                <h6>Sonalika Jewellers</h6>
+
+                <small>Typically replies in a few minutes</small>
+
+            </div>
+
+        </div>
+
+        <div class="wa-body">
+
+            <div class="wa-message">
+
+                👋 Hello! Welcome to Sonalika Jewellers.
+
+                <br><br>
+
+                How can we help you today?
+
+            </div>
+
+        </div>
+
+        <div class="wa-footer">
+
+            <a href="https://wa.me/919900472995?text=Hi%20Sonalika%20Jewellers"
+               target="_blank"
+               class="btn btn-success w-100">
+
+                <i class="fab fa-whatsapp"></i>
+
+                Chat on WhatsApp
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <button class="wa-button" onclick="toggleWhatsApp()">
+
+        <i class="fab fa-whatsapp"></i>
+
+    </button>
+
+</div>
 
 
     <!-- Footer Start -->
@@ -1027,6 +1194,23 @@ document.getElementById("contactForm").addEventListener("submit", async function
 
 });
 
+</script>
+<script>
+    function toggleWhatsApp(){
+
+    const box=document.getElementById("waBox");
+
+    if(box.style.display==="block"){
+
+        box.style.display="none";
+
+    }else{
+
+        box.style.display="block";
+
+    }
+
+}
 </script>
 </body>
 

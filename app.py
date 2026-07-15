@@ -545,7 +545,7 @@ def api_styles():
     category = request.args.get("category", "").strip()
     page = int(request.args.get("page", 1))
 
-    PER_PAGE = 10
+    PER_PAGE = 8
 
     query = StyleNo.query
 
@@ -580,6 +580,8 @@ def api_styles():
             "dia_wt": style.dia_wt,
             "dia_pc": style.dia_pc,
             "brand": style.brand,
+            "cstn_pc": style.cstn_pc,
+            "cstn_wt":style.cstn_wt,
             "image": base64.b64encode(style.image).decode("utf-8") if style.image else ""
         })
 
