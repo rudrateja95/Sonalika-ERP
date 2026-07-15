@@ -362,7 +362,7 @@
 
             let html = "";
 
-            products.forEach(product => {
+            products.forEach(function(product) {
 
                 html += `
     
@@ -412,27 +412,27 @@
     
                         <tr>
                             <th>Gold Net wt</th>
-                            <td>${product.net_wt ?? "-"}</td>
+                            ${product.net_wt != null ? product.net_wt : "-"}
                         </tr>
     
                         <tr>
                             <th>Diamond wt</th>
-                            <td>${product.dia_wt ?? "-"}</td>
+                            ${product.dia_wt != null ? product.dia_wt : "-"}
                         </tr>
     
                         <tr>
                             <th>Diamond Pieces</th>
-                            <td>${product.dia_pc ?? "-"}</td>
+                            ${product.dia_pc != null ? product.dia_pc : "-"}
                         </tr>
 
                         <tr>
                         <th>Color stn. pc</th>
-                        <td>${product.cstn_pc ?? "-"}</td>
+                        ${product.cstn_pc != null ? product.cstn_pc : "-"}
                     </tr>
 
                     <tr>
                         <th>Color stn. wt</th>
-                        <td>${product.cstn_wt ?? "-"}</td>
+                        ${product.cstn_wt != null ? product.cstn_wt : "-"}
                     </tr>
     
                     </tbody>
@@ -505,7 +505,7 @@
             document.getElementById("loader").style.display = "none";
 
             // Preload next page in background
-            fetchPage(page).then(data => {
+            fetchPage(page).then(function(data) {
 
                 preloadedProducts = data.products;
 
@@ -513,9 +513,9 @@
 
         }
 
-        window.addEventListener("scroll", () => {
+        window.addEventListener("scroll", function() {
 
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
+            if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 300) {
 
                 loadProducts();
 
