@@ -9,7 +9,7 @@
 
         async function fetchPage(pageNo) {
 
-            const response = await fetch(`/api/styles?brand=SONALIKA&category=PENDENT=${pageNo}`);
+            const response = await fetch(`/api/styles?brand=SONALIKA&category=PENDENT&page=${pageNo}`);
             return await response.json();
 
         }
