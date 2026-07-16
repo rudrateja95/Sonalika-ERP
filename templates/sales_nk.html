@@ -358,7 +358,7 @@ async function fetchPage(pageNo) {
 
     try {
 
-        const response = await fetch("/api/styles?brand=SONALIKA&category= Necklace&page=" + pageNo);
+        const response = await fetch("/api/styles?brand=SONALIKA&category=Necklace&page=" + pageNo);
 
         if (!response.ok) {
             throw new Error("HTTP Error: " + response.status);
