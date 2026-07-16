@@ -24,83 +24,159 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url_for('static', filename='css_ec/style.css') }}" rel="stylesheet">
     <style>
+        .table td,
+        .table th {
+            padding: 6px;
+            vertical-align: middle;
+        }
 
-.table td,
-.table th{
-    padding:6px;
-    vertical-align:middle;
-}
+        .card {
+            border-radius: 12px;
+        }
 
-.card{
-    border-radius:12px;
-}
-.product-bg{
-    background: url("") no-repeat center center;
-    background-size: cover;
-    background-attachment: fixed;
-    min-height: 100vh;
-    padding-top: 40px;
-    padding-bottom: 40px;
-}
+        .product-bg {
+            background: url("") no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding-top: 40px;
+            padding-bottom: 40px;
+        }
 
-.product-item{
-    background: rgba(255,255,255,0.95);
-    border-radius: 12px;
-    overflow: hidden;
-}
-.image-box{
-    position:relative;
-    overflow:hidden;
-    border-radius:20px;
-    background:#fff;
-    text-align:center;
-    padding:15px;
-}
+        .product-item {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            overflow: hidden;
+        }
 
-.product-img{
-    transition:0.4s;
-}
+        h6 {
+            color: whitesmoke
+        }
 
-.image-overlay{
+        .image-box {
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #fff;
+            text-align: center;
+            padding: 15px;
+        }
 
-    position:absolute;
-    top:0;
-    left:0;
+        .product-img {
+            transition: 0.4s;
+        }
 
-    width:100%;
-    height:100%;
+        .image-overlay {
 
-    background:rgba(0,0,0,.45);
+            position: absolute;
+            top: 0;
+            left: 0;
 
-    display:flex;
-    justify-content:center;
-    align-items:center;
+            width: 100%;
+            height: 100%;
 
-    opacity:0;
-    transition:.3s;
+            background: rgba(0, 0, 0, .45);
 
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-.image-box:hover .image-overlay{
-    opacity:1;
-}
+            opacity: 0;
+            transition: .3s;
 
-.image-box:hover .product-img{
-    transform:scale(1.05);
-}
+        }
 
-.image-overlay .btn{
+        .image-box:hover .image-overlay {
+            opacity: 1;
+        }
 
-    width:55px;
-    height:55px;
+        .image-box:hover .product-img {
+            transform: scale(1.05);
+        }
 
-    font-size:22px;
+        .image-overlay .btn {
 
-}
+            width: 55px;
+            height: 55px;
 
+            font-size: 22px;
 
+        }
 
+        .modal-content {
+            border-radius: 20px;
+        }
 
+        .modal-header {
+            padding: 20px 25px;
+        }
+
+        .modal-body {
+            background: #fafafa;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 12px;
+            padding: 12px;
+            transition: .3s;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 10px rgba(13, 110, 253, .2);
+        }
+
+        .btn {
+            border-radius: 30px;
+            transition: .3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .modal-footer {
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        @media(max-width:768px) {
+
+            .modal-dialog {
+                margin: .5rem;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+
+            .modal-footer .btn {
+                width: 100%;
+            }
+
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .form-select {
+            height: 50px;
+            border-radius: 12px;
+        }
+
+        .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 8px rgba(13, 110, 253, .15);
+        }
     </style>
 </head>
 
@@ -329,6 +405,165 @@
 
 </div>
 
+    <!-- Order Modal -->
+    <div class="modal fade" id="selectModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+
+            <div class="modal-content border-0 shadow-lg rounded-4">
+
+                <!-- Header -->
+                <div class="modal-header bg-primary text-white rounded-top-4">
+
+                    <h4 class="modal-title text-center" style="color: #fafafa;">
+                        Create Order
+                    </h4>
+
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body p-4">
+
+                    <form id="selectForm">
+
+
+
+                        <div id="orderContainer">
+
+                            <div class="order-item">
+
+                                <div class="row">
+
+                                    <!-- Style Number -->
+                                    <div class="col-12 col-md-6 mb-4">
+                                        <label class="form-label fw-bold">
+                                            Style Number
+                                        </label>
+
+                                        <input type="text" id="styleNo" class="form-control form-control-lg" readonly>
+                                    </div>
+
+                                    <!-- Quantity -->
+                                    <div class="col-12 col-md-6 mb-4">
+                                        <label class="form-label fw-bold">
+                                            Quantity
+                                        </label>
+
+                                        <input type="number" id="quantity" class="form-control form-control-lg"
+                                            value="1" min="1">
+                                    </div>
+
+                                </div>
+
+                                <div class="row g-3 mb-3">
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Diamond Clarity</label>
+
+                                        <select class="form-select w-100" data-role="diamond_clarity">
+                                            <option value="">Diamond Clarity</option>
+                                            <option>VVS</option>
+                                            <option>VS</option>
+                                            <option>SI</option>
+                                            <option>IJ</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Diamond Color</label>
+
+                                        <select class="form-select w-100" data-role="diamond_color">
+                                            <option value="">Diamond Color</option>
+                                            <option>EF</option>
+                                            <option>FG</option>
+                                            <option>GH</option>
+                                            <option>HI</option>
+                                            <option>IJ</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Gold Color</label>
+
+                                        <select class="form-select w-100" data-role="gold_color">
+                                            <option value="">Gold Color</option>
+                                            <option>Yellow Gold</option>
+                                            <option>Rose Gold</option>
+                                            <option>White Gold</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Gold Purity</label>
+
+                                        <select class="form-select w-100" data-role="goldPurity">
+                                            <option value="">Gold Purity</option>
+                                            <option>9 KT</option>
+                                            <option>14 KT</option>
+                                            <option>18 KT</option>
+                                            <option>22 KT</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-3">
+                                    <textarea class="form-control" rows="2" placeholder="Enter order remarks..."
+                                        data-role="Style_remark"></textarea>
+                                </div>
+
+                                <div class="text-end mb-3">
+                                    <button type="button" class="btn btn-danger remove-order" style="display:none"
+                                        onclick="removeOrder(this)">
+                                        Remove
+                                    </button>
+                                </div>
+
+                                <hr>
+
+                            </div>
+
+                        </div>
+
+                        <!-- Add Order -->
+                        <!-- Add Button -->
+                        <div class="text-center">
+
+                            <button type="button" class="btn btn-outline-primary rounded-pill px-4"
+                                onclick="addOrder()">
+
+                                <i class="fas fa-plus-circle me-2"></i>
+                                Add Same Item
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="modal-footer " style="justify-content: center;">
+
+                    <button type="submit" form="selectForm" class="btn btn-primary rounded-pill px-5">
+
+                        <i class="fas fa-check-circle me-2"></i>
+                        Cart Order
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 
 
 
@@ -344,223 +579,22 @@
 
     <!-- Template Javascript -->
     <script src="js_ec/main.js"></script>
-<script>
+    <!-- cardsloader -->
+    <script src="{{ url_for('static', filename='js_ec/cardsloader.js') }}"></script>
 
-var page = 1;
-var loading = false;
-var finished = false;
-var preloadedProducts = [];
 
-// First load
-loadProducts();
+    <!-- add items -->
+    <script src="{{ url_for('static', filename='js_ec/additems.js') }}"></script>
 
-async function fetchPage(pageNo) {
 
-    try {
+    <!-- image preview popup -->
+    <script src="{{ url_for('static', filename='js_ec/imagepreview.js') }}"></script>
 
-        const response = await fetch("/api/styles?brand=SONALIKA&category=Necklace&page=" + pageNo);
+    <!--cart popup -->
+    <script src="{{ url_for('static', filename='js_ec/cartpopup.js') }}"></script>
 
-        if (!response.ok) {
-            throw new Error("HTTP Error: " + response.status);
-        }
-
-        return await response.json();
-
-    } catch (err) {
-
-        console.error(err);
-        return { products: [] };
-
-    }
-
-}
-
-function renderProducts(products) {
-
-    var html = "";
-
-    products.forEach(function(product) {
-
-        html += `
-
-<div class="col-lg-3 col-md-6 col-sm-12 mb-4">
-
-    <div class="card h-100 shadow-sm border">
-
-        <div class="image-box">
-
-            <img
-                src="data:image/jpeg;base64,${product.image}"
-                alt="${product.style_no}"
-                class="img-fluid product-img"
-                style="height:260px; object-fit:contain;">
-
-            <div class="image-overlay">
-
-                <button
-                    class="btn btn-light rounded-circle"
-                    onclick="showImage('data:image/jpeg;base64,${product.image}')">
-
-                    <i class="fas fa-eye"></i>
-
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="card-body d-flex flex-column">
-
-            <h5 class="text-center font-weight-bold mb-1">
-                ${product.style_no}
-            </h5>
-
-                <table class="table table-bordered table-sm text-center mb-4">
-    
-                    <tbody>
-    
-                        <tr>
-                            <th>Gross wt</th>
-                            <td>${product.gold_wt != null ? Number(product.gold_wt).toFixed(3) : "-"}</td>
-                        </tr>
-    
-                        <tr>
-                            <th>Gold Net wt</th>
-                            ${product.net_wt != null ? product.net_wt : "-"}
-                        </tr>
-    
-                        <tr>
-                            <th>Diamond wt</th>
-                            ${product.dia_wt != null ? product.dia_wt : "-"}
-                        </tr>
-    
-                        <tr>
-                            <th>Diamond Pieces</th>
-                            ${product.dia_pc != null ? product.dia_pc : "-"}
-                        </tr>
-
-                        <tr>
-                        <th>Color stn. pc</th>
-                        ${product.cstn_pc != null ? product.cstn_pc : "-"}
-                    </tr>
-
-                    <tr>
-                        <th>Color stn. wt</th>
-                        ${product.cstn_wt != null ? product.cstn_wt : "-"}
-                    </tr>
-    
-                    </tbody>
-    
-                </table>
-
-            <div class="mt-auto">
-
-                <a href="#" class="btn btn-primary btn-block rounded-pill">
-
-                    <i class="fas fa-shopping-cart mr-2"></i>
-
-                    Order Now
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-        `;
-
-    });
-
-    document.getElementById("products").insertAdjacentHTML("beforeend", html);
-
-}
-
-async function loadProducts() {
-
-    if (loading || finished) return;
-
-    loading = true;
-
-    document.getElementById("loader").style.display = "block";
-
-    try {
-
-        if (preloadedProducts.length > 0) {
-
-            renderProducts(preloadedProducts);
-            preloadedProducts = [];
-
-        } else {
-
-            var data = await fetchPage(page);
-
-            if (!data.products || data.products.length === 0) {
-
-                finished = true;
-                document.getElementById("loader").innerHTML = "No More Products";
-                loading = false;
-                return;
-
-            }
-
-            renderProducts(data.products);
-
-        }
-
-        page++;
-
-        loading = false;
-
-        document.getElementById("loader").style.display = "none";
-
-        fetchPage(page).then(function(data) {
-
-            if (data.products) {
-                preloadedProducts = data.products;
-            }
-
-        });
-
-    } catch (err) {
-
-        console.error(err);
-
-        loading = false;
-        document.getElementById("loader").style.display = "none";
-
-    }
-
-}
-
-window.addEventListener("scroll", function() {
-
-    if ((window.innerHeight + window.pageYOffset) >= (document.body.offsetHeight - 300)) {
-
-        loadProducts();
-
-    }
-
-});
-
-</script>
-<script>
-    function showImage(imageSrc){
-
-    document.getElementById("popupImage").src = imageSrc;
-
-    const modal = new bootstrap.Modal(
-        document.getElementById("imageModal")
-    );
-
-    modal.show();
-
-}
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- close button link -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

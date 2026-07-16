@@ -1242,8 +1242,8 @@ pre code {
     max-width: 16.66667%;
   }
   .col-lg-3 {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
   }
   .col-lg-4 {
     flex: 0 0 33.33333%;
@@ -2664,14 +2664,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #D19C97;
-  border-color: #D19C97;
+  color: #030303;
+  border-color: #3d4568;
 }
 
 .btn-outline-primary:hover {
   color: #212529;
-  background-color: #D19C97;
-  border-color: #D19C97;
+  background-color: #2b276380;
+  border-color: #093049;
 }
 
 .btn-outline-primary:focus, .btn-outline-primary.focus {
