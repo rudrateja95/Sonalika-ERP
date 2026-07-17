@@ -64,7 +64,7 @@ app.config['MAIL_PASSWORD'] = 'amag epeg aaez mklf'
 app.config['MAIL_DEFAULT_SENDER'] = 'sonalikajewellers2021@gmail.com'
 
 mail = Mail(app)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/sonalika'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/sonalika'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sonalika:1234@localhost/sonalika'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024 * 1024  # 1 GB
