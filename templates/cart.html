@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>SONALIKAShopping</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+    <!-- Favicon -->
+    <link href="{{ url_for('static', filename='img_ec/favicon.ico') }}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome (CDN - No changes needed) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{{ url_for('static', filename='lib_ec/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ url_for('static', filename='css_ec/style.css') }}" rel="stylesheet">
+</head>
+
+
+<body>
+    <!-- Topbar Start -->
+    <div class="navbar navbar-expand-lg bg-light navbar-light">
+        <div class="container-fluid">
+            <img src="{{ url_for('static', filename='img-land/SonalikaLogo.png') }}" alt="Image" style="width: 250px;">
+            <button type="button" class="navbar-toggler ml-0" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto">
+                    <a href="{{ url_for('home') }}" class="nav-item nav-link">Home</a>
+                    <a href="{{ url_for('home') }}#about" class="nav-item nav-link">About</a>
+                    <a href="{{ url_for('home') }}#location" class="nav-item nav-link">Location</a>
+                    <a href="{{ url_for('home') }}#contact" class="nav-item nav-link">Contact</a>
+                    <a href="{{ url_for('sales_er') }}" class="nav-item nav-link">Collections</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+<hr>
+
+<!-- Cart Start -->
+<div class="table-responsive shadow rounded px-xl-5">
+    <!-- Cart Header -->
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+
+        <div>
+
+            <h2 class="font-weight-bold text-primary mb-1">
+                <i class="fas fa-shopping-cart"></i> My Cart
+            </h2>
+
+        </div>
+
+    </div>
+
+</div>
+    <table class="table table-hover align-middle mb-0">
+
+        <thead class="bg-primary text-white">
+            <tr class="text-center">
+                <th>img</th>
+                <th>Style No</th>
+                <th>Qty</th>
+                <th>Gold Color</th>
+                <th>Purity</th>
+                <th>Dia Color</th>
+                <th>Dia Clarity</th>
+                <th>Remarks</th>
+                <th>Created</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+        <tbody id="cartBody">
+
+        </tbody>
+
+    </table>
+    
+        <div class="text-right mb-4">
+
+
+          <center>  <button
+                class="btn btn-success btn-lg px-4"
+                onclick="placeOrder()">
+
+                <i class="fas fa-check-circle"></i>
+                Place Order
+
+            </button></center>
+
+        </div>
+
+</div>
+<!-- Cart End -->
+
+<!-- ================= UPDATE CART MODAL ================= -->
+
+<div class="modal fade" id="editCartModal" tabindex="-1">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header bg-warning text-dark">
+
+                <h5 class="modal-title">
+                    <i class="fas fa-edit"></i>
+                    Update Cart Item
+                </h5>
+
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body p-4">
+
+                <form id="editCartForm">
+
+                    <!-- Hidden Cart ID -->
+                    <input type="hidden" id="edit_cart_id">
+
+                    <div class="row">
+
+                        <!-- Style Number -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="font-weight-bold">
+                                Style Number
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                data-role="edit_style_no"
+                                readonly>
+
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="font-weight-bold">
+                                Quantity
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                data-role="edit_qty"
+                                min="1">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Gold Color -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="font-weight-bold">
+                                Gold Color
+                            </label>
+
+                            <select
+                                class="form-control"
+                                data-role="edit_gold_color">
+
+                                <option>Yellow Gold</option>
+                                <option>Rose Gold</option>
+                                <option>White Gold</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- Gold Purity -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="font-weight-bold">
+                                Gold Purity
+                            </label>
+
+                            <select
+                                class="form-control"
+                                data-role="edit_gold_purity">
+
+                                <option>9 KT</option>
+                                <option>14 KT</option>
+                                <option>18 KT</option>
+                                <option>22 KT</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Diamond Color -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="font-weight-bold">
+                                Diamond Color
+                            </label>
+
+                            <select
+                                class="form-control"
+                                data-role="edit_diamond_color">
+
+                                <option>EF</option>
+                                <option>FG</option>
+                                <option>GH</option>
+                                <option>HI</option>
+                                <option>IJ</option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- Diamond Clarity -->
+                        <div class="col-md-6 mb-3">
+
+                            <label class="font-weight-bold">
+                                Diamond Clarity
+                            </label>
+
+                            <select
+                                class="form-control"
+                                data-role="edit_diamond_clarity">
+
+                                <option>VVS</option>
+                                <option>VS</option>
+                                <option>SI</option>
+                                <option>IJ</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="font-weight-bold">
+                            Remarks
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            rows="3"
+                            data-role="edit_remarks"></textarea>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-dismiss="modal">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-warning"
+                    onclick="updateCart()">
+
+                    <i class="fas fa-save"></i>
+                    Update Cart
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib_ec/easing/easing.min.js"></script>
+    <script src="lib_ec/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js_ec/main.js"></script>
+
+ <!-- alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- GET cart List -->
+    <script src="{{ url_for('static', filename='js_ec/getcart.js') }}"></script>
+
+    <!-- GET cart List -->
+    <script src="{{ url_for('static', filename='js_ec/editcart.js') }}"></script>
+
+    <!-- update cart List -->
+    <script src="{{ url_for('static', filename='js_ec/updatecart.js') }}"></script>
+
+    <!-- delet cart List -->
+    <script src="{{ url_for('static', filename='js_ec/deletcart.js') }}"></script>
+</body>
+
+</html>

@@ -202,10 +202,16 @@
         </div>
     </div>
     <!-- Topbar End -->
-
-<!--Start Sticky Icon--> 
+<!--Start Sticky Icon-->
 <div class="sticky-icon">
-   <a href="{{ url_for('sales_er') }}" class="Cart"><i class="fas fa-shopping-cart"> </i> Cart-10 </a>   
+    <a ></a>
+    <a ></a>
+    <a ></a>
+    <a ></a>
+    <a href="{{ url_for('cart') }}" class="Cart">
+        <i class="fas fa-shopping-cart"></i>
+        Cart - <span id="cartQty">0</span>
+    </a>
 </div>
 <!--End Sticky Icon-->
 
@@ -429,7 +435,7 @@
 
                 </div>
 
-                <!-- Body -->
+                <!-- Cart PopUp -->
                 <div class="modal-body p-4">
 
                     <form id="selectForm">
@@ -448,7 +454,8 @@
                                             Style Number
                                         </label>
 
-                                        <input type="text" id="styleNo" class="form-control form-control-lg" readonly>
+                                        <input type="text" class="form-control form-control-lg" data-role="style_no"
+                                            readonly>
                                     </div>
 
                                     <!-- Quantity -->
@@ -457,7 +464,7 @@
                                             Quantity
                                         </label>
 
-                                        <input type="number" id="quantity" class="form-control form-control-lg"
+                                        <input type="number" class="form-control form-control-lg" data-role="qty"
                                             value="1" min="1">
                                     </div>
 
@@ -504,7 +511,7 @@
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Gold Purity</label>
 
-                                        <select class="form-select w-100" data-role="goldPurity">
+                                        <select class="form-select w-100" data-role="gold_purity">
                                             <option value="">Gold Purity</option>
                                             <option>9 KT</option>
                                             <option>14 KT</option>
@@ -517,7 +524,7 @@
 
                                 <div class="mb-3">
                                     <textarea class="form-control" rows="2" placeholder="Enter order remarks..."
-                                        data-role="Style_remark"></textarea>
+                                        data-role="remarks"></textarea>
                                 </div>
 
                                 <div class="text-end mb-3">
@@ -554,10 +561,9 @@
                 <!-- Footer -->
                 <div class="modal-footer " style="justify-content: center;">
 
-                    <button type="submit" form="selectForm" class="btn btn-primary rounded-pill px-5">
+                    <button type="button" class="btn btn-success" onclick="saveCart()">
 
-                        <i class="fas fa-check-circle me-2"></i>
-                        Cart Order
+                        Save to Cart
 
                     </button>
 
@@ -583,7 +589,6 @@
     <!-- cardsloader -->
     <script src="{{ url_for('static', filename='js_ec/taso-necklace.js') }}"></script>
 
-
     <!-- add items -->
     <script src="{{ url_for('static', filename='js_ec/additems.js') }}"></script>
 
@@ -593,6 +598,18 @@
 
     <!--cart popup -->
     <script src="{{ url_for('static', filename='js_ec/cartpopup.js') }}"></script>
+
+    <!--cart api js -->
+    <script src="{{ url_for('static', filename='js_ec/cartapijsn.js') }}"></script>
+
+    <!-- get json values -->
+    <script src="{{ url_for('static', filename='js_ec/getjsncart.js') }}"></script>
+
+    <!-- alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Total Quantity -->
+    <script src="{{ url_for('static', filename='js_ec/totlqty.js') }}"></script>
 
     <!-- close button link -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

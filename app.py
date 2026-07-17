@@ -20,6 +20,7 @@ from sqlalchemy.dialects.mysql import LONGBLOB, JSON
 from sqlalchemy import LargeBinary, func, and_
 import math
 from datetime import datetime
+import pytz
 import openpyxl
 import imghdr
 from sqlalchemy.orm.attributes import flag_modified
@@ -437,17 +438,208 @@ class DiamondIssueRound(db.Model):
     pcs = db.Column(db.Integer)
     ct = db.Column(db.Float)
     
+class Cart(db.Model):
+    __tablename__ = "cart"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    client_code = db.Column(db.String(20), index=True, nullable=False)
+    style_no = db.Column(db.String(100), index=True, nullable=False)
+
+    qty = db.Column(db.Integer, nullable=False, default=1)
+
+    gold_color = db.Column(db.String(50))
+    gold_purity = db.Column(db.String(20))
+
+    diamond_color = db.Column(db.String(50))
+    diamond_clarity = db.Column(db.String(50))
+
+    remarks = db.Column(db.Text)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
 
- 
-
-# -----------------------------
-# MAIN ROUTES
-# -----------------------------
 
 # ======================================
 # 🔧 GETTING DIAMOND DETAILS FROM DB
 # ======================================
+
+# -----------------------------
+# Save Cart Temporary
+# -----------------------------
+
+@app.route("/api/cart", methods=["POST"])
+def save_cart():
+
+    data = request.get_json()
+
+    client_code = data["client_code"]
+
+    for item in data["items"]:
+
+        cart = Cart(
+
+            client_code=client_code,
+
+            style_no=item["style_no"],
+
+            qty=item["qty"],
+
+            gold_color=item["gold_color"],
+
+            gold_purity=item["gold_purity"],
+
+            diamond_color=item["diamond_color"],
+
+            diamond_clarity=item["diamond_clarity"],
+
+            remarks=item["remarks"]
+
+        )
+
+        db.session.add(cart)
+
+    db.session.commit()
+
+    return jsonify({
+        "status": "success",
+        "message": "Cart saved successfully"
+    })
+ # -----------------------------
+# total quantity
+# -----------------------------   
+@app.route("/api/cart-count")
+def cart_count():
+
+    # Later replace TEST001 with the logged-in client code
+    client_code = "TEST001"
+
+    total_qty = db.session.query(db.func.sum(Cart.qty))\
+        .filter(Cart.client_code == client_code)\
+        .scalar()
+
+    if total_qty is None:
+        total_qty = 0
+
+    return jsonify({
+        "total_qty": total_qty
+    })
+    
+@app.route("/cart")
+def cart():
+    return render_template("cart.html")
+
+ # -----------------------------
+# cart-get-id wise for edit
+# -----------------------------
+
+@app.route("/api/cart/<int:id>")
+def get_cart(id):
+
+    cart = Cart.query.get_or_404(id)
+
+    return jsonify({
+        "id": cart.id,
+        "style_no": cart.style_no,
+        "qty": cart.qty,
+        "gold_color": cart.gold_color,
+        "gold_purity": cart.gold_purity,
+        "diamond_color": cart.diamond_color,
+        "diamond_clarity": cart.diamond_clarity,
+        "remarks": cart.remarks
+    })
+    
+ # -----------------------------
+# edit-after-send-db
+# -----------------------------
+    
+@app.route("/api/cart/<int:id>", methods=["PUT"])
+def update_cart(id):
+
+    cart = Cart.query.get_or_404(id)
+
+    data = request.json
+
+    cart.qty = data["qty"]
+    cart.gold_color = data["gold_color"]
+    cart.gold_purity = data["gold_purity"]
+    cart.diamond_color = data["diamond_color"]
+    cart.diamond_clarity = data["diamond_clarity"]
+    cart.remarks = data["remarks"]
+
+    db.session.commit()
+
+    return jsonify({
+        "status": "success",
+        "message": "Cart updated successfully"
+    })
+
+ # -----------------------------
+# cart-list-get
+# -----------------------------
+
+@app.route("/api/cart-list")
+def cart_list():
+
+    client_code = "TEST001"
+
+    carts = Cart.query.filter_by(
+        client_code=client_code
+    ).order_by(
+        Cart.id.desc()
+    ).all()
+
+    data = []
+
+    for cart in carts:
+
+        style = StyleNo.query.filter_by(
+            style_no=cart.style_no
+        ).first()
+
+        image = ""
+        if style and style.image:
+            image = base64.b64encode(style.image).decode("utf-8")
+
+        data.append({
+
+            "id": cart.id,
+            "style_no": cart.style_no,
+            "qty": cart.qty,
+            "gold_color": cart.gold_color,
+            "gold_purity": cart.gold_purity,
+            "diamond_color": cart.diamond_color,
+            "diamond_clarity": cart.diamond_clarity,
+            "remarks": cart.remarks,
+            "created_at": cart.created_at.strftime("%d-%m-%Y %I:%M %p"),
+            "image": image
+
+        })
+
+    return jsonify(data)
+ # -----------------------------
+# delet-cart-by-id
+# -----------------------------
+
+@app.route("/api/cart/<int:id>", methods=["DELETE"])
+def delete_cart(id):
+
+    cart = Cart.query.get(id)
+
+    if not cart:
+        return jsonify({
+            "status": "error",
+            "message": "Cart item not found"
+        }), 404
+
+    db.session.delete(cart)
+    db.session.commit()
+
+    return jsonify({
+        "status": "success",
+        "message": "Cart item deleted successfully"
+    })
+
 @app.route("/contact", methods=["POST"])
 def contact():
 
@@ -538,7 +730,9 @@ def sales_tnk():
 def sales_tpd():
     return render_template("sales_tpd.html")
 
-
+# ======================================
+# 🔧 GETTING DIAMOND DETAILS FROM DB
+# ======================================
 @app.route("/api/styles", methods=["GET"])
 def api_styles():
 
