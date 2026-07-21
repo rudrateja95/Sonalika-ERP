@@ -189,14 +189,22 @@
             <button type="button" class="navbar-toggler ml-0" data-toggle="collapse" data-target="#navbarCollapse">
                 <span class="navbar-toggler-icon" ></span>
             </button>
-
             <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                 <div class="navbar-nav ml-auto">
-                   <a href="{{ url_for('home') }}" class="nav-item nav-link">Home</a>
-                   <a href="{{ url_for('home') }}#about" class="nav-item nav-link">About</a>
-                   <a href="{{ url_for('home') }}#location" class="nav-item nav-link">Location</a>
-                   <a href="{{ url_for('home') }}#contact" class="nav-item nav-link">Contact</a>
-                   <a href="{{ url_for('sales_er') }}" class="nav-item nav-link">Collections</a>
+                    <a href="{{ url_for('home') }}" class="nav-item nav-link">Home</a>
+                    <a href="{{ url_for('home') }}#about" class="nav-item nav-link">About</a>
+                    <a href="{{ url_for('home') }}#location" class="nav-item nav-link">Location</a>
+                    <a href="{{ url_for('home') }}#contact" class="nav-item nav-link">Contact</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <span class="d-none d-lg-inline-flex">
+                                {{ session.get("company_name") }}
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="logout" class="dropdown-item-1">Log Out</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

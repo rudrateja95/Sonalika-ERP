@@ -1,19 +1,27 @@
 async function loadCart() {
 
-    const res = await fetch("/api/cart-list");
+    try {
 
-    const data = await res.json();
+        const res = await fetch("/api/cart-list");
+        const data = await res.json();
 
-    let html = "";
+        let html = "";
+        let totalQty = 0;
 
-    let totalQty = 0;
+        data.forEach(item => {
 
-    data.forEach(item => {
+            totalQty += item.qty;
 
-        totalQty += item.qty;
-
-        html += `
-<tr>
+            html += `
+<tr
+    data-style-no="${item.style_no}"
+    data-qty="${item.qty}"
+    data-gold-color="${item.gold_color || ''}"
+    data-gold-purity="${item.gold_purity || ''}"
+    data-diamond-color="${item.diamond_color || ''}"
+    data-diamond-clarity="${item.diamond_clarity || ''}"
+    data-remarks="${item.remarks || ''}"
+>
 
 <td class="text-center">
     <img
@@ -22,60 +30,57 @@ async function loadCart() {
         style="width:90px;height:70px;object-fit:cover;">
 </td>
 
-    <td>
-        <strong>${item.style_no}</strong>
-    </td>
+<td>
+    <strong>${item.style_no}</strong>
+</td>
 
-    <td class="text-center">${item.qty}</td>
+<td class="text-center">${item.qty}</td>
 
-    <td>${item.gold_color}</td>
+<td>${item.gold_color}</td>
 
-    <td>${item.gold_purity}</td>
+<td>${item.gold_purity}</td>
 
-    <td>${item.diamond_color}</td>
+<td>${item.diamond_color}</td>
 
-    <td>${item.diamond_clarity}</td>
+<td>${item.diamond_clarity}</td>
 
-    <td>${item.remarks || "-"}</td>
+<td>${item.remarks || "-"}</td>
 
-    <td>${item.created_at}</td>
+<td>${item.created_at}</td>
 
-    <td class="text-center">
+<td class="text-center">
+    <button
+        type="button"
+        class="btn btn-warning"
+        onclick="editCart(${item.id})">
+        <i class="fas fa-edit"></i>
+    </button>
+</td>
 
-
-
-<button
-    type="button"
-    class="btn btn-warning"
-    onclick="editCart(${item.id})">
-
-    <i class="fas fa-edit"></i>
-
-</button>
-
-    </td>
-
-    <td class="text-center">
-
-<button
-    class="btn btn-sm btn-danger"
-    onclick="deleteCart(${item.id})">
-
-    <i class="fas fa-trash"></i>
-
-</button>
-
-    </td>
+<td class="text-center">
+    <button
+        class="btn btn-sm btn-danger"
+        onclick="deleteCart(${item.id})">
+        <i class="fas fa-trash"></i>
+    </button>
+</td>
 
 </tr>
 `;
 
-    });
+        });
 
-    document.getElementById("cartBody").innerHTML = html;
+        document.getElementById("cartBody").innerHTML = html;
 
-    document.getElementById("cartCount").innerHTML = data.length;
+    } catch (err) {
 
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "Failed to load cart."
+        });
+
+    }
 
 }
 

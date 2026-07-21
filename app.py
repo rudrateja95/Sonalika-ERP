@@ -33,7 +33,11 @@ from xml.etree import ElementTree as ET
 import io
 from flask_mail import Mail, Message
 
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+#server
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
+
+#local
+#pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 NS = {
     "etc": "http://www.wps.cn/officeDocument/2017/etCustomData",
@@ -458,43 +462,103 @@ class Cart(db.Model):
 
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
+class Order(db.Model):
+    __tablename__ = "orders"
+
+    id = db.Column(db.Integer, primary_key=True)
+    
+    order_no = db.Column(db.String(50), unique=True, nullable=False)
+
+    client_id = db.Column(db.Integer, nullable=False)
+
+    style_no = db.Column(db.String(100), nullable=False)
+
+    qty = db.Column(db.Integer, nullable=False, default=1)
+
+    gold_color = db.Column(db.String(50))
+
+    gold_purity = db.Column(db.String(50))
+
+    diamond_color = db.Column(db.String(50))
+
+    diamond_clarity = db.Column(db.String(50))
+
+    remarks = db.Column(db.Text)
+    
 
 
 # ======================================
 # 🔧 GETTING DIAMOND DETAILS FROM DB
 # ======================================
 
+@app.route("/api/orders", methods=["GET"])
+def api_orders():
+
+    client_id = request.args.get("client_id", type=int)
+
+    query = Order.query
+
+    if client_id:
+        query = query.filter(Order.client_id == client_id)
+
+    orders = query.order_by(Order.id.desc()).all()
+
+    grouped = {}
+
+    for order in orders:
+
+        if order.order_no not in grouped:
+
+            grouped[order.order_no] = {
+                "order_no": order.order_no,
+                "client_id": order.client_id,
+                "total_qty": 0,
+                "items": []
+            }
+
+        grouped[order.order_no]["total_qty"] += order.qty
+
+        grouped[order.order_no]["items"].append({
+            "id": order.id,
+            "style_no": order.style_no,
+            "qty": order.qty,
+            "gold_color": order.gold_color,
+            "gold_purity": order.gold_purity,
+            "diamond_color": order.diamond_color,
+            "diamond_clarity": order.diamond_clarity,
+            "remarks": order.remarks
+        })
+
+    return jsonify(list(grouped.values()))
+
 # -----------------------------
 # Save Cart Temporary
 # -----------------------------
 
 @app.route("/api/cart", methods=["POST"])
-def save_cart():
+def api_cart():
 
-    data = request.get_json()
+    client_code = session.get("client_code")
 
-    client_code = data["client_code"]
+    if not client_code:
+        return jsonify({
+            "status": "error",
+            "message": "Please login again."
+        }), 401
 
-    for item in data["items"]:
+    data = request.get_json(silent=True) or {}
+    items = data.get("items", [])
 
+    for item in items:
         cart = Cart(
-
             client_code=client_code,
-
             style_no=item["style_no"],
-
             qty=item["qty"],
-
-            gold_color=item["gold_color"],
-
-            gold_purity=item["gold_purity"],
-
-            diamond_color=item["diamond_color"],
-
-            diamond_clarity=item["diamond_clarity"],
-
-            remarks=item["remarks"]
-
+            gold_color=item.get("gold_color"),
+            gold_purity=item.get("gold_purity"),
+            diamond_color=item.get("diamond_color"),
+            diamond_clarity=item.get("diamond_clarity"),
+            remarks=item.get("remarks")
         )
 
         db.session.add(cart)
@@ -503,7 +567,7 @@ def save_cart():
 
     return jsonify({
         "status": "success",
-        "message": "Cart saved successfully"
+        "message": "Cart saved successfully."
     })
  # -----------------------------
 # total quantity
@@ -511,18 +575,21 @@ def save_cart():
 @app.route("/api/cart-count")
 def cart_count():
 
-    # Later replace TEST001 with the logged-in client code
-    client_code = "TEST001"
+    client_code = session.get("client_code")
 
-    total_qty = db.session.query(db.func.sum(Cart.qty))\
-        .filter(Cart.client_code == client_code)\
+    if not client_code:
+        return jsonify({
+            "total_qty": 0
+        }), 401
+
+    total_qty = (
+        db.session.query(db.func.sum(Cart.qty))
+        .filter(Cart.client_code == client_code)
         .scalar()
-
-    if total_qty is None:
-        total_qty = 0
+    )
 
     return jsonify({
-        "total_qty": total_qty
+        "total_qty": total_qty or 0
     })
     
 @app.route("/cart")
@@ -581,7 +648,14 @@ def update_cart(id):
 @app.route("/api/cart-list")
 def cart_list():
 
-    client_code = "TEST001"
+    client_code = session.get("client_code")
+
+    if not client_code:
+        return jsonify({
+            "status": "error",
+            "message": "Please login again."
+        }), 401
+
 
     carts = Cart.query.filter_by(
         client_code=client_code
@@ -589,7 +663,9 @@ def cart_list():
         Cart.id.desc()
     ).all()
 
+
     data = []
+
 
     for cart in carts:
 
@@ -597,24 +673,42 @@ def cart_list():
             style_no=cart.style_no
         ).first()
 
+
         image = ""
+
         if style and style.image:
-            image = base64.b64encode(style.image).decode("utf-8")
+            image = base64.b64encode(
+                style.image
+            ).decode("utf-8")
+
 
         data.append({
 
             "id": cart.id,
+
             "style_no": cart.style_no,
+
             "qty": cart.qty,
+
             "gold_color": cart.gold_color,
+
             "gold_purity": cart.gold_purity,
+
             "diamond_color": cart.diamond_color,
+
             "diamond_clarity": cart.diamond_clarity,
+
             "remarks": cart.remarks,
-            "created_at": cart.created_at.strftime("%d-%m-%Y %I:%M %p"),
+
+            "created_at": (
+                cart.created_at.strftime("%d-%m-%Y %I:%M %p")
+                if cart.created_at else ""
+            ),
+
             "image": image
 
         })
+
 
     return jsonify(data)
  # -----------------------------
@@ -683,52 +777,112 @@ Message :
             "success": False,
             "message": "Failed to send message."
         }),500
-
+# ======================================
+# 🔧 Collection Link-Start
+# ======================================
 
 @app.route("/ledger")
 def ledger():
+    if "role" not in session or session["role"] != "sales":
+        return redirect("/signin")
     return render_template("ledger.html")
 
 @app.route("/sales_er")
 def sales_er():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_er.html")
 
 @app.route("/sales_nk")
 def sales_nk():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_nk.html")
 
 @app.route("/sales_ns")
 def sales_ns():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_ns.html")
 
 
 @app.route("/sales_lr")
 def sales_lr():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_lr.html")
 
 @app.route("/sales_pd")
 def sales_pd():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_pd.html")
 
 @app.route("/sales_tbrl")
 def sales_tbrl():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_tbrl.html")
 
 @app.route("/sales_ter")
 def sales_ter():
+
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
+
     return render_template("sales_ter.html")
 
 @app.route("/sales_tlr")
 def sales_tlr():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_tlr.html")
 
 @app.route("/sales_tnk")
 def sales_tnk():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_tnk.html")
 
 @app.route("/sales_tpd")
 def sales_tpd():
+    if "role" not in session:
+        return redirect("/signin")
+
+    if session["role"] not in ["sales", "client"]:
+        return redirect("/signin")
     return render_template("sales_tpd.html")
+
+# ======================================
+# 🔧 Collection Link-End
+# ======================================
 
 # ======================================
 # 🔧 GETTING DIAMOND DETAILS FROM DB
@@ -786,6 +940,48 @@ def api_styles():
         "total": total,
         "products": products
     })
+    
+# ======================================
+# 🔧 style no wise details img gem wt
+# ======================================
+    
+@app.route("/api/order/<order_no>")
+def api_order_details(order_no):
+
+    rows = (
+        db.session.query(Order, StyleNo)
+        .join(StyleNo, Order.style_no == StyleNo.style_no)
+        .filter(Order.order_no == order_no)
+        .all()
+    )
+
+    data = []
+
+    for order, style in rows:
+
+        data.append({
+
+            "id": order.id,
+            "style_no": order.style_no,
+            "qty": order.qty,
+
+            "gold_color": order.gold_color,
+            "gold_purity": order.gold_purity,
+            "diamond_color": order.diamond_color,
+            "diamond_clarity": order.diamond_clarity,
+            "remarks": order.remarks,
+
+            "gross_wt": style.gold_wt,
+            "net_wt": style.net_wt,
+            "dia_wt": style.dia_wt,
+            "dia_pc": style.dia_pc,
+
+            "image": base64.b64encode(style.image).decode("utf-8") if style.image else "",
+            "gem_chart": base64.b64encode(style.gem_chart).decode("utf-8") if style.gem_chart else ""
+
+        })
+
+    return jsonify(data)
 
 @app.route("/jobcard_list")
 def jobcard_list():
@@ -2770,6 +2966,12 @@ def admin():
         return redirect("/signin")
     return render_template("admin.html")
 
+@app.route("/new_orders")
+def new_orders():
+    if "role" not in session or session["role"] != "admin":
+        return redirect("/signin")
+    return render_template("new_orders.html")
+
 @app.route("/gold_items")
 def gold_items():
     if "role" not in session or session["role"] != "admin":
@@ -3351,36 +3553,118 @@ def api_create_order():
         "order_no": order.order_no
     }), 201
     
+@app.route("/api/ecom-order", methods=["POST"])
+def ecom_order():
+
+    client_id = session.get("client_id")
+    client_code = session.get("client_code")
+
+    if not client_id or not client_code:
+        return jsonify({
+            "ok": False,
+            "error": "Please login again."
+        }), 401
+
+    data = request.get_json(silent=True) or {}
+
+    items = data.get("items", [])
+
+    if not items:
+        return jsonify({
+            "ok": False,
+            "error": "No items found."
+        }), 400
+
+    order_no = generate_order_no()
+
+    # Save Order
+    for item in items:
+
+        db.session.add(Order(
+            order_no=order_no,
+            client_id=client_id,
+            style_no=(item.get("style_no") or "").strip(),
+            qty=int(item.get("qty") or 1),
+            gold_color=item.get("gold_color"),
+            gold_purity=item.get("gold_purity"),
+            diamond_color=item.get("diamond_color"),
+            diamond_clarity=item.get("diamond_clarity"),
+            remarks=item.get("remarks")
+        ))
+
+    # Delete only this client's cart
+    deleted_rows = Cart.query.filter(
+        Cart.client_code == client_code
+    ).delete(synchronize_session=False)
+
+    db.session.commit()
+    print("Session client_code:", client_code)
+
+    return jsonify({
+        "ok": True,
+        "order_no": order_no,
+        "deleted_rows": deleted_rows
+    }), 201
     
-
-
-
+    
 
 
 @app.route("/signin", methods=["GET", "POST"])
 def signin():
+
     selected_role = request.args.get("role")
 
     if request.method == "POST":
-        email = request.form.get("email")
-        password = request.form.get("password")
 
-        user = User.query.filter_by(email=email, password=password).first()
+        username = request.form.get("email").strip()
+        password = request.form.get("password").strip()
+
+        # -------------------------
+        # Staff Login
+        # -------------------------
+        user = User.query.filter_by(
+            email=username,
+            password=password
+        ).first()
 
         if user:
+
             session["user_id"] = user.id
             session["role"] = user.role
 
             if user.role == "admin":
                 return redirect("/admin")
+
             elif user.role == "sales":
                 return redirect("/sales")
+
             elif user.role == "production":
                 return redirect("/production-board")
+
             elif user.role == "account":
                 return redirect("/acc_orders")
 
-        return "Invalid Login"
+        # -------------------------
+        # Client Login
+        # -------------------------
+        client = ClientKYC.query.filter_by(
+            company_name=username,
+            gst_number=password
+        ).first()
+
+        if client:
+
+            session["client_id"] = client.id
+            session["client_code"] = client.client_code
+            session["company_name"] = client.company_name
+            session["role"] = "client"
+
+            return redirect("/sales_er")
+
+        return render_template(
+            "signin.html",
+            error="Invalid Login"
+        )
 
     return render_template("signin.html", selected_role=selected_role)
 
@@ -3389,7 +3673,7 @@ def signin():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("/portal")
+    return redirect("/home")
 
 
 

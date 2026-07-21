@@ -13,7 +13,8 @@
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
 
     <!-- Font Awesome (CDN - No changes needed) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
@@ -187,34 +188,43 @@
         <div class="container-fluid">
             <img src="{{ url_for('static', filename='img-land/SonalikaLogo.png') }}" alt="Image" style="width: 250px;">
             <button type="button" class="navbar-toggler ml-0" data-toggle="collapse" data-target="#navbarCollapse">
-                <span class="navbar-toggler-icon" ></span>
+                <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                 <div class="navbar-nav ml-auto">
-                   <a href="{{ url_for('home') }}" class="nav-item nav-link">Home</a>
-                   <a href="{{ url_for('home') }}#about" class="nav-item nav-link">About</a>
-                   <a href="{{ url_for('home') }}#location" class="nav-item nav-link">Location</a>
-                   <a href="{{ url_for('home') }}#contact" class="nav-item nav-link">Contact</a>
-                   <a href="{{ url_for('sales_er') }}" class="nav-item nav-link">Collections</a>
+                    <a href="{{ url_for('home') }}" class="nav-item nav-link">Home</a>
+                    <a href="{{ url_for('home') }}#about" class="nav-item nav-link">About</a>
+                    <a href="{{ url_for('home') }}#location" class="nav-item nav-link">Location</a>
+                    <a href="{{ url_for('home') }}#contact" class="nav-item nav-link">Contact</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <span class="d-none d-lg-inline-flex">
+                                {{ session.get("company_name") }}
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="logout" class="dropdown-item-1">Log Out</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Topbar End -->
 
-<!--Start Sticky Icon-->
-<div class="sticky-icon">
-    <a ></a>
-    <a ></a>
-    <a ></a>
-    <a ></a>
-    <a href="{{ url_for('cart') }}" class="Cart">
-        <i class="fas fa-shopping-cart"></i>
-        Cart - <span id="cartQty">0</span>
-    </a>
-</div>
-<!--End Sticky Icon-->
+    <!--Start Sticky Icon-->
+    <div class="sticky-icon">
+        <a></a>
+        <a></a>
+        <a></a>
+        <a></a>
+        <a href="{{ url_for('cart') }}" class="Cart">
+            <i class="fas fa-shopping-cart"></i>
+            Cart - <span id="cartQty">0</span>
+        </a>
+    </div>
+    <!--End Sticky Icon-->
 
     <!-- Navbar Start -->
     <div class="container-fluid mb-5">
@@ -234,23 +244,23 @@
                             <div class="dropdown-menu w-100 shadow pb-3">
 
                                 <a class="dropdown-item" href="sales_er">
-                                     Sonalika Ear Rings
+                                    Sonalika Ear Rings
                                 </a>
 
                                 <a class="dropdown-item" href="sales_nk">
-                                     Sonalika Necklace
+                                    Sonalika Necklace
                                 </a>
 
                                 <a class="dropdown-item" href="sales_ns">
-                                     Sonalika Nosepin
+                                    Sonalika Nosepin
                                 </a>
 
                                 <a class="dropdown-item" href="sales_pd">
-                                     Sonalika Pendants
+                                    Sonalika Pendants
                                 </a>
 
                                 <a class="dropdown-item" href="sales_lr">
-                                     Sonalika Ladies Ring
+                                    Sonalika Ladies Ring
                                 </a>
 
                             </div>
@@ -263,31 +273,31 @@
 
                                 <button class="btn text-left py-3" data-toggle="dropdown"
                                     style="background-color: rgb(7, 7, 58); border-radius: 10px;color: white;">
-                                    
-                                    TASO COLLECTION  <i class="fa fa-chevron-down float-right mt-1 ml-2"></i>
-                                    
+
+                                    TASO COLLECTION <i class="fa fa-chevron-down float-right mt-1 ml-2"></i>
+
                                 </button>
 
                                 <div class="dropdown-menu w-100 shadow">
 
                                     <a class="dropdown-item" href="sales_ter">
-                                         TASO Ear Rings
+                                        TASO Ear Rings
                                     </a>
 
                                     <a class="dropdown-item" href="sales_tnk">
-                                         TASO Necklace
+                                        TASO Necklace
                                     </a>
 
-                                    <a class="dropdown-item" href="sales_tbrl" >
-                                         TASO BRACELET
+                                    <a class="dropdown-item" href="sales_tbrl">
+                                        TASO BRACELET
                                     </a>
 
                                     <a class="dropdown-item" href="sales_tpd">
-                                         TASO Pendants
+                                        TASO Pendants
                                     </a>
 
                                     <a class="dropdown-item" href="sales_tlr">
-                                         TASO Ladies Ring
+                                        TASO Ladies Ring
                                     </a>
 
                                 </div>
@@ -367,62 +377,57 @@
     <!-- Navbar End -->
 
 
-<!-- Products Start -->
-<div class="container-fluid py-5 product-bg">
+    <!-- Products Start -->
+    <div class="container-fluid py-5 product-bg">
 
-    <div class="text-center mb-4">
-        <h2 class="section-title px-5">
-            <span class="px-2">TASO PENDANT</span>
-        </h2>
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5">
+                <span class="px-2">TASO PENDANT</span>
+            </h2>
+        </div>
+
+        <div class="row px-xl-5 pb-3" id="products"></div>
+
+        <div id="loader" class="text-center my-4" style="display:none;">
+            <div class="spinner-border text-white"></div>
+            <p class="mt-2">Loading...</p>
+        </div>
+
     </div>
-
-    <div class="row px-xl-5 pb-3" id="products"></div>
-
-    <div id="loader" class="text-center my-4" style="display:none;">
-        <div class="spinner-border text-white"></div>
-        <p class="mt-2">Loading...</p>
-    </div>
-
-</div>
-<!-- Products End -->
+    <!-- Products End -->
 
 
-<div class="modal fade" id="imageModal" tabindex="-1">
+    <div class="modal fade" id="imageModal" tabindex="-1">
 
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
 
-        <div class="modal-content">
+            <div class="modal-content">
 
-            <div class="modal-header">
+                <div class="modal-header">
 
-                <h5 class="modal-title">
-                    Product Preview
-                </h5>
+                    <h5 class="modal-title">
+                        Product Preview
+                    </h5>
 
-<button
-    type="button"
-    class="btn border-0 bg-transparent"
-    data-bs-dismiss="modal">
+                    <button type="button" class="btn border-0 bg-transparent" data-bs-dismiss="modal">
 
-    <i class="fas fa-times fs-4"></i>
+                        <i class="fas fa-times fs-4"></i>
 
-</button>
+                    </button>
 
-            </div>
+                </div>
 
-            <div class="modal-body text-center">
+                <div class="modal-body text-center">
 
-                <img
-                    id="popupImage"
-                    class="img-fluid rounded">
+                    <img id="popupImage" class="img-fluid rounded">
+
+                </div>
 
             </div>
 
         </div>
 
     </div>
-
-</div>
 
     <!-- Order Modal -->
     <div class="modal fade" id="selectModal" tabindex="-1" aria-hidden="true">

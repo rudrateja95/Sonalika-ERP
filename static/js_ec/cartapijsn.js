@@ -1,10 +1,9 @@
 async function saveCart() {
     try {
 
-        const payload = {
-            client_code: "TEST001",
-            items: getOrderData()
-        };
+         const payload = {
+             items: getOrderData()
+         };
 
         const res = await fetch("/api/cart", {
             method: "POST",

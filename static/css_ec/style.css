@@ -3247,6 +3247,18 @@ input[type="button"].btn-block {
   background-color: transparent;
   border: 0;
 }
+.dropdown-item-2 {
+  display: block;
+  width: 100%;
+  padding: 0.25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #000000;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
 
 .dropdown-item:hover, .dropdown-item:focus {
   color: #f4f6f8;
@@ -6355,6 +6367,7 @@ button.bg-dark:focus {
 
 .d-none {
   display: none !important;
+  color: blue;
 }
 
 .d-inline {

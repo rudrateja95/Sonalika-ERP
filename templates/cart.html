@@ -43,6 +43,16 @@
                     <a href="{{ url_for('home') }}#location" class="nav-item nav-link">Location</a>
                     <a href="{{ url_for('home') }}#contact" class="nav-item nav-link">Contact</a>
                     <a href="{{ url_for('sales_er') }}" class="nav-item nav-link">Collections</a>
+                                        <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <span class="d-none d-lg-inline-flex">
+                                {{ session.get("company_name") }}
+                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
+                            <a href="logout" class="dropdown-item-1">Log Out</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,6 +60,7 @@
     <!-- Topbar End -->
 
 <hr>
+
 
 <!-- Cart Start -->
 <div class="table-responsive shadow rounded px-xl-5">
@@ -96,14 +107,18 @@
         <div class="text-right mb-4">
 
 
-          <center>  <button
-                class="btn btn-success btn-lg px-4"
-                onclick="placeOrder()">
+<center>
+    <button
+        id="placeOrderBtn"
+        type="button"
+        class="btn btn-success btn-lg px-4"
+        onclick="placeOrder()">
 
-                <i class="fas fa-check-circle"></i>
-                Place Order
+        <i class="fas fa-check-circle"></i>
+        <span id="btnText">Place Order</span>
 
-            </button></center>
+    </button>
+</center>
 
         </div>
 
@@ -337,7 +352,126 @@
     <script src="{{ url_for('static', filename='js_ec/updatecart.js') }}"></script>
 
     <!-- delet cart List -->
-    <script src="{{ url_for('static', filename='js_ec/deletcart.js') }}"></script>
+    <script src="{{ url_for('static', filename='js_ec/deletecart.js') }}"></script>
+<script>
+async function placeOrder() {
+
+    console.log("===== PLACE ORDER START =====");
+
+    try {
+
+        const items = [];
+
+        document.querySelectorAll("#cartBody tr").forEach((row, index) => {
+
+            const item = {
+
+                style_no: row.dataset.styleNo,
+
+                qty: row.dataset.qty,
+
+                gold_color: row.dataset.goldColor,
+
+                gold_purity: row.dataset.goldPurity,
+
+                diamond_color: row.dataset.diamondColor,
+
+                diamond_clarity: row.dataset.diamondClarity,
+
+                remarks: row.dataset.remarks
+
+            };
+
+            console.log("Row", index + 1, item);
+
+            items.push(item);
+
+        });
+
+        console.log("Total Items:", items.length);
+
+        const payload = {
+            items: items
+        };
+
+        console.log("Payload:", payload);
+
+        console.log("Sending request...");
+
+        const response = await fetch("/api/ecom-order", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(payload)
+
+        });
+
+        console.log("Response Status:", response.status);
+
+        const text = await response.text();
+
+        console.log("Raw Response:", text);
+
+        let data;
+
+        try {
+
+            data = JSON.parse(text);
+
+        } catch (e) {
+
+            console.error("JSON Parse Error:", e);
+
+            Swal.fire({
+                icon: "error",
+                title: "Invalid Response",
+                text: "Server returned invalid JSON."
+            });
+
+            return;
+
+        }
+
+        console.log("Parsed Response:", data);
+
+        if (data.ok) {
+
+            Swal.fire({
+                icon: "success",
+                title: "Order Created",
+                text: data.order_no
+            });
+
+        } else {
+
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: data.error
+            });
+
+        }
+
+    } catch (err) {
+
+        console.error("Fetch Error:", err);
+
+        Swal.fire({
+            icon: "error",
+            title: "Exception",
+            text: err.message
+        });
+
+    }
+
+    console.log("===== PLACE ORDER END =====");
+}
+</script>
+    
 </body>
 
 </html>
