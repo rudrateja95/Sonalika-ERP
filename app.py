@@ -507,11 +507,15 @@ def api_orders():
 
     for order in orders:
 
+        client = ClientKYC.query.filter_by(id=order.client_id).first()
+
         if order.order_no not in grouped:
 
             grouped[order.order_no] = {
                 "order_no": order.order_no,
                 "client_id": order.client_id,
+                "client_code": client.client_code if client else "",
+                "company_name": client.company_name if client else "",
                 "total_qty": 0,
                 "items": []
             }

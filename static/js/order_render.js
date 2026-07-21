@@ -31,7 +31,9 @@ async function loadOrders() {
 
     <td class="text-center align-middle">${order.order_no}</td>
 
-    <td class="text-center align-middle">${order.client_id}</td>
+    <td class="text-center align-middle">${order.client_code}</td>
+
+    <td class="text-center align-middle">${order.company_name}</td>
 
     <td class="text-center align-middle">${order.total_qty}</td>
 
