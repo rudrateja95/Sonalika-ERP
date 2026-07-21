@@ -509,9 +509,12 @@ def api_orders():
 
         client = ClientKYC.query.filter_by(id=order.client_id).first()
 
-        if order.order_no not in grouped:
+        # Unique key = Order No + Client ID
+        key = f"{order.order_no}_{order.client_id}"
 
-            grouped[order.order_no] = {
+        if key not in grouped:
+
+            grouped[key] = {
                 "order_no": order.order_no,
                 "client_id": order.client_id,
                 "client_code": client.client_code if client else "",
@@ -520,9 +523,9 @@ def api_orders():
                 "items": []
             }
 
-        grouped[order.order_no]["total_qty"] += order.qty
+        grouped[key]["total_qty"] += order.qty
 
-        grouped[order.order_no]["items"].append({
+        grouped[key]["items"].append({
             "id": order.id,
             "style_no": order.style_no,
             "qty": order.qty,
@@ -3478,15 +3481,13 @@ def parse_dt(s):
 
 def generate_order_no():
 
-    last = ProductionOrder.query.order_by(ProductionOrder.id.desc()).first()
+    last = Order.query.order_by(Order.id.desc()).first()
 
     if not last or not last.order_no:
         return "SJOD0001"
 
     last_number = int(last.order_no.replace("SJOD", ""))
-    new_number = last_number + 1
-
-    return f"SJOD{new_number:04d}"
+    return f"SJOD{last_number + 1:04d}"
 
 @app.route("/api/create-order", methods=["POST"])
 def api_create_order():
