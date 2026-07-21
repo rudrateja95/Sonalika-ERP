@@ -25,20 +25,27 @@ async function loadOrders() {
             orders.forEach((order, index) => {
 
                 html += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${order.order_no}</td>
-                        <td>${order.client_id}</td>
-                        <td>${order.total_qty}</td>
-                        <td>${order.items.length}</td>
-                        <td>
-                            <button class="btn btn-primary btn-sm"
-                                onclick="viewOrder('${order.order_no}')">
-                                View
-                            </button>
-                        </td>
-                    </tr>
-                `;
+<tr>
+
+    <td class="text-center align-middle">${index + 1}</td>
+
+    <td class="text-center align-middle">${order.order_no}</td>
+
+    <td class="text-center align-middle">${order.client_id}</td>
+
+    <td class="text-center align-middle">${order.total_qty}</td>
+
+    <td class="text-center align-middle">${order.items.length}</td>
+
+    <td class="text-center align-middle">
+        <button class="btn btn-primary btn-sm"
+            onclick="viewOrder('${order.order_no}', this)">
+            View
+        </button>
+    </td>
+
+</tr>
+`;
 
             });
 

@@ -1,5 +1,15 @@
 async function loadCart() {
 
+    // Show loader first
+    document.getElementById("cartBody").innerHTML = `
+        <tr>
+            <td colspan="11" class="text-center py-4">
+                <div class="spinner-border text-primary" role="status"></div>
+                <div class="mt-2">Loading cart...</div>
+            </td>
+        </tr>
+    `;
+
     try {
 
         const res = await fetch("/api/cart-list");
@@ -30,9 +40,7 @@ async function loadCart() {
         style="width:90px;height:70px;object-fit:cover;">
 </td>
 
-<td>
-    <strong>${item.style_no}</strong>
-</td>
+<td><strong>${item.style_no}</strong></td>
 
 <td class="text-center">${item.qty}</td>
 
@@ -70,9 +78,27 @@ async function loadCart() {
 
         });
 
+        if (html === "") {
+            html = `
+                <tr>
+                    <td colspan="11" class="text-center">
+                        Cart is empty.
+                    </td>
+                </tr>
+            `;
+        }
+
         document.getElementById("cartBody").innerHTML = html;
 
     } catch (err) {
+
+        document.getElementById("cartBody").innerHTML = `
+            <tr>
+                <td colspan="11" class="text-center text-danger">
+                    Failed to load cart.
+                </td>
+            </tr>
+        `;
 
         Swal.fire({
             icon: "error",

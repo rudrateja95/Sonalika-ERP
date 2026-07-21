@@ -3673,7 +3673,7 @@ def signin():
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect("/home")
+    return redirect("/")
 
 
 
