@@ -7,7 +7,7 @@ import os
 import tempfile
 import pytesseract
 from pytesseract import Output
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import fitz
 from io import BytesIO
 from werkzeug.datastructures import FileStorage
@@ -69,8 +69,8 @@ app.config['MAIL_PASSWORD'] = 'amag epeg aaez mklf'
 app.config['MAIL_DEFAULT_SENDER'] = 'sonalikajewellers2021@gmail.com'
 
 mail = Mail(app)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/sonalika'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sonalika:1234@localhost/sonalika'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:1234@localhost/sonalika'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://sonalika:1234@localhost/sonalika'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024 * 1024  # 1 GB
 
@@ -938,7 +938,7 @@ def api_styles():
             "brand": style.brand,
             "cstn_pc": style.cstn_pc,
             "cstn_wt":style.cstn_wt,
-            "image": base64.b64encode(style.image).decode("utf-8") if style.image else ""
+            "image": watermark_image(style.image) if style.image else ""
         })
 
     return jsonify({
@@ -947,6 +947,32 @@ def api_styles():
         "total": total,
         "products": products
     })
+    
+def watermark_image(image_bytes):
+
+    image = Image.open(BytesIO(image_bytes)).convert("RGB")
+
+    # Resize
+    image.thumbnail((700, 700))
+
+    draw = ImageDraw.Draw(image)
+
+    text = "Sonalika Jewellers"
+
+    font = ImageFont.load_default()
+
+    draw.text(
+        (20, 20),
+        text,
+        fill=(0, 0, 0),
+        font=font
+    )
+
+    output = BytesIO()
+
+    image.save(output, format="JPEG", quality=70)
+
+    return base64.b64encode(output.getvalue()).decode("utf-8")
     
 # ======================================
 # 🔧 style no wise details img gem wt

@@ -1,26 +1,26 @@
-        let page = 1;
-        let loading = false;
-        let finished = false;
+let page = 1;
+let loading = false;
+let finished = false;
 
-        let preloadedProducts = [];
+let preloadedProducts = [];
 
-        // First load
-        loadProducts();
+// First load
+loadProducts();
 
-        async function fetchPage(pageNo) {
+async function fetchPage(pageNo) {
 
-            const response = await fetch(`/api/styles?brand=SONALIKA&category=ear%20ring&page=${pageNo}`);
-            return await response.json();
+    const response = await fetch(`/api/styles?brand=SONALIKA&category=ear%20ring&page=${pageNo}`);
+    return await response.json();
 
-        }
+}
 
-        function renderProducts(products) {
+function renderProducts(products) {
 
-            let html = "";
+    let html = "";
 
-            products.forEach(function (product) {
+    products.forEach(function (product) {
 
-                html += `
+        html += `
     
     <div class="col-lg-3 col-md-6 col-sm-12 mb-4" >
     
@@ -117,65 +117,70 @@
     
             `;
 
-            });
+    });
 
-            document.getElementById("products").insertAdjacentHTML("beforeend", html);
+    document.getElementById("products").insertAdjacentHTML("beforeend", html);
 
-        }
+}
 
-        async function loadProducts() {
+async function loadProducts() {
 
-            if (loading || finished) return;
+    if (loading || finished) return;
 
-            loading = true;
+    loading = true;
 
-            document.getElementById("loader").style.display = "block";
+    document.getElementById("loader").style.display = "block";
 
-            // Use preloaded data if available
-            if (preloadedProducts.length > 0) {
+    // Use preloaded data if available
+    if (preloadedProducts.length > 0) {
 
-                renderProducts(preloadedProducts);
+        renderProducts(preloadedProducts);
 
-                preloadedProducts = [];
+        preloadedProducts = [];
 
-            } else {
+    } else {
 
-                const data = await fetchPage(page);
+        const data = await fetchPage(page);
 
-                if (data.products.length == 0) {
+        if (data.products.length == 0) {
 
-                    finished = true;
-                    document.getElementById("loader").innerHTML = "No More Products";
-                    return;
-
-                }
-
-                renderProducts(data.products);
-
-            }
-
-            page++;
-
-            loading = false;
-
-            document.getElementById("loader").style.display = "none";
-
-            // Preload next page in background
-            fetchPage(page).then(function (data) {
-
-                preloadedProducts = data.products;
-
-            });
+            finished = true;
+            document.getElementById("loader").innerHTML = "No More Products";
+            return;
 
         }
 
-        window.addEventListener("scroll", function () {
+        renderProducts(data.products);
 
-            if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 300) {
+    }
 
-                loadProducts();
+    page++;
 
-            }
+    loading = false;
 
-        });
+    document.getElementById("loader").style.display = "none";
+
+    // Preload next page in background
+    fetchPage(page).then(function (data) {
+
+        preloadedProducts = data.products;
+
+    });
+    document.addEventListener("dragstart", function (e) {
+        if (e.target.tagName === "IMG") {
+            e.preventDefault();
+        }
+    });
+
+}
+
+window.addEventListener("scroll", function () {
+
+    if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 300) {
+
+        loadProducts();
+
+    }
+
+});
 

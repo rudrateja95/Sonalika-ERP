@@ -166,6 +166,11 @@
                 preloadedProducts = data.products;
 
             });
+            document.addEventListener("dragstart", function (e) {
+                if (e.target.tagName === "IMG") {
+                    e.preventDefault();
+                }
+            });            
 
         }
 
