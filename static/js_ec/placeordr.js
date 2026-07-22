@@ -2,6 +2,16 @@ async function placeOrder() {
 
     console.log("===== PLACE ORDER START =====");
 
+    const btn = document.getElementById("placeOrderBtn");
+    const btnContent = document.getElementById("btnContent");
+
+    // Show Loader
+    btn.disabled = true;
+    btnContent.innerHTML = `
+        <span class="spinner-border spinner-border-sm me-2"></span>
+        Placing Order...
+    `;
+
     try {
 
         const items = [];
@@ -11,17 +21,11 @@ async function placeOrder() {
             const item = {
 
                 style_no: row.dataset.styleNo,
-
                 qty: row.dataset.qty,
-
                 gold_color: row.dataset.goldColor,
-
                 gold_purity: row.dataset.goldPurity,
-
                 diamond_color: row.dataset.diamondColor,
-
                 diamond_clarity: row.dataset.diamondClarity,
-
                 remarks: row.dataset.remarks
 
             };
@@ -39,8 +43,6 @@ async function placeOrder() {
         };
 
         console.log("Payload:", payload);
-
-        console.log("Sending request...");
 
         const response = await fetch("/api/ecom-order", {
 
@@ -68,7 +70,12 @@ async function placeOrder() {
 
         } catch (e) {
 
-            console.error("JSON Parse Error:", e);
+            btn.disabled = false;
+
+            btnContent.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                Place Order
+            `;
 
             Swal.fire({
                 icon: "error",
@@ -87,10 +94,22 @@ async function placeOrder() {
             Swal.fire({
                 icon: "success",
                 title: "Order Created",
-                text: data.order_no
+                text: data.order_no,
+                allowOutsideClick: false
+            }).then(() => {
+
+                location.reload();
+
             });
 
         } else {
+
+            btn.disabled = false;
+
+            btnContent.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                Place Order
+            `;
 
             Swal.fire({
                 icon: "error",
@@ -104,6 +123,13 @@ async function placeOrder() {
 
         console.error("Fetch Error:", err);
 
+        btn.disabled = false;
+
+        btnContent.innerHTML = `
+            <i class="fas fa-check-circle"></i>
+            Place Order
+        `;
+
         Swal.fire({
             icon: "error",
             title: "Exception",
@@ -113,4 +139,5 @@ async function placeOrder() {
     }
 
     console.log("===== PLACE ORDER END =====");
+
 }

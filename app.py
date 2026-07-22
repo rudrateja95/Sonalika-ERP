@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response, flash, session, url_for, redirect
+from flask import Flask, render_template, request, jsonify, Response, flash, session, url_for, redirect, current_app
 import re
 import cv2
 import pandas as pd
@@ -80,8 +80,6 @@ migrate = Migrate(app, db)
 
 
 
-
-
 class ClientKYC(db.Model):
     __tablename__ = "client_kyc"
 
@@ -92,6 +90,7 @@ class ClientKYC(db.Model):
     company_name = db.Column(db.String(200))
     gst_number = db.Column(db.String(30))
     company_pan = db.Column(db.String(20))
+    business_email = db.Column(db.String(150))
     msme_registration = db.Column(db.String(50))
     iec_code = db.Column(db.String(30))
     address = db.Column(db.Text)
@@ -485,7 +484,127 @@ class Order(db.Model):
 
     remarks = db.Column(db.Text)
     
+def send_order_email(order_no, client_code, items):
 
+    try:
+
+        client = ClientKYC.query.filter_by(
+            client_code=client_code
+        ).first()
+
+        if not client:
+            print("Client not found.")
+            return
+
+        #############################################
+        # Customer Email
+        #############################################
+
+        customer_body = f"""
+Dear {client.company_name},
+
+Thank you for placing your order with Sonalika Jewellers.
+
+Your Order Number is:
+
+{order_no}
+
+---------------------------------------
+ORDER DETAILS
+---------------------------------------
+"""
+
+        for item in items:
+
+            customer_body += f"""
+
+Style No          : {item.get('style_no')}
+Quantity          : {item.get('qty')}
+Gold Color        : {item.get('gold_color')}
+Gold Purity       : {item.get('gold_purity')}
+Diamond Color     : {item.get('diamond_color')}
+Diamond Clarity   : {item.get('diamond_clarity')}
+Remarks           : {item.get('remarks')}
+
+---------------------------------------
+"""
+
+        customer_body += """
+
+We have successfully received your order.
+
+Our team will contact you shortly.
+
+Thank you.
+
+Regards,
+Sonalika Jewellers
+"""
+
+        customer_msg = Message(
+
+            subject=f"Order Confirmation - {order_no}",
+
+            recipients=[client.business_email]
+
+        )
+
+        customer_msg.body = customer_body
+
+        mail.send(customer_msg)
+
+        #############################################
+        # Admin Email
+        #############################################
+
+        admin_body = f"""
+New Order Received
+
+Order Number : {order_no}
+
+Company Name : {client.company_name}
+
+Client Code  : {client.client_code}
+
+Email        : {client.business_email}
+
+---------------------------------------
+ORDER ITEMS
+---------------------------------------
+"""
+
+        for item in items:
+
+            admin_body += f"""
+
+Style No          : {item.get('style_no')}
+Quantity          : {item.get('qty')}
+Gold Color        : {item.get('gold_color')}
+Gold Purity       : {item.get('gold_purity')}
+Diamond Color     : {item.get('diamond_color')}
+Diamond Clarity   : {item.get('diamond_clarity')}
+Remarks           : {item.get('remarks')}
+
+---------------------------------------
+"""
+
+        admin_msg = Message(
+
+            subject=f"New Order Received - {order_no}",
+
+            recipients=["sonalikajewellers2021@gmail.com"]
+
+        )
+
+        admin_msg.body = admin_body
+
+        mail.send(admin_msg)
+
+        print("Emails Sent Successfully")
+
+    except Exception as e:
+
+        print("Mail Error:", e)
 
 # ======================================
 # 🔧 GETTING DIAMOND DETAILS FROM DB
@@ -2887,6 +3006,7 @@ def upload_docs():
         company_name=request.form.get("company_name"),
         gst_number=request.form.get("gst_number"),
         company_pan=request.form.get("company_pan"),
+        business_email=request.form.get("business_email"),  # NEW
         msme_registration=request.form.get("msme_registration"),
         iec_code=request.form.get("iec_code"),
         address=request.form.get("address"),
@@ -3630,6 +3750,12 @@ def ecom_order():
 
     db.session.commit()
     print("Session client_code:", client_code)
+    
+    send_order_email(
+    order_no=order_no,
+    client_code=client_code,
+    items=items
+    )
 
     return jsonify({
         "ok": True,
