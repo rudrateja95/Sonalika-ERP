@@ -766,7 +766,27 @@ def update_cart(id):
         "status": "success",
         "message": "Cart updated successfully"
     })
+    
+ # -----------------------------
+# style-list-get-5 limit
+# -----------------------------
+@app.route("/api/style-search")
+def style_search():
 
+    q = request.args.get("q", "").strip()
+
+    if not q:
+        return jsonify([])
+
+    styles = (
+        StyleNo.query
+        .filter(StyleNo.style_no.ilike(f"%{q}%"))
+        .order_by(StyleNo.style_no)
+        .limit(5)
+        .all()
+    )
+
+    return jsonify([s.style_no for s in styles])
  # -----------------------------
 # cart-list-get
 # -----------------------------
@@ -3104,6 +3124,12 @@ def acc_orders_page():
 
     return render_template("acc_orders.html", orders=orders)
 
+@app.route("/tag_entry")
+def tag_entry_page():
+    if "role" not in session or session["role"] not in ["account", "admin"]:
+        return redirect("/signin")
+    return render_template("tag_entry.html",)
+
 @app.route("/create_mou")
 def create_mou():
     return render_template("create_mou.html")
@@ -3111,6 +3137,11 @@ def create_mou():
 @app.route("/mou_list")
 def mou_list():
     return render_template("mou_list.html")
+
+
+@app.route("/print-tag")
+def print_tag():
+    return render_template("print_tag.html")
 
 
 @app.route("/admin")

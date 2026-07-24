@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+
+.left{
+    width:75mm;      /* Increase from the current value */
+}
+
+.right{
+    width:15mm;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-left: 1mm;
+}
+
+.tag-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top: 1mm;
+    margin-left: 1mm;
+}
+
+.tag-table td{
+    border:1px solid #000;
+    padding:1px;
+    line-height:1;
+}
+@page{
+    size:50mm 12mm;
+    margin:0;
+}
+
+html,body{
+    margin:0;
+    padding:0;
+}
+
+#labels{
+    width:50mm;
+}
+
+.tag-label{
+    width:50mm;
+    height:12mm;
+    display:flex;
+    align-items:center;
+    font-family: Tahoma, sans-serif;
+    font-size:7px;
+    box-sizing:border-box;
+    page-break-after:always;
+}
+</style>
+</head>
+<body>
+
+<!-- Only your label -->
+<div id="labels"></div>
+
+<script>
+
+const tags = JSON.parse(localStorage.getItem("printTags")) || [];
+
+const container = document.getElementById("labels");
+
+tags.forEach(item => {
+
+    container.innerHTML += `
+        <div class="tag-label">
+
+            <div class="left">
+
+                <table class="tag-table">
+
+                    <tr align="center">
+                        <td><b>TAG</b><br>${item.tag}</td>
+                        <td><b>G.WT</b><br>${item.gross}</td>
+                        <td><b>D.WT</b><br>${item.diawt}</td>
+                        <td><b>ST.WT</b><br>${item.stonewt}</td>
+                        <td><b>PTY</b><br>${item.purity}</td>
+                    </tr>
+
+                    <tr align="center">
+                        <td><b>DGN</b><br>${item.design}</td>
+                        <td><b>N.WT</b><br>${item.net}</td>
+                        <td><b>D.PC</b><br>${item.diapc}</td>
+                        <td><b>D.Cty</b><br>${item.clarity}-${item.color}</td>
+                        <td><b>ST.PC</b><br>${item.stonepc}</td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <div class="right">
+                <img src="/static/img-land/Sonalikaicon.png"
+                     style="width:8mm;height:auto;">
+            </div>
+
+        </div>
+    `;
+
+});
+
+window.onload = function () {
+    setTimeout(function () {
+        window.print();
+    }, 500);
+};
+
+</script>
+</body>
+</html>
