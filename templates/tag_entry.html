@@ -21,76 +21,77 @@
 
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-<style>
-    .tag-label{
-    width:90mm;
-    height:12mm;
-    display:flex;
-    align-items:center;
-    font-size:7px;
-    font-family:Arial, sans-serif;
-    box-sizing:border-box;
-}
+    <style>
+        .tag-label {
+            width: 90mm;
+            height: 12mm;
+            display: flex;
+            align-items: center;
+            font-size: 7px;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
 
-.left{
-    width:80%;
-}
+        .left {
+            width: 80%;
+        }
 
-.right{
-    width:20%;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
+        .right {
+            width: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-.tag-table{
-    width:100%;
-    border-collapse:collapse;
-}
+        .tag-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-.tag-table td{
-    border:1px solid #000;
-    padding:0 2px;
-    line-height:1;
-    white-space:nowrap;
-}
+        .tag-table td {
+            border: 1px solid #000;
+            padding: 0 2px;
+            line-height: 1;
+            white-space: nowrap;
+        }
 
-@media print {
+        @media print {
 
-    @page{
-        size:90mm 12mm;
-        margin:0;
-    }
+            @page {
+                size: 90mm 12mm;
+                margin: 0;
+            }
 
-    html,body{
-        width:90mm;
-        height:12mm;
-        margin:0;
-        padding:0;
-        overflow:hidden;
-    }
+            html,
+            body {
+                width: 90mm;
+                height: 12mm;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
 
-    body *{
-        visibility:hidden;
-    }
+            body * {
+                visibility: hidden;
+            }
 
-    #printTag,
-    #printTag *{
-        visibility:visible;
-    }
+            #printTag,
+            #printTag * {
+                visibility: visible;
+            }
 
-    #printTag{
-        position:fixed;
-        left:0;
-        top:0;
-        width:90mm;
-        height:12mm;
-        display:block !important;
-        margin:0;
-        padding:0;
-    }
-}
-</style>
+            #printTag {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 90mm;
+                height: 12mm;
+                display: block !important;
+                margin: 0;
+                padding: 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -102,152 +103,151 @@
             {% include 'navbar.html' %}
             <!-- Order Recieved render -->
 
-<div class="container-fluid pt-4 px-4">
-    <div class="bg-light rounded p-4">
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-light rounded p-4">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="mb-0">Tag Entry</h4>
-        </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Tag Entry</h4>
+                    </div>
 
-        <div class="table-responsive">
+                    <div class="table-responsive">
 
-            <table class="table table-bordered table-hover text-center align-middle" style="border-color:#000;">
+                        <table class="table table-bordered table-hover text-center align-middle"
+                            style="border-color:#000;">
 
-                <thead class="table-primary">
+                            <thead class="table-primary">
 
-                    <tr>
-                        <th>Tag No</th>
-                        <th>Dgn No</th>
-                        <th>Gr.Pty</th>
-                        <th>D.Cty</th>
-                        <th>D.Clr</th>
-                        <th>G.Wt</th>
-                        <th>D.Wt</th>
-                        <th>D.Pc</th>
-                        <th>St.Wt</th>
-                        <th>St.Pc</th>
-                        <th>Nt.Wt</th>
-                        <th>Delete</th>
-                    </tr>
+                                <tr>
+                                    <th>Tag No</th>
+                                    <th>Dgn No</th>
+                                    <th>Gr.Pty</th>
+                                    <th>D.Cty</th>
+                                    <th>D.Clr</th>
+                                    <th>G.Wt</th>
+                                    <th>D.Wt</th>
+                                    <th>D.Pc</th>
+                                    <th>St.Wt</th>
+                                    <th>St.Pc</th>
+                                    <th>Nt.Wt</th>
+                                    <th>Delete</th>
+                                </tr>
 
-                </thead>
+                            </thead>
 
-                <tbody id="tagTable">
+                            <tbody id="tagTable">
 
-                    <tr>
+                                <tr>
 
-                        <!-- Tag No -->
-                        <td>
-                            <input type="text"
-                                   class="form-control form-control-sm cell tagNo"
-                                   readonly>
-                        </td>
+                                    <!-- Tag No -->
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm cell tagNo" readonly>
+                                    </td>
 
-                        <!-- Design No -->
-<td>
-    <input type="text"
-           class="form-control form-control-sm cell designNo"
-           list="styleList"
-           placeholder="Design No">
-</td>
+                                    <!-- Design No -->
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm cell designNo"
+                                            list="styleList" placeholder="Design No">
+                                    </td>
 
-<datalist id="styleList"></datalist>
+                                    <datalist id="styleList"></datalist>
 
-                        <!-- Gold Purity -->
-                        <td style="min-width:100px;">
-                            <select class="form-select form-select-sm cell">
-                                <option>9KT</option>
-                                <option>14KT</option>
-                                <option>18KT</option>
-                                <option>22KT</option>
-                            </select>
-                        </td>
+                                    <!-- Gold Purity -->
+                                    <td style="min-width:100px;">
+                                        <select class="form-select form-select-sm cell">
+                                            <option>9KT</option>
+                                            <option>14KT</option>
+                                            <option>18KT</option>
+                                            <option>22KT</option>
+                                        </select>
+                                    </td>
 
-                        <!-- diamond Clarity -->
-                        <td style="min-width:100px;">
-                            <select class="form-select form-select-sm cell">
-                                <option>VVS</option>
-                                <option>VS</option>
-                                <option>SI</option>
-                                <option>IJ</option>
-                            </select>
-                        </td>
+                                    <!-- diamond Clarity -->
+                                    <td style="min-width:100px;">
+                                        <select class="form-select form-select-sm cell">
+                                            <option>VVS</option>
+                                            <option>VS</option>
+                                            <option>SI</option>
+                                            <option>IJ</option>
+                                        </select>
+                                    </td>
 
-                        <!-- diamond Color -->
-                        <td style="min-width:100px;">
-                            <select class="form-select form-select-sm cell">
-                                <option>EF</option>
-                                <option>FG</option>
-                                <option>Gh</option>
-                                <option>HI</option>
-                                <option>IJ</option>
-                            </select>
-                        </td>
+                                    <!-- diamond Color -->
+                                    <td style="min-width:100px;">
+                                        <select class="form-select form-select-sm cell">
+                                            <option>EF</option>
+                                            <option>FG</option>
+                                            <option>Gh</option>
+                                            <option>HI</option>
+                                            <option>IJ</option>
+                                        </select>
+                                    </td>
 
-                        <!-- Gross Weight -->
-                        <td>
-                            <input type="number" step="0.001"
-                                   class="form-control form-control-sm cell">
-                        </td>
+                                    <!-- Gross Weight -->
+                                    <td>
+                                        <input type="number" step="0.001"
+                                            class="form-control form-control-sm cell grossWt"
+                                            oninput="calculateNetWt(this)">
+                                    </td>
 
-                        <!-- Diamond Weight -->
-                        <td>
-                            <input type="number" step="0.001"
-                                   class="form-control form-control-sm cell">
-                        </td>
+                                    <!-- Diamond Weight -->
+                                    <td>
+                                        <input type="number" step="0.001"
+                                            class="form-control form-control-sm cell diaWt"
+                                            oninput="calculateNetWt(this)">
+                                    </td>
 
-                        <!-- Diamond Pieces -->
-                        <td>
-                            <input type="number"
-                                   class="form-control form-control-sm cell">
-                        </td>
+                                    <!-- Diamond Pieces -->
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm cell">
+                                    </td>
 
-                        <!-- Stone Weight -->
-                        <td>
-                            <input type="number" step="0.001"
-                                   class="form-control form-control-sm cell">
-                        </td>
-
-                        <!-- Stone Pieces -->
-                        <td>
-                            <input type="number"
-                                   class="form-control form-control-sm cell">
-                        </td>
-
-                        <!-- Net Weight -->
-                    <td>
-                        <input type="number" step="0.001" class="form-control form-control-sm cell netWt">
-                    </td>
-
-                        <!-- Delete Row -->
-                        <td>
-                            <button class="btn btn-danger btn-sm"
-                                    onclick="removeThisRow(this)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-        <!-- Bottom Buttons -->
-        <div class="mt-4 text-center">
-
-            <button class="btn btn-success" onclick="printAllTags()">
-                <i class="bi bi-printer"></i> Print All
-            </button>
+                                    <!-- Stone Weight -->
+                                    <td>
+                                        <input type="number" step="0.001"
+                                            class="form-control form-control-sm cell stoneWt"
+                                            oninput="calculateNetWt(this)">
+                                    </td>
 
 
-        </div>
+                                    <!-- Stone Pieces -->
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm cell">
+                                    </td>
+
+                                    <!-- Net Weight -->
+                                    <td>
+                                        <input type="number" step="0.001"
+                                            class="form-control form-control-sm cell netWt" readonly>
+                                    </td>
+
+                                    <!-- Delete Row -->
+                                    <td>
+                                        <button class="btn btn-danger btn-sm" onclick="removeThisRow(this)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <!-- Bottom Buttons -->
+                    <div class="mt-4 text-center">
+
+                        <button class="btn btn-success" onclick="printAllTags()">
+                            <i class="bi bi-printer"></i> Print All
+                        </button>
 
 
-    </div>
-</div>
+                    </div>
+
+
+                </div>
+            </div>
 
 
 
@@ -260,114 +260,114 @@
 
 
 
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
-<script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
-<script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
 
-<!-- Template Javascript -->
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-<script>
+    <!-- Template Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
 
-    // Generate Tag Numbers
-    function updateTagNumbers() {
-        const rows = document.querySelectorAll("#tagTable tr");
+        // Generate Tag Numbers
+        function updateTagNumbers() {
+            const rows = document.querySelectorAll("#tagTable tr");
 
-        rows.forEach((row, index) => {
-            const tagInput = row.querySelector(".tagNo");
-            if (tagInput) {
-                tagInput.value = "SJ-" + (index + 1);
+            rows.forEach((row, index) => {
+                const tagInput = row.querySelector(".tagNo");
+                if (tagInput) {
+                    tagInput.value = "SJ-" + (index + 1);
+                }
+            });
+        }
+
+        // Add New Row
+        function addRow() {
+
+            const tbody = document.getElementById("tagTable");
+            const newRow = tbody.rows[0].cloneNode(true);
+
+            // Clear inputs
+            newRow.querySelectorAll("input").forEach(input => {
+                input.value = "";
+            });
+
+            // Reset dropdowns
+            newRow.querySelectorAll("select").forEach(select => {
+                select.selectedIndex = 0;
+            });
+
+            tbody.appendChild(newRow);
+
+            updateTagNumbers();
+        }
+
+        // Remove Row
+        function removeThisRow(btn) {
+
+            const tbody = document.getElementById("tagTable");
+
+            if (tbody.rows.length > 1) {
+
+                btn.closest("tr").remove();
+
+                updateTagNumbers();
+
+            } else {
+
+                alert("At least one row must remain.");
+
             }
-        });
-    }
+        }
 
-    // Add New Row
-    function addRow() {
-
-        const tbody = document.getElementById("tagTable");
-        const newRow = tbody.rows[0].cloneNode(true);
-
-        // Clear inputs
-        newRow.querySelectorAll("input").forEach(input => {
-            input.value = "";
-        });
-
-        // Reset dropdowns
-        newRow.querySelectorAll("select").forEach(select => {
-            select.selectedIndex = 0;
-        });
-
-        tbody.appendChild(newRow);
-
-        updateTagNumbers();
-    }
-
-    // Remove Row
-    function removeThisRow(btn) {
-
-        const tbody = document.getElementById("tagTable");
-
-        if (tbody.rows.length > 1) {
-
-            btn.closest("tr").remove();
+        // Page Load
+        document.addEventListener("DOMContentLoaded", function () {
 
             updateTagNumbers();
 
-        } else {
+        });
 
-            alert("At least one row must remain.");
+        // Auto Add Row on Net Weight Enter
+        document.addEventListener("keydown", function (e) {
 
-        }
-    }
+            if (e.key !== "Enter") return;
 
-    // Page Load
-    document.addEventListener("DOMContentLoaded", function () {
+            if (!e.target.classList.contains("netWt")) return;
 
-        updateTagNumbers();
-
-    });
-
-    // Auto Add Row on Net Weight Enter
-    document.addEventListener("keydown", function (e) {
-
-        if (e.key !== "Enter") return;
-
-        if (!e.target.classList.contains("netWt")) return;
-
-        e.preventDefault();
-
-        const row = e.target.closest("tr");
-        const tbody = document.getElementById("tagTable");
-
-        // Only add a row if current row is the last one
-        if (row === tbody.rows[tbody.rows.length - 1]) {
-
-            addRow();
-
-        }
-
-        // Focus Design No of the new last row
-        const lastRow = tbody.rows[tbody.rows.length - 1];
-
-        lastRow.cells[1].querySelector("input").focus();
-
-    });
-
-    document.addEventListener("wheel", function (e) {
-        if (document.activeElement.type === "number") {
             e.preventDefault();
-        }
-    }, { passive: false });
 
-</script>
-   <!-- key board Functions --> 
+            const row = e.target.closest("tr");
+            const tbody = document.getElementById("tagTable");
+
+            // Only add a row if current row is the last one
+            if (row === tbody.rows[tbody.rows.length - 1]) {
+
+                addRow();
+
+            }
+
+            // Focus Design No of the new last row
+            const lastRow = tbody.rows[tbody.rows.length - 1];
+
+            lastRow.cells[1].querySelector("input").focus();
+
+        });
+
+        document.addEventListener("wheel", function (e) {
+            if (document.activeElement.type === "number") {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+    </script>
+    <!-- key board Functions -->
     <script>
         document.addEventListener("keydown", function (e) {
 
@@ -449,39 +449,52 @@
             });
 
         });
+        function calculateNetWt(input) {
+
+            const row = input.closest("tr");
+
+            const grossWt = parseFloat(row.querySelector(".grossWt").value) || 0;
+            const diaWt = parseFloat(row.querySelector(".diaWt").value) || 0;
+            const stoneWt = parseFloat(row.querySelector(".stoneWt").value) || 0;
+
+            // Net Wt = Gross Wt - ((Dia Wt + Stone Wt) / 5)
+            const netWt = grossWt - ((diaWt + stoneWt) / 5);
+
+            row.querySelector(".netWt").value = netWt.toFixed(3);
+        }
     </script>
 
-<!-- send data to print-tag -->
-<script>
-    function printAllTags() {
+    <!-- send data to print-tag -->
+    <script>
+        function printAllTags() {
 
-    const rows = document.querySelectorAll("#tagTable tr");
+            const rows = document.querySelectorAll("#tagTable tr");
 
-    let tags = [];
+            let tags = [];
 
-    rows.forEach(row => {
+            rows.forEach(row => {
 
-        tags.push({
-            tag: row.cells[0].querySelector("input").value,
-            design: row.cells[1].querySelector("input").value,
-            purity: row.cells[2].querySelector("select").value,
-            clarity: row.cells[3].querySelector("select").value,
-            color: row.cells[4].querySelector("select").value,
-            gross: row.cells[5].querySelector("input").value,
-            diawt: row.cells[6].querySelector("input").value,
-            diapc: row.cells[7].querySelector("input").value,
-            stonewt: row.cells[8].querySelector("input").value,
-            stonepc: row.cells[9].querySelector("input").value,
-            net: row.cells[10].querySelector("input").value
-        });
+                tags.push({
+                    tag: row.cells[0].querySelector("input").value,
+                    design: row.cells[1].querySelector("input").value,
+                    purity: row.cells[2].querySelector("select").value,
+                    clarity: row.cells[3].querySelector("select").value,
+                    color: row.cells[4].querySelector("select").value,
+                    gross: row.cells[5].querySelector("input").value,
+                    diawt: row.cells[6].querySelector("input").value,
+                    diapc: row.cells[7].querySelector("input").value,
+                    stonewt: row.cells[8].querySelector("input").value,
+                    stonepc: row.cells[9].querySelector("input").value,
+                    net: row.cells[10].querySelector("input").value
+                });
 
-    });
+            });
 
-    localStorage.setItem("printTags", JSON.stringify(tags));
+            localStorage.setItem("printTags", JSON.stringify(tags));
 
-    window.open("/print-tag");
-}
-</script>
+            window.open("/print-tag");
+        }
+    </script>
 
 
 
