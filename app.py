@@ -484,6 +484,32 @@ class Order(db.Model):
 
     remarks = db.Column(db.Text)
     
+class Tag(db.Model):
+    __tablename__ = "tag"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    batch_no = db.Column(db.String(30), nullable=False)
+
+    tag_no = db.Column(db.String(50), nullable=False)
+
+    design_no = db.Column(db.String(100))
+
+    gold_purity = db.Column(db.String(20))
+    diamond_clarity = db.Column(db.String(20))
+    diamond_color = db.Column(db.String(20))
+
+    gold_weight = db.Column(db.Float, default=0)
+    diamond_weight = db.Column(db.Float, default=0)
+    diamond_pieces = db.Column(db.Integer, default=0)
+
+    stone_weight = db.Column(db.Float, default=0)
+    stone_pieces = db.Column(db.Integer, default=0)
+
+    net_weight = db.Column(db.Float, default=0)
+
+    printed_date = db.Column(db.DateTime, default=datetime.utcnow)
+    
 def send_order_email(order_no, client_code, items):
 
     try:
@@ -3142,6 +3168,183 @@ def mou_list():
 @app.route("/print-tag")
 def print_tag():
     return render_template("print_tag.html")
+
+@app.route("/api/reprint-tags", methods=["POST"])
+def reprint_tags():
+
+    data = request.get_json()
+
+    selected_tags = data.get("tags", [])
+
+    result = []
+
+    for item in selected_tags:
+
+        tag = Tag.query.filter_by(
+            batch_no=item["batch_no"],
+            tag_no=item["tag_no"]
+        ).first()
+
+
+        if tag:
+
+            result.append({
+
+                "tag": tag.tag_no,
+                "design": tag.design_no,
+                "purity": tag.gold_purity,
+                "clarity": tag.diamond_clarity,
+                "color": tag.diamond_color,
+
+                "gross": tag.gold_weight,
+                "diawt": tag.diamond_weight,
+                "diapc": tag.diamond_pieces,
+
+                "stonewt": tag.stone_weight,
+                "stonepc": tag.stone_pieces,
+
+                "net": tag.net_weight
+
+            })
+
+
+    return jsonify({
+
+        "success": True,
+        "tags": result
+
+    })
+
+@app.route("/save-print-tags", methods=["POST"])
+def save_print_tags():
+
+    data = request.get_json()
+    tags = data.get("tags", [])
+
+    try:
+
+        # Generate Batch Number
+        last = Tag.query.order_by(Tag.id.desc()).first()
+
+        if last:
+            last_no = int(last.batch_no.replace("BATCH", ""))
+            batch_no = f"BATCH{last_no + 1:04d}"
+        else:
+            batch_no = "BATCH0001"
+
+        print("Batch :", batch_no)
+
+        for item in tags:
+
+            print("Saving :", item)
+
+            tag = Tag(
+
+                batch_no=batch_no,
+
+                tag_no=item["tag"],
+                design_no=item["design"],
+
+                gold_purity=item["purity"],
+                diamond_clarity=item["clarity"],
+                diamond_color=item["color"],
+
+                gold_weight=float(item["gross"] or 0),
+                diamond_weight=float(item["diawt"] or 0),
+                diamond_pieces=int(item["diapc"] or 0),
+
+                stone_weight=float(item["stonewt"] or 0),
+                stone_pieces=int(item["stonepc"] or 0),
+
+                net_weight=float(item["net"] or 0)
+
+            )
+
+            db.session.add(tag)
+
+        db.session.commit()
+
+        print("Saved Successfully")
+
+        return jsonify({
+            "success": True,
+            "batch_no": batch_no
+        })
+
+    except Exception as e:
+
+        db.session.rollback()
+
+        print("ERROR :", e)
+
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        })
+        
+@app.route("/api/tag-history", methods=["GET"])
+def tag_history():
+
+    date = request.args.get("date")
+    batch_no = request.args.get("batch_no")
+
+    query = Tag.query
+
+    if date:
+        query = query.filter(func.date(Tag.printed_date) == date)
+
+    if batch_no:
+        query = query.filter(Tag.batch_no == batch_no)
+
+    tags = query.order_by(Tag.id.desc()).all()
+
+    data = []
+
+    for tag in tags:
+        data.append({
+            "batch_no": tag.batch_no,
+            "tag_no": tag.tag_no,
+            "design_no": tag.design_no,
+            "gold_purity": tag.gold_purity,
+            "diamond_clarity": tag.diamond_clarity,
+            "diamond_color": tag.diamond_color,
+            "gold_weight": tag.gold_weight,
+            "diamond_weight": tag.diamond_weight,
+            "diamond_pieces": tag.diamond_pieces,
+            "stone_weight": tag.stone_weight,
+            "stone_pieces": tag.stone_pieces,
+            "net_weight": tag.net_weight,
+            "printed_date": tag.printed_date.strftime("%d-%m-%Y %H:%M:%S")
+        })
+
+    return jsonify({
+        "success": True,
+        "data": data
+    })
+    
+@app.route("/api/tag-filters")
+def tag_filters():
+
+    dates = db.session.query(
+        func.date(Tag.printed_date)
+    ).distinct().order_by(
+        func.date(Tag.printed_date).desc()
+    ).all()
+
+    batches = db.session.query(
+        Tag.batch_no
+    ).distinct().order_by(
+        Tag.batch_no.desc()
+    ).all()
+
+    return jsonify({
+        "dates": [str(d[0]) for d in dates],
+        "batches": [b[0] for b in batches]
+    })
+    
+@app.route("/tag_list")
+def tag_list():
+    return render_template("tag_list.html")
 
 
 @app.route("/admin")

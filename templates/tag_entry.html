@@ -465,36 +465,68 @@
     </script>
 
     <!-- send data to print-tag -->
-    <script>
-        function printAllTags() {
+<script>
+    function printAllTags() {
 
-            const rows = document.querySelectorAll("#tagTable tr");
+    const rows = document.querySelectorAll("#tagTable tr");
 
-            let tags = [];
+    let tags = [];
 
-            rows.forEach(row => {
+    rows.forEach(row => {
 
-                tags.push({
-                    tag: row.cells[0].querySelector("input").value,
-                    design: row.cells[1].querySelector("input").value,
-                    purity: row.cells[2].querySelector("select").value,
-                    clarity: row.cells[3].querySelector("select").value,
-                    color: row.cells[4].querySelector("select").value,
-                    gross: row.cells[5].querySelector("input").value,
-                    diawt: row.cells[6].querySelector("input").value,
-                    diapc: row.cells[7].querySelector("input").value,
-                    stonewt: row.cells[8].querySelector("input").value,
-                    stonepc: row.cells[9].querySelector("input").value,
-                    net: row.cells[10].querySelector("input").value
-                });
+        tags.push({
+            tag: row.cells[0].querySelector("input").value,
+            design: row.cells[1].querySelector("input").value,
+            purity: row.cells[2].querySelector("select").value,
+            clarity: row.cells[3].querySelector("select").value,
+            color: row.cells[4].querySelector("select").value,
+            gross: row.cells[5].querySelector("input").value,
+            diawt: row.cells[6].querySelector("input").value,
+            diapc: row.cells[7].querySelector("input").value,
+            stonewt: row.cells[8].querySelector("input").value,
+            stonepc: row.cells[9].querySelector("input").value,
+            net: row.cells[10].querySelector("input").value
+        });
 
-            });
+    });
 
-            localStorage.setItem("printTags", JSON.stringify(tags));
+    // Save data for print page
+    localStorage.setItem("printTags", JSON.stringify(tags));
+
+    // Save into database first
+    fetch("/save-print-tags", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            tags: tags
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+
+        if(data.success){
 
             window.open("/print-tag");
+
+        }else{
+
+            alert(data.message);
+
         }
-    </script>
+
+    })
+    .catch(error => {
+
+        console.log(error);
+
+        alert("Unable to save tags.");
+
+    });
+
+}
+</script>
 
 
 

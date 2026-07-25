@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Account - ERP</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link href="{{ url_for('static', filename='img/favicon.ico') }}" rel="icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+        rel="stylesheet">
+
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        .tag-label {
+            width: 90mm;
+            height: 12mm;
+            display: flex;
+            align-items: center;
+            font-size: 7px;
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+        }
+
+        .left {
+            width: 80%;
+        }
+
+        .right {
+            width: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tag-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tag-table td {
+            border: 1px solid #000;
+            padding: 0 2px;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        @media print {
+
+            @page {
+                size: 90mm 12mm;
+                margin: 0;
+            }
+
+            html,
+            body {
+                width: 90mm;
+                height: 12mm;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            #printTag,
+            #printTag * {
+                visibility: visible;
+            }
+
+            #printTag {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 90mm;
+                height: 12mm;
+                display: block !important;
+                margin: 0;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid position-relative bg-white d-flex p-0">
+
+        {% include 'account_menu.html' %}
+
+        <div class="content">
+            {% include 'navbar.html' %}
+            <!-- Order Recieved render -->
+
+
+            <div class="container-fluid pt-4 px-4">
+
+
+                <div class="bg-light rounded p-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <center>
+                            <h4 class="mb-0">Tag List filter</h4>
+                        </center>
+                    </div>
+                    <div class="row mb-1">
+
+                        <div class="row justify-content-between align-items-end mb-4">
+
+                            <div class="col-lg-3 col-md-4 col-12">
+                                <label class="form-label">Date</label>
+                                <select id="dateFilter" class="form-select" onchange="loadHistory()">
+                                    <option value="">All Dates</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 col-md-4 col-12">
+                                <label class="form-label">Batch</label>
+                                <select id="batchFilter" class="form-select" onchange="loadHistory()">
+                                    <option value="">All Batches</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+
+                <div class="bg-light rounded p-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Tag List</h4>
+                    </div>
+                    <div class="row mb-3">
+
+
+
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered table-hover">
+
+                                <thead class="table-dark">
+
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Batch</th>
+                                        <th>Tag No</th>
+                                        <th>Design</th>
+                                        <th>Gold Purity</th>
+                                        <th>Dia Clarity</th>
+                                        <th>Dia Color</th>
+                                        <th>Gold Wt</th>
+                                        <th>Dia Wt</th>
+                                        <th>Dia Pcs</th>
+                                        <th>Stone Wt</th>
+                                        <th>Stone Pcs</th>
+                                        <th>Net Wt</th>
+                                        <th>Printed Date</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="historyBody">
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                        <button class="btn btn-success" onclick="getSelectedTags()">
+                            <i class="bi bi-printer"></i> Print Selected
+                        </button>
+
+
+                    </div>
+                </div>
+
+
+
+
+                {% include 'footer.html' %}
+            </div>
+        </div>
+
+        <!-- JS Libraries -->
+
+
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script src="{{ url_for('static', filename='lib/chart/chart.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/easing/easing.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/waypoints/waypoints.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
+        <script
+            src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+
+        <!-- Template Javascript -->
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+        <script>
+
+            document.addEventListener("DOMContentLoaded", () => {
+
+                loadFilters();
+                loadHistory();
+
+            });
+
+
+            // ================= LOAD FILTERS =================
+
+            function loadFilters() {
+
+                fetch("/api/tag-filters")
+
+                    .then(res => res.json())
+
+                    .then(result => {
+
+
+                        const dateFilter = document.getElementById("dateFilter");
+                        const batchFilter = document.getElementById("batchFilter");
+
+
+                        dateFilter.innerHTML =
+                            `<option value="">All Dates</option>`;
+
+                        batchFilter.innerHTML =
+                            `<option value="">All Batches</option>`;
+
+
+                        result.dates.forEach(date => {
+
+                            dateFilter.innerHTML +=
+                                `<option value="${date}">
+                ${date}
+            </option>`;
+
+                        });
+
+
+                        result.batches.forEach(batch => {
+
+                            batchFilter.innerHTML +=
+                                `<option value="${batch}">
+                ${batch}
+            </option>`;
+
+                        });
+
+
+                    })
+
+                    .catch(error => {
+
+                        console.error("Filter Error:", error);
+
+                    });
+
+            }
+
+
+
+            // ================= LOAD HISTORY =================
+
+
+            function loadHistory() {
+
+
+                const date =
+                    document.getElementById("dateFilter").value;
+
+
+                const batch =
+                    document.getElementById("batchFilter").value;
+
+
+
+                let url = "/api/tag-history";
+
+
+                let params = [];
+
+
+                if (date) {
+
+                    params.push(
+                        "date=" + encodeURIComponent(date)
+                    );
+
+                }
+
+
+                if (batch) {
+
+                    params.push(
+                        "batch_no=" + encodeURIComponent(batch)
+                    );
+
+                }
+
+
+
+                if (params.length > 0) {
+
+                    url += "?" + params.join("&");
+
+                }
+
+
+
+                fetch(url)
+
+                    .then(res => res.json())
+
+                    .then(result => {
+
+
+
+                        let html = "";
+
+
+
+                        if (!result.success || result.data.length === 0) {
+
+
+                            html = `
+
+            <tr>
+
+                <td colspan="14"
+                    class="text-center">
+
+                    No Records Found
+
+                </td>
+
+            </tr>
+
+            `;
+
+
+                        }
+
+                        else {
+
+
+                            result.data.forEach(item => {
+
+
+
+                                html += `
+
+                <tr>
+
+
+                    <td class="text-center">
+
+                        <input type="checkbox"
+
+                               class="selectedTag"
+
+                               data-batch="${item.batch_no}"
+
+                               data-tag="${item.tag_no}">
+
+                    </td>
+
+
+
+                    <td>${item.batch_no}</td>
+
+                    <td>${item.tag_no}</td>
+
+                    <td>${item.design_no}</td>
+
+                    <td>${item.gold_purity}</td>
+
+                    <td>${item.diamond_clarity}</td>
+
+                    <td>${item.diamond_color}</td>
+
+                    <td>${item.gold_weight}</td>
+
+                    <td>${item.diamond_weight}</td>
+
+                    <td>${item.diamond_pieces}</td>
+
+                    <td>${item.stone_weight}</td>
+
+                    <td>${item.stone_pieces}</td>
+
+                    <td>${item.net_weight}</td>
+
+                    <td>${item.printed_date}</td>
+
+
+
+                </tr>
+
+                `;
+
+
+                            });
+
+
+                        }
+
+
+
+                        document.getElementById("historyBody").innerHTML = html;
+
+
+
+                    })
+
+
+                    .catch(error => {
+
+                        console.error("History Error:", error);
+
+                    });
+
+
+            }
+
+
+
+            // ================= REPRINT SELECTED TAGS =================
+
+
+            function getSelectedTags() {
+
+
+
+                const checked =
+                    document.querySelectorAll(".selectedTag:checked");
+
+
+
+                if (checked.length === 0) {
+
+
+                    alert("Please select tag");
+
+                    return;
+
+
+                }
+
+
+
+                let tags = [];
+
+
+
+                checked.forEach(item => {
+
+
+
+                    tags.push({
+
+                        batch_no:
+                            item.dataset.batch,
+
+
+                        tag_no:
+                            item.dataset.tag
+
+
+                    });
+
+
+
+                });
+
+
+
+                console.log(
+                    "Selected Tags:",
+                    tags
+                );
+
+
+
+                fetch("/api/reprint-tags", {
+
+
+                    method: "POST",
+
+
+                    headers: {
+
+
+                        "Content-Type": "application/json"
+
+
+                    },
+
+
+                    body: JSON.stringify({
+
+                        tags: tags
+
+                    })
+
+
+
+                })
+
+
+                    .then(res => res.json())
+
+
+                    .then(result => {
+
+
+
+                        console.log(
+                            "Print Response:",
+                            result
+                        );
+
+
+
+                        if (result.success) {
+
+
+
+                            localStorage.setItem(
+
+                                "printTags",
+
+                                JSON.stringify(result.tags)
+
+                            );
+
+
+
+                            window.open(
+                                "/print-tag",
+                                "_blank"
+                            );
+
+
+
+                        }
+
+                        else {
+
+
+                            alert(
+                                result.message ||
+                                "No tag found"
+                            );
+
+
+                        }
+
+
+
+                    })
+
+
+                    .catch(error => {
+
+
+
+                        console.error(
+                            "Reprint Error:",
+                            error
+                        );
+
+
+                        alert(
+                            "Unable to print selected tags"
+                        );
+
+
+
+                    });
+
+
+
+            }
+
+
+
+        </script>
+
+
+</body>
+
+</html>

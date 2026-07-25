@@ -1992,7 +1992,7 @@ progress {
 }
 
 .table {
-    --bs-table-bg: rgba(0, 0, 0, 0);
+    --bs-table-bg: rgba(33, 58, 139, 0);
     --bs-table-striped-color: #757575;
     --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
     --bs-table-active-color: #757575;
@@ -2145,7 +2145,7 @@ progress {
 }
 
 .table-dark {
-    --bs-table-bg: #191C24;
+    --bs-table-bg: #1e3881;
     --bs-table-striped-bg: #25272f;
     --bs-table-striped-color: #fff;
     --bs-table-active-bg: #30333a;

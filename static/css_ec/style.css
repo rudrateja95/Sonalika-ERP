@@ -26,7 +26,7 @@
   --warning: #ffc107;
   --danger: #dc3545;
   --light: #FFFFFF;
-  --dark: #1C1C1C;
+  --dark: #1a1979;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;
@@ -1792,7 +1792,7 @@ pre code {
 
 .table-dark {
   color: #fff;
-  background-color: #343a40;
+  background-color: #033669;
 }
 
 .table-dark th,
