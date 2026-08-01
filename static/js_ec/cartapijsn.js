@@ -4,56 +4,74 @@ function saveCart() {
         items: getOrderData()
     };
 
-    $.ajax({
-        url: "/api/cart",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(payload),
+    var xhr = new XMLHttpRequest();
 
-        success: function (result) {
+    xhr.open("POST", "/api/cart", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
 
-            if (result.status === "success") {
+    xhr.onreadystatechange = function () {
 
-                Swal.fire({
-                    icon: "success",
-                    title: "Success!",
-                    text: result.message,
-                    timer: 2000,
-                    showConfirmButton: false
-                }).then(function () {
+        if (xhr.readyState === 4) {
 
-                    $("#selectModal").modal("hide");
-                    document.getElementById("selectForm").reset();
-                    loadCartCount();
+            if (xhr.status === 200) {
 
-                });
+                var result;
+
+                try {
+                    result = JSON.parse(xhr.responseText);
+                } catch (e) {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "Invalid server response."
+                    });
+
+                    return;
+                }
+
+                if (result.status === "success") {
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: result.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(function () {
+
+                        $("#selectModal").modal("hide");
+
+                        document.getElementById("selectForm").reset();
+
+                        loadCartCount();
+
+                    });
+
+                } else {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error!",
+                        text: result.message
+                    });
+
+                }
 
             } else {
 
                 Swal.fire({
                     icon: "error",
-                    title: "Error!",
-                    text: result.message
+                    title: "Network Error",
+                    text: "Unable to connect to the server."
                 });
 
             }
 
-        },
-
-        error: function (xhr, status, error) {
-
-            console.log(xhr.responseText);
-            console.log(status);
-            console.log(error);
-
-            Swal.fire({
-                icon: "error",
-                title: "Network Error",
-                text: "Unable to connect to the server."
-            });
-
         }
 
-    });
+    };
+
+    xhr.send(JSON.stringify(payload));
 
 }
