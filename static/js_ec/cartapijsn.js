@@ -4,59 +4,55 @@ function saveCart() {
         items: getOrderData()
     };
 
-    fetch("/api/cart", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
+    $.ajax({
+        url: "/api/cart",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(payload),
+
+        success: function (result) {
+
+            if (result.status === "success") {
+
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    text: result.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(function () {
+
+                    $("#selectModal").modal("hide");
+                    document.getElementById("selectForm").reset();
+                    loadCartCount();
+
+                });
+
+            } else {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: result.message
+                });
+
+            }
+
         },
-        body: JSON.stringify(payload)
-    })
-    .then(function (res) {
-        return res.json();
-    })
-    .then(function (result) {
 
-        if (result.status === "success") {
+        error: function (xhr, status, error) {
 
-            Swal.fire({
-                icon: "success",
-                title: "Success!",
-                text: result.message,
-                timer: 2000,
-                showConfirmButton: false
-            }).then(function () {
-
-                // Close Modal
-                $("#selectModal").modal("hide");
-
-                // Reset Form
-                document.getElementById("selectForm").reset();
-
-                // Update Cart Count
-                loadCartCount();
-
-            });
-
-        } else {
+            console.log(xhr.responseText);
+            console.log(status);
+            console.log(error);
 
             Swal.fire({
                 icon: "error",
-                title: "Error!",
-                text: result.message
+                title: "Network Error",
+                text: "Unable to connect to the server."
             });
 
         }
-
-    })
-    .catch(function (error) {
-
-        console.error(error);
-
-        Swal.fire({
-            icon: "error",
-            title: "Network Error",
-            text: "Unable to connect to the server."
-        });
 
     });
 
