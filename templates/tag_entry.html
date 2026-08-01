@@ -145,13 +145,13 @@
                                     </td>
 
 
-<td>
-    <input type="text"
-           class="form-control form-control-sm cell designNo"
-           list="styleList"
-           placeholder="Design No"
-           oninput="this.value = this.value.toUpperCase();">
-</td>
+                                    <td>
+                                        <input type="text"
+                                               class="form-control form-control-sm cell designNo"
+                                               list="styleList"
+                                               placeholder="Design No"
+                                               oninput="this.value = this.value.toUpperCase();">
+                                    </td>
 
 
                                     <datalist id="styleList"></datalist>
@@ -355,6 +355,7 @@
     <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ url_for('static', filename='lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 
     <script>
@@ -796,133 +797,7 @@
 
 </script>
 
-<!-- Temporary render data Javascript -->
-<script>
 
-    // =========================
-    // Save Draft Row
-    // =========================
-    function saveDraftRow(row) {
-
-        const data = {
-            tag_no: row.querySelector(".tagNo").value,
-            design_no: row.querySelector(".designNo").value,
-
-            gold_purity: row.cells[2].querySelector("select").value,
-            diamond_clarity: row.cells[3].querySelector("select").value,
-            diamond_color: row.cells[4].querySelector("select").value,
-
-            gold_weight: parseFloat(row.querySelector(".grossWt").value) || 0,
-            diamond_weight: parseFloat(row.querySelector(".diaWt").value) || 0,
-            diamond_pieces: parseInt(row.querySelector(".diaPc").value) || 0,
-
-            dia_pc_2: parseInt(row.dataset.diaPc2) || 0,
-            dia_wt_2: parseFloat(row.dataset.diaWt2) || 0,
-
-            dia_pc_6_5: parseInt(row.dataset.diaPc6_5) || 0,
-            dia_wt_6_5: parseFloat(row.dataset.diaWt6_5) || 0,
-
-            dia_pc_11: parseInt(row.dataset.diaPc11) || 0,
-            dia_wt_11: parseFloat(row.dataset.diaWt11) || 0,
-
-            igi_no: row.dataset.diaIgiNo || "",
-            huid_no: row.dataset.diaHuidNo || "",
-
-            stone_weight: parseFloat(row.querySelector(".stoneWt").value) || 0,
-            stone_pieces: parseInt(row.cells[9].querySelector("input").value) || 0,
-
-            net_weight: parseFloat(row.querySelector(".netWt").value) || 0
-        };
-
-        fetch("/api/tag-draft/save", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-            .then(res => res.json())
-            .then(result => {
-                console.log("Draft Saved:", result);
-            })
-            .catch(err => {
-                console.error(err);
-            });
-
-    }
-
-
-    // =========================
-    // Load Draft
-    // =========================
-    async function loadDraft() {
-
-        try {
-
-            const res = await fetch("/api/tag-draft");
-            const result = await res.json();
-
-            const tbody = document.getElementById("tagTable");
-
-            tbody.innerHTML = "";
-
-            if (!result.success || result.data.length === 0) {
-
-                addRow();
-                return;
-
-            }
-
-            result.data.forEach(item => {
-
-                addRow();
-
-                const row = tbody.rows[tbody.rows.length - 1];
-
-                row.querySelector(".tagNo").value = item.tag_no || "";
-                row.querySelector(".designNo").value = item.design_no || "";
-
-                row.cells[2].querySelector("select").value = item.gold_purity || "18KT";
-                row.cells[3].querySelector("select").value = item.diamond_clarity || "VVS";
-                row.cells[4].querySelector("select").value = item.diamond_color || "EF";
-
-                row.querySelector(".grossWt").value = item.gold_weight || 0;
-                row.querySelector(".diaWt").value = item.diamond_weight || 0;
-                row.querySelector(".diaPc").value = item.diamond_pieces || 0;
-
-                row.dataset.diaPc2 = item.dia_pc_2 || 0;
-                row.dataset.diaWt2 = item.dia_wt_2 || 0;
-
-                row.dataset.diaPc6_5 = item.dia_pc_6_5 || 0;
-                row.dataset.diaWt6_5 = item.dia_wt_6_5 || 0;
-
-                row.dataset.diaPc11 = item.dia_pc_11 || 0;
-                row.dataset.diaWt11 = item.dia_wt_11 || 0;
-
-                row.dataset.diaIgiNo = item.igi_no || "";
-                row.dataset.diaHuidNo = item.huid_no || "";
-
-                row.querySelector(".stoneWt").value = item.stone_weight || 0;
-                row.cells[9].querySelector("input").value = item.stone_pieces || 0;
-
-                row.querySelector(".netWt").value = item.net_weight || 0;
-
-            });
-
-            // Always keep one empty row for new entry
-            addRow();
-
-        } catch (err) {
-
-            console.error(err);
-
-            addRow();
-
-        }
-
-    }
-
-</script>
 
     <!-- clear data -->
     <script>
@@ -1161,19 +1036,35 @@
         rows.forEach(row => {
 
             tags.push({
+            
                 tag: row.cells[0].querySelector("input").value,
                 design: row.cells[1].querySelector("input").value,
+            
                 purity: row.cells[2].querySelector("select").value,
                 clarity: row.cells[3].querySelector("select").value,
                 color: row.cells[4].querySelector("select").value,
+            
                 gross: row.cells[5].querySelector("input").value,
                 diawt: row.cells[6].querySelector("input").value,
                 diapc: row.cells[7].querySelector("input").value,
+            
+                // Read from dataset
+                dia_pc_2: row.dataset.diaPc2 || 0,
+                dia_wt_2: row.dataset.diaWt2 || 0,
+            
+                dia_pc_6_5: row.dataset.diaPc6_5 || 0,
+                dia_wt_6_5: row.dataset.diaWt6_5 || 0,
+            
+                dia_pc_11: row.dataset.diaPc11 || 0,
+                dia_wt_11: row.dataset.diaWt11 || 0,
+            
                 igi: row.dataset.diaIgiNo || "",
                 huid: row.dataset.diaHuidNo || "",
+            
                 stonewt: row.cells[8].querySelector("input").value,
                 stonepc: row.cells[9].querySelector("input").value,
                 net: row.cells[10].querySelector("input").value
+            
             });
 
         });

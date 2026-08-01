@@ -157,7 +157,9 @@
                                 <thead class="table-dark">
 
                                     <tr>
-                                        <th>Select</th>
+                                        <th class="text-center">
+                                            <input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)">
+                                        </th>
                                         <th>Batch</th>
                                         <th>Tag No</th>
                                         <th>Design</th>
@@ -182,9 +184,18 @@
                             </table>
 
                         </div>
-                        <button class="btn btn-success" onclick="getSelectedTags()">
-                            <i class="bi bi-printer"></i> Print Selected
-                        </button>
+                        <div class="d-flex flex-column flex-sm-row gap-2 mt-3">
+
+                            <button type="button" class="btn btn-success w-100 w-sm-auto" onclick="getSelectedTags()">
+                                <i class="bi bi-printer"></i> Print Selected
+                            </button>
+
+                            <button type="button" class="btn btn-primary w-100 w-sm-auto"
+                                onclick="extractSelectedTags()">
+                                <i class="bi bi-file-earmark-excel"></i> Extract Selected
+                            </button>
+
+                        </div>
 
 
                     </div>
@@ -252,8 +263,8 @@
 
                             dateFilter.innerHTML +=
                                 `<option value="${date}">
-                ${date}
-            </option>`;
+                        ${date}
+                    </option>`;
 
                         });
 
@@ -262,8 +273,8 @@
 
                             batchFilter.innerHTML +=
                                 `<option value="${batch}">
-                ${batch}
-            </option>`;
+                        ${batch}
+                    </option>`;
 
                         });
 
@@ -344,19 +355,19 @@
 
 
                             html = `
-
-            <tr>
-
-                <td colspan="14"
-                    class="text-center">
-
-                    No Records Found
-
-                </td>
-
-            </tr>
-
-            `;
+        
+                    <tr>
+        
+                        <td colspan="14"
+                            class="text-center">
+        
+                            No Records Found
+        
+                        </td>
+        
+                    </tr>
+        
+                    `;
 
 
                         }
@@ -369,55 +380,55 @@
 
 
                                 html += `
-
-                <tr>
-
-
-                    <td class="text-center">
-
-                        <input type="checkbox"
-
-                               class="selectedTag"
-
-                               data-batch="${item.batch_no}"
-
-                               data-tag="${item.tag_no}">
-
-                    </td>
-
-
-
-                    <td>${item.batch_no}</td>
-
-                    <td>${item.tag_no}</td>
-
-                    <td>${item.design_no}</td>
-
-                    <td>${item.gold_purity}</td>
-
-                    <td>${item.diamond_clarity}</td>
-
-                    <td>${item.diamond_color}</td>
-
-                    <td>${item.gold_weight}</td>
-
-                    <td>${item.diamond_weight}</td>
-
-                    <td>${item.diamond_pieces}</td>
-
-                    <td>${item.stone_weight}</td>
-
-                    <td>${item.stone_pieces}</td>
-
-                    <td>${item.net_weight}</td>
-
-                    <td>${item.printed_date}</td>
-
-
-
-                </tr>
-
-                `;
+        
+                        <tr>
+        
+        
+                            <td class="text-center">
+        
+                                <input type="checkbox"
+        
+                                       class="selectedTag"
+        
+                                       data-batch="${item.batch_no}"
+        
+                                       data-tag="${item.tag_no}">
+        
+                            </td>
+        
+        
+        
+                            <td>${item.batch_no}</td>
+        
+                            <td>${item.tag_no}</td>
+        
+                            <td>${item.design_no}</td>
+        
+                            <td>${item.gold_purity}</td>
+        
+                            <td>${item.diamond_clarity}</td>
+        
+                            <td>${item.diamond_color}</td>
+        
+                            <td>${item.gold_weight}</td>
+        
+                            <td>${item.diamond_weight}</td>
+        
+                            <td>${item.diamond_pieces}</td>
+        
+                            <td>${item.stone_weight}</td>
+        
+                            <td>${item.stone_pieces}</td>
+        
+                            <td>${item.net_weight}</td>
+        
+                            <td>${item.printed_date}</td>
+        
+        
+        
+                        </tr>
+        
+                        `;
 
 
                             });
@@ -443,170 +454,164 @@
 
             }
 
-
-
             // ================= REPRINT SELECTED TAGS =================
+            // Select All
+            document.addEventListener("change", function (e) {
 
+                if (e.target && e.target.id === "selectAll") {
 
-            function getSelectedTags() {
+                    var checked = e.target.checked;
 
+                    var boxes = document.getElementsByClassName("selectedTag");
 
-
-                const checked =
-                    document.querySelectorAll(".selectedTag:checked");
-
-
-
-                if (checked.length === 0) {
-
-
-                    alert("Please select tag");
-
-                    return;
-
+                    for (var i = 0; i < boxes.length; i++) {
+                        boxes[i].checked = checked;
+                    }
 
                 }
 
+            });
+            function getSelectedTags() {
 
+                var checkboxes = document.getElementsByClassName("selectedTag");
+                var tags = [];
 
-                let tags = [];
+                for (var i = 0; i < checkboxes.length; i++) {
 
+                    if (checkboxes[i].checked) {
 
+                        tags.push({
+                            batch_no: checkboxes[i].getAttribute("data-batch"),
+                            tag_no: checkboxes[i].getAttribute("data-tag")
+                        });
 
-                checked.forEach(item => {
+                    }
 
+                }
 
+                if (tags.length === 0) {
 
-                    tags.push({
+                    alert("Please select at least one tag.");
+                    return;
 
-                        batch_no:
-                            item.dataset.batch,
+                }
 
+                var xhr = new XMLHttpRequest();
 
-                        tag_no:
-                            item.dataset.tag
+                xhr.open("POST", "/api/reprint-tags", true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
+                xhr.onreadystatechange = function () {
 
-                    });
+                    if (xhr.readyState === 4) {
 
+                        if (xhr.status === 200) {
 
+                            var result;
 
-                });
+                            try {
 
+                                result = JSON.parse(xhr.responseText);
 
+                            } catch (e) {
 
-                console.log(
-                    "Selected Tags:",
-                    tags
-                );
+                                alert("Invalid server response.");
+                                return;
 
+                            }
 
+                            if (result.success) {
 
-                fetch("/api/reprint-tags", {
+                                localStorage.setItem("printTags", JSON.stringify(result.tags));
 
+                                window.open("/print-tag", "_blank");
 
-                    method: "POST",
+                            } else {
 
+                                alert(result.message || "No tag found.");
 
-                    headers: {
+                            }
 
+                        } else {
 
-                        "Content-Type": "application/json"
-
-
-                    },
-
-
-                    body: JSON.stringify({
-
-                        tags: tags
-
-                    })
-
-
-
-                })
-
-
-                    .then(res => res.json())
-
-
-                    .then(result => {
-
-
-
-                        console.log(
-                            "Print Response:",
-                            result
-                        );
-
-
-
-                        if (result.success) {
-
-
-
-                            localStorage.setItem(
-
-                                "printTags",
-
-                                JSON.stringify(result.tags)
-
-                            );
-
-
-
-                            window.open(
-                                "/print-tag",
-                                "_blank"
-                            );
-
-
+                            alert("Unable to print selected tags.");
 
                         }
 
-                        else {
+                    }
 
+                };
 
-                            alert(
-                                result.message ||
-                                "No tag found"
-                            );
-
-
-                        }
-
-
-
-                    })
-
-
-                    .catch(error => {
-
-
-
-                        console.error(
-                            "Reprint Error:",
-                            error
-                        );
-
-
-                        alert(
-                            "Unable to print selected tags"
-                        );
-
-
-
-                    });
-
-
+                xhr.send(JSON.stringify({
+                    tags: tags
+                }));
 
             }
-
-
-
         </script>
 
+        <script>
+            function extractSelectedTags() {
+
+                var checkboxes = document.getElementsByClassName("selectedTag");
+                var tags = [];
+
+                for (var i = 0; i < checkboxes.length; i++) {
+
+                    if (checkboxes[i].checked) {
+
+                        tags.push({
+                            batch_no: checkboxes[i].getAttribute("data-batch"),
+                            tag_no: checkboxes[i].getAttribute("data-tag")
+                        });
+
+                    }
+
+                }
+
+                if (tags.length === 0) {
+                    alert("Please select at least one tag.");
+                    return;
+                }
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("POST", "/api/export-selected-tags", true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.responseType = "blob";
+
+                xhr.onload = function () {
+
+                    if (xhr.status === 200) {
+
+                        var blob = new Blob([xhr.response], {
+                            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        });
+
+                        var url = window.URL.createObjectURL(blob);
+
+                        var a = document.createElement("a");
+                        a.href = url;
+                        a.download = "Selected_Tags.xlsx";
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+
+                        window.URL.revokeObjectURL(url);
+
+                    } else {
+
+                        alert("Failed to export.");
+
+                    }
+
+                };
+
+                xhr.send(JSON.stringify({
+                    tags: tags
+                }));
+
+            }
+        </script>
 
 </body>
 

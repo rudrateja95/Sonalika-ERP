@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response, flash, session, url_for, redirect, current_app
+from flask import Flask, render_template, request, jsonify, Response, flash, session, url_for, redirect, current_app, send_file
 import re
 import cv2
 import pandas as pd
@@ -22,6 +22,7 @@ import math
 from datetime import datetime
 import pytz
 import openpyxl
+from openpyxl import Workbook
 import imghdr
 from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy.orm import joinedload
@@ -564,6 +565,85 @@ class Tag(db.Model):
     net_weight = db.Column(db.Float, default=0)
 
     printed_date = db.Column(db.DateTime, default=datetime.utcnow)
+    
+@app.route("/api/export-selected-tags", methods=["POST"])
+def export_selected_tags():
+
+    data = request.get_json()
+
+    tags = data.get("tags", [])
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Selected Tags"
+
+    ws.append([
+        "Batch No",
+        "Tag No",
+        "Design No",
+        "Gold Purity",
+        "Diamond Clarity",
+        "Diamond Color",
+        "Gold Weight",
+        "Diamond Weight",
+        "Diamond Pieces",
+        "Dia Pc 2",
+        "Dia Wt 2",
+        "Dia Pc 6.5",
+        "Dia Wt 6.5",
+        "Dia Pc 11",
+        "Dia Wt 11",
+        "IGI No",
+        "HUID No",
+        "Stone Weight",
+        "Stone Pieces",
+        "Net Weight",
+        "Printed Date"
+    ])
+
+    for t in tags:
+
+        tag = Tag.query.filter_by(
+            batch_no=t["batch_no"],
+            tag_no=t["tag_no"]
+        ).first()
+
+        if tag:
+
+            ws.append([
+                tag.batch_no,
+                tag.tag_no,
+                tag.design_no,
+                tag.gold_purity,
+                tag.diamond_clarity,
+                tag.diamond_color,
+                tag.gold_weight,
+                tag.diamond_weight,
+                tag.diamond_pieces,
+                tag.dia_pc_2,
+                tag.dia_wt_2,
+                tag.dia_pc_6_5,
+                tag.dia_wt_6_5,
+                tag.dia_pc_11,
+                tag.dia_wt_11,
+                tag.igi_no,
+                tag.huid_no,
+                tag.stone_weight,
+                tag.stone_pieces,
+                tag.net_weight,
+                tag.printed_date.strftime("%Y-%m-%d %H:%M:%S") if tag.printed_date else ""
+            ])
+
+    output = BytesIO()
+    wb.save(output)
+    output.seek(0)
+
+    return send_file(
+        output,
+        as_attachment=True,
+        download_name="Selected_Tags.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
     
     
 @app.route("/api/next-tag-no")
@@ -3469,28 +3549,38 @@ def save_print_tags():
             
 
             tag = Tag(
-
+            
                 batch_no=batch_no,
-
+            
                 tag_no=item["tag"],
                 design_no=item["design"],
-
+            
                 gold_purity=item["purity"],
                 diamond_clarity=item["clarity"],
                 diamond_color=item["color"],
-
+            
                 gold_weight=float(item["gross"] or 0),
                 diamond_weight=float(item["diawt"] or 0),
                 diamond_pieces=int(item["diapc"] or 0),
-
+            
+                # Diamond Size Breakdown
+                dia_pc_2=int(item.get("dia_pc_2", 0) or 0),
+                dia_wt_2=float(item.get("dia_wt_2", 0) or 0),
+            
+                dia_pc_6_5=int(item.get("dia_pc_6_5", 0) or 0),
+                dia_wt_6_5=float(item.get("dia_wt_6_5", 0) or 0),
+            
+                dia_pc_11=int(item.get("dia_pc_11", 0) or 0),
+                dia_wt_11=float(item.get("dia_wt_11", 0) or 0),
+            
                 igi_no=item.get("igi", ""),
                 huid_no=item.get("huid", ""),
-
+            
                 stone_weight=float(item["stonewt"] or 0),
                 stone_pieces=int(item["stonepc"] or 0),
-
+            
                 net_weight=float(item["net"] or 0)
-
+            
             )
 
             db.session.add(tag)
