@@ -1176,7 +1176,7 @@ def api_styles():
 
     styles = (
         query
-        .order_by(StyleNo.id)
+        .order_by(StyleNo.id.desc())
         .offset((page - 1) * PER_PAGE)
         .limit(PER_PAGE)
         .all()

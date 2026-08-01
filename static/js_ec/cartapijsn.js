@@ -1,77 +1,60 @@
-function saveCart() {
+async function saveCart() {
+    try {
 
-    var payload = {
-        items: getOrderData()
-    };
+         const payload = {
+             items: getOrderData()
+         };
 
-    var xhr = new XMLHttpRequest();
+        const res = await fetch("/api/cart", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
 
-    xhr.open("POST", "/api/cart", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
+        const result = await res.json();
 
-    xhr.onreadystatechange = function () {
+        if (result.status === "success") {
 
-        if (xhr.readyState === 4) {
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: result.message,
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
 
-            if (xhr.status === 200) {
+                // Close Modal
+                $("#selectModal").modal("hide");
 
-                var result;
+                // Reset Form
+                document.getElementById("selectForm").reset();
 
-                try {
-                    result = JSON.parse(xhr.responseText);
-                } catch (e) {
+                // Update Cart Quantity
+                loadCartCount();
 
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "Invalid server response."
-                    });
+            });
 
-                    return;
-                }
+        } else {
 
-                if (result.status === "success") {
-
-                    Swal.fire({
-                        icon: "success",
-                        title: "Success!",
-                        text: result.message,
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(function () {
-
-                        $("#selectModal").modal("hide");
-
-                        document.getElementById("selectForm").reset();
-
-                        loadCartCount();
-
-                    });
-
-                } else {
-
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error!",
-                        text: result.message
-                    });
-
-                }
-
-            } else {
-
-                Swal.fire({
-                    icon: "error",
-                    title: "Network Error",
-                    text: "Unable to connect to the server."
-                });
-
-            }
+            Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: result.message
+            });
 
         }
 
-    };
+    } catch (error) {
 
-    xhr.send(JSON.stringify(payload));
+        console.error(error);
 
+        Swal.fire({
+            icon: "error",
+            title: "Network Error",
+            text: "Unable to connect to the server."
+        });
+
+    }
 }

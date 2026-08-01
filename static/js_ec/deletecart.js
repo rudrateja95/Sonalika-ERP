@@ -1,50 +1,46 @@
-function deleteCart(id) {
+async function deleteCart(id) {
 
-    if (!confirm("Do you want to remove this item from the cart?")) {
+    const confirmDelete = await Swal.fire({
+        title: "Delete Item?",
+        text: "Do you want to remove this item from the cart?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete",
+        cancelButtonText: "Cancel"
+    });
+
+    if (!confirmDelete.isConfirmed) {
         return;
     }
 
-    var xhr = new XMLHttpRequest();
+    const res = await fetch(`/api/cart/${id}`, {
+        method: "DELETE"
+    });
 
-    xhr.open("DELETE", "/api/cart/" + id, true);
+    const result = await res.json();
 
-    xhr.onreadystatechange = function () {
+    if (result.status === "success") {
 
-        if (xhr.readyState === 4) {
+        Swal.fire({
+            icon: "success",
+            title: "Deleted",
+            text: result.message,
+            timer: 1500,
+            showConfirmButton: false
+        }).then(() => {
 
-            if (xhr.status === 200) {
+            loadCart();     // Reload table
 
-                var result;
+        });
 
-                try {
-                    result = JSON.parse(xhr.responseText);
-                } catch (e) {
-                    alert("Invalid server response.");
-                    return;
-                }
+    } else {
 
-                if (result.status === "success") {
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: result.message
+        });
 
-                    alert(result.message);
-
-                    loadCart();
-
-                } else {
-
-                    alert(result.message);
-
-                }
-
-            } else {
-
-                alert("Failed to delete item.");
-
-            }
-
-        }
-
-    };
-
-    xhr.send(null);
+    }
 
 }
