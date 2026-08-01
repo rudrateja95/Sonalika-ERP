@@ -1,46 +1,63 @@
-async function deleteCart(id) {
+function deleteCart(id) {
 
-    const confirmDelete = await Swal.fire({
+    Swal.fire({
         title: "Delete Item?",
         text: "Do you want to remove this item from the cart?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, Delete",
         cancelButtonText: "Cancel"
-    });
+    }).then(function (confirmDelete) {
 
-    if (!confirmDelete.isConfirmed) {
-        return;
-    }
+        if (!confirmDelete.isConfirmed) {
+            return;
+        }
 
-    const res = await fetch(`/api/cart/${id}`, {
-        method: "DELETE"
-    });
+        fetch("/api/cart/" + id, {
+            method: "DELETE"
+        })
+        .then(function (res) {
+            return res.json();
+        })
+        .then(function (result) {
 
-    const result = await res.json();
+            if (result.status === "success") {
 
-    if (result.status === "success") {
+                Swal.fire({
+                    icon: "success",
+                    title: "Deleted",
+                    text: result.message,
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(function () {
 
-        Swal.fire({
-            icon: "success",
-            title: "Deleted",
-            text: result.message,
-            timer: 1500,
-            showConfirmButton: false
-        }).then(() => {
+                    loadCart();   // Reload table
 
-            loadCart();     // Reload table
+                });
+
+            } else {
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: result.message
+                });
+
+            }
+
+        })
+        .catch(function (err) {
+
+            console.error(err);
+
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Failed to delete item."
+            });
 
         });
 
-    } else {
-
-        Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: result.message
-        });
-
-    }
+    });
 
 }

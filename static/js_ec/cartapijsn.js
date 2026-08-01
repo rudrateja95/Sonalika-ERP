@@ -1,19 +1,20 @@
-async function saveCart() {
-    try {
+function saveCart() {
 
-         const payload = {
-             items: getOrderData()
-         };
+    var payload = {
+        items: getOrderData()
+    };
 
-        const res = await fetch("/api/cart", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        });
-
-        const result = await res.json();
+    fetch("/api/cart", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(function (res) {
+        return res.json();
+    })
+    .then(function (result) {
 
         if (result.status === "success") {
 
@@ -23,7 +24,7 @@ async function saveCart() {
                 text: result.message,
                 timer: 2000,
                 showConfirmButton: false
-            }).then(() => {
+            }).then(function () {
 
                 // Close Modal
                 $("#selectModal").modal("hide");
@@ -31,7 +32,7 @@ async function saveCart() {
                 // Reset Form
                 document.getElementById("selectForm").reset();
 
-                // Update Cart Quantity
+                // Update Cart Count
                 loadCartCount();
 
             });
@@ -46,7 +47,8 @@ async function saveCart() {
 
         }
 
-    } catch (error) {
+    })
+    .catch(function (error) {
 
         console.error(error);
 
@@ -56,5 +58,6 @@ async function saveCart() {
             text: "Unable to connect to the server."
         });
 
-    }
+    });
+
 }

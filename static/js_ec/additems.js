@@ -1,24 +1,43 @@
-          function addOrder() {
+function addOrder() {
 
-            const container = document.getElementById("orderContainer");
-            const clone = container.firstElementChild.cloneNode(true);
+    var container = document.getElementById("orderContainer");
+    var clone = container.firstElementChild.cloneNode(true);
 
-            // Reset selects
-            clone.querySelectorAll("select").forEach(select => {
-                select.selectedIndex = 0;
-            });
+    // Reset all select boxes
+    var selects = clone.getElementsByTagName("select");
+    for (var i = 0; i < selects.length; i++) {
+        selects[i].selectedIndex = 0;
+    }
 
-            // Reset textarea
-            clone.querySelectorAll("textarea").forEach(textarea => {
-                textarea.value = "";
-            });
+    // Reset all textareas
+    var textareas = clone.getElementsByTagName("textarea");
+    for (var j = 0; j < textareas.length; j++) {
+        textareas[j].value = "";
+    }
 
-            // Show remove button
-            clone.querySelector(".remove-order").style.display = "block";
+    // Show remove button
+    var removeBtn = clone.querySelector(".remove-order");
+    if (removeBtn) {
+        removeBtn.style.display = "block";
+    }
 
-            container.appendChild(clone);
-        }
+    container.appendChild(clone);
+}
 
-        function removeOrder(btn) {
-            btn.closest(".order-item").remove();
-        }
+function removeOrder(btn) {
+
+    var orderItem = btn;
+
+    while (orderItem && !hasClass(orderItem, "order-item")) {
+        orderItem = orderItem.parentNode;
+    }
+
+    if (orderItem && orderItem.parentNode) {
+        orderItem.parentNode.removeChild(orderItem);
+    }
+}
+
+// Helper function for old browsers
+function hasClass(element, className) {
+    return (" " + element.className + " ").indexOf(" " + className + " ") > -1;
+}

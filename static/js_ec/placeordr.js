@@ -1,81 +1,71 @@
-async function placeOrder() {
+function placeOrder() {
 
     console.log("===== PLACE ORDER START =====");
 
-    const btn = document.getElementById("placeOrderBtn");
-    const btnContent = document.getElementById("btnContent");
+    var btn = document.getElementById("placeOrderBtn");
+    var btnContent = document.getElementById("btnContent");
 
-    // Show Loader
     btn.disabled = true;
-    btnContent.innerHTML = `
-        <span class="spinner-border spinner-border-sm me-2"></span>
-        Placing Order...
-    `;
+    btnContent.innerHTML =
+        '<span class="spinner-border spinner-border-sm me-2"></span>' +
+        'Placing Order...';
 
-    try {
+    var items = [];
+    var rows = document.querySelectorAll("#cartBody tr");
 
-        const items = [];
+    for (var i = 0; i < rows.length; i++) {
 
-        document.querySelectorAll("#cartBody tr").forEach((row, index) => {
+        var row = rows[i];
 
-            const item = {
-
-                style_no: row.dataset.styleNo,
-                qty: row.dataset.qty,
-                gold_color: row.dataset.goldColor,
-                gold_purity: row.dataset.goldPurity,
-                diamond_color: row.dataset.diamondColor,
-                diamond_clarity: row.dataset.diamondClarity,
-                remarks: row.dataset.remarks
-
-            };
-
-            console.log("Row", index + 1, item);
-
-            items.push(item);
-
-        });
-
-        console.log("Total Items:", items.length);
-
-        const payload = {
-            items: items
+        var item = {
+            style_no: row.getAttribute("data-style-no"),
+            qty: row.getAttribute("data-qty"),
+            gold_color: row.getAttribute("data-gold-color"),
+            gold_purity: row.getAttribute("data-gold-purity"),
+            diamond_color: row.getAttribute("data-diamond-color"),
+            diamond_clarity: row.getAttribute("data-diamond-clarity"),
+            remarks: row.getAttribute("data-remarks")
         };
 
-        console.log("Payload:", payload);
+        console.log("Row " + (i + 1), item);
+        items.push(item);
+    }
 
-        const response = await fetch("/api/ecom-order", {
+    console.log("Total Items:", items.length);
 
-            method: "POST",
+    var payload = {
+        items: items
+    };
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+    console.log("Payload:", payload);
 
-            body: JSON.stringify(payload)
-
-        });
+    fetch("/api/ecom-order", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(function (response) {
 
         console.log("Response Status:", response.status);
 
-        const text = await response.text();
+        return response.text();
+
+    })
+    .then(function (text) {
 
         console.log("Raw Response:", text);
 
-        let data;
+        var data;
 
         try {
-
             data = JSON.parse(text);
-
         } catch (e) {
 
             btn.disabled = false;
-
-            btnContent.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                Place Order
-            `;
+            btnContent.innerHTML =
+                '<i class="fas fa-check-circle"></i> Place Order';
 
             Swal.fire({
                 icon: "error",
@@ -84,7 +74,6 @@ async function placeOrder() {
             });
 
             return;
-
         }
 
         console.log("Parsed Response:", data);
@@ -96,20 +85,15 @@ async function placeOrder() {
                 title: "Order Created",
                 text: data.order_no,
                 allowOutsideClick: false
-            }).then(() => {
-
+            }).then(function () {
                 location.reload();
-
             });
 
         } else {
 
             btn.disabled = false;
-
-            btnContent.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                Place Order
-            `;
+            btnContent.innerHTML =
+                '<i class="fas fa-check-circle"></i> Place Order';
 
             Swal.fire({
                 icon: "error",
@@ -119,16 +103,14 @@ async function placeOrder() {
 
         }
 
-    } catch (err) {
+    })
+    .catch(function (err) {
 
         console.error("Fetch Error:", err);
 
         btn.disabled = false;
-
-        btnContent.innerHTML = `
-            <i class="fas fa-check-circle"></i>
-            Place Order
-        `;
+        btnContent.innerHTML =
+            '<i class="fas fa-check-circle"></i> Place Order';
 
         Swal.fire({
             icon: "error",
@@ -136,8 +118,7 @@ async function placeOrder() {
             text: err.message
         });
 
-    }
+    });
 
     console.log("===== PLACE ORDER END =====");
-
 }
