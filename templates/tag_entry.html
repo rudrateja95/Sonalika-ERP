@@ -97,10 +97,10 @@
 <body>
     <div class="container-fluid position-relative bg-white d-flex p-0">
 
-        {% include 'account_menu.html' %}
+        {% include 'tag_sidemenu.html' %}
 
         <div class="content">
-            {% include 'navbar.html' %}
+            {% include 'tag_navbar.html' %}
             <!-- Order Recieved render -->
 
             <div class="container-fluid pt-4 px-4">
@@ -141,19 +141,25 @@
                                     <!-- Tag No -->
                                     <td>
                                         <input type="text" class="form-control form-control-sm cell tagNo" readonly>
+                                        <input type="hidden" id="category" value="{{ category }}">
                                     </td>
 
-                                    <!-- Design No -->
-                                    <td>
-                                        <input type="text" class="form-control form-control-sm cell designNo"
-                                            list="styleList" placeholder="Design No">
-                                    </td>
+
+<td>
+    <input type="text"
+           class="form-control form-control-sm cell designNo"
+           list="styleList"
+           placeholder="Design No"
+           oninput="this.value = this.value.toUpperCase();">
+</td>
+
 
                                     <datalist id="styleList"></datalist>
 
                                     <!-- Gold Purity -->
-                                    <td style="min-width:100px;">
+                                    <td style="min-width:90px;">
                                         <select class="form-select form-select-sm cell">
+                                            <option>-</option>
                                             <option>9KT</option>
                                             <option>14KT</option>
                                             <option>18KT</option>
@@ -162,8 +168,9 @@
                                     </td>
 
                                     <!-- diamond Clarity -->
-                                    <td style="min-width:100px;">
+                                    <td style="min-width:90px;">
                                         <select class="form-select form-select-sm cell">
+                                            <option>-</option>
                                             <option>VVS</option>
                                             <option>VS</option>
                                             <option>SI</option>
@@ -172,8 +179,9 @@
                                     </td>
 
                                     <!-- diamond Color -->
-                                    <td style="min-width:100px;">
+                                    <td style="min-width:90px;">
                                         <select class="form-select form-select-sm cell">
+                                            <option>-</option>
                                             <option>EF</option>
                                             <option>FG</option>
                                             <option>Gh</option>
@@ -186,19 +194,18 @@
                                     <td>
                                         <input type="number" step="0.001"
                                             class="form-control form-control-sm cell grossWt"
-                                            oninput="calculateNetWt(this)">
+                                            oninput="calculateNetWt(this)" >
                                     </td>
 
                                     <!-- Diamond Weight -->
+                                    <!-- Diamond Weight -->
                                     <td>
                                         <input type="number" step="0.001"
-                                            class="form-control form-control-sm cell diaWt"
-                                            oninput="calculateNetWt(this)">
+                                            class="form-control form-control-sm cell diaWt" readonly>
                                     </td>
 
-                                    <!-- Diamond Pieces -->
                                     <td>
-                                        <input type="number" class="form-control form-control-sm cell">
+                                        <input type="number" class="form-control form-control-sm cell diaPc" readonly>
                                     </td>
 
                                     <!-- Stone Weight -->
@@ -242,10 +249,87 @@
                             <i class="bi bi-printer"></i> Print All
                         </button>
 
+                        <button class="btn btn-danger ms-2" onclick="clearDraft()">
+                            <i class="bi bi-trash"></i> Clear Form
+                        </button>
+
 
                     </div>
 
+<!-- Diamond Selection Modal -->
+<div class="modal fade" id="diamondModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Diamond Selection</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-sm table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th>Size</th>
+                            <th>Pieces</th>
+                            <th>Total Weight</th>
+                        </tr>
+                    </thead>
+                    <tbody id="diamondRowsBody">
+                        <tr data-size="-2.0">
+                            <td>-2.0</td>
+                            <td><input type="number"
+                                    class="form-control form-control-sm diaModalCell diaPieces"
+                                    oninput="updateDiamondTotals()"></td>
+                            <td><input type="number" step="0.001"
+                                    class="form-control form-control-sm diaModalCell diaRowTotal"
+                                    oninput="updateDiamondTotals()"></td>
+                        </tr>
+                        <tr data-size="-6.5">
+                            <td>-6.5</td>
+                            <td><input type="number"
+                                    class="form-control form-control-sm diaModalCell diaPieces"
+                                    oninput="updateDiamondTotals()"></td>
+                            <td><input type="number" step="0.001"
+                                    class="form-control form-control-sm diaModalCell diaRowTotal"
+                                    oninput="updateDiamondTotals()"></td>
+                        </tr>
+                        <tr data-size="-11">
+                            <td>-11</td>
+                            <td><input type="number"
+                                    class="form-control form-control-sm diaModalCell diaPieces"
+                                    oninput="updateDiamondTotals()"></td>
+                            <td><input type="number" step="0.001"
+                                    class="form-control form-control-sm diaModalCell diaRowTotal"
+                                    oninput="updateDiamondTotals()"></td>
+                        </tr>
+                    </tbody>
+                </table>
 
+                <!-- Certificate Numbers (single, per item — not per size) -->
+                <div class="row g-2 mt-2">
+                    <div class="col-6">
+                        <label class="form-label form-label-sm mb-1">IGI No</label>
+                        <input type="text" id="diaIgiNo"
+                               class="form-control form-control-sm diaModalCell"
+                               placeholder="IGI No">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label form-label-sm mb-1">HUID No</label>
+                        <input type="text" id="diaHuidNo"
+                               class="form-control form-control-sm diaModalCell"
+                               placeholder="HUID No">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <div>
+                    <strong>Total Pieces:</strong> <span id="diaTotalPc">0</span>
+                    &nbsp;|&nbsp;
+                    <strong>Total Weight:</strong> <span id="diaTotalWt">0.000</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                 </div>
             </div>
 
@@ -276,40 +360,68 @@
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
 
-        // Generate Tag Numbers
-        function updateTagNumbers() {
-            const rows = document.querySelectorAll("#tagTable tr");
+        // =========================
+        // Selected Category
+        // =========================
+        const category = new URLSearchParams(window.location.search).get("category") || "SJ";
 
-            rows.forEach((row, index) => {
-                const tagInput = row.querySelector(".tagNo");
-                if (tagInput) {
-                    tagInput.value = "SJ-" + (index + 1);
-                }
-            });
+        // =========================
+        // Variables
+        // =========================
+        let rowTemplate;
+        let nextTagNo = 1;
+
+        // =========================
+        // Get Next Tag Number From DB
+        // =========================
+        async function loadNextTagNumber() {
+
+            const res = await fetch(`/api/next-tag-no?category=${category}`);
+            const result = await res.json();
+
+            if (result.success) {
+                nextTagNo = result.next_no;
+            } else {
+                nextTagNo = 1;
+            }
         }
-
+        // =========================
         // Add New Row
+        // =========================
         function addRow() {
 
             const tbody = document.getElementById("tagTable");
-            const newRow = tbody.rows[0].cloneNode(true);
 
-            // Clear inputs
+            const newRow = rowTemplate.cloneNode(true);
+
+            // Clear Inputs
             newRow.querySelectorAll("input").forEach(input => {
-                input.value = "";
+
+                if (input.type !== "hidden") {
+                    input.value = "";
+                }
+
             });
 
-            // Reset dropdowns
+            // Reset Selects
             newRow.querySelectorAll("select").forEach(select => {
                 select.selectedIndex = 0;
             });
 
+            // Assign Tag Number
+            const tagInput = newRow.querySelector(".tagNo");
+            tagInput.value = `${category}-${nextTagNo}`;
+
+            // Increase for next row
+            nextTagNo++;
+
             tbody.appendChild(newRow);
 
-            updateTagNumbers();
         }
 
+        // =========================
         // Remove Row
+        // =========================
         function removeThisRow(btn) {
 
             const tbody = document.getElementById("tagTable");
@@ -318,24 +430,42 @@
 
                 btn.closest("tr").remove();
 
-                updateTagNumbers();
-
             } else {
 
                 alert("At least one row must remain.");
 
             }
+
         }
 
+        // =========================
         // Page Load
-        document.addEventListener("DOMContentLoaded", function () {
+        // =========================
+        document.addEventListener("DOMContentLoaded", async function () {
 
-            updateTagNumbers();
+            rowTemplate = document.querySelector("#tagTable tr").cloneNode(true);
+
+            document.getElementById("tagTable").innerHTML = "";
+
+            // Get starting number from database
+            await loadNextTagNumber();
+
+            // Load Draft
+            await loadDraft();
+
+            // If no draft, create first row
+            if (document.querySelectorAll("#tagTable tr").length === 0) {
+
+                addRow();
+
+            }
 
         });
 
-        // Auto Add Row on Net Weight Enter
-        document.addEventListener("keydown", function (e) {
+        // =========================
+        // Enter Key
+        // =========================
+        document.addEventListener("keydown", async function (e) {
 
             if (e.key !== "Enter") return;
 
@@ -344,111 +474,39 @@
             e.preventDefault();
 
             const row = e.target.closest("tr");
+
+            await saveDraftRow(row);
+
             const tbody = document.getElementById("tagTable");
 
-            // Only add a row if current row is the last one
             if (row === tbody.rows[tbody.rows.length - 1]) {
 
                 addRow();
 
             }
 
-            // Focus Design No of the new last row
-            const lastRow = tbody.rows[tbody.rows.length - 1];
-
-            lastRow.cells[1].querySelector("input").focus();
+            tbody.rows[tbody.rows.length - 1]
+                .querySelector(".designNo")
+                .focus();
 
         });
 
+        // =========================
+        // Disable Mouse Wheel
+        // =========================
         document.addEventListener("wheel", function (e) {
+
             if (document.activeElement.type === "number") {
+
                 e.preventDefault();
+
             }
+
         }, { passive: false });
 
-    </script>
-    <!-- key board Functions -->
-    <script>
-        document.addEventListener("keydown", function (e) {
-
-            if (!e.target.classList.contains("cell")) return;
-
-            const current = e.target;
-            const row = current.closest("tr");
-
-            const rows = [...document.querySelectorAll("#tagTable tr")];
-
-            const rowIndex = rows.indexOf(row);
-
-            const cols = [...row.querySelectorAll(".cell")];
-
-            const colIndex = cols.indexOf(current);
-
-            let target = null;
-
-            switch (e.key) {
-
-                case "Enter":
-                case "ArrowRight":
-                    e.preventDefault();
-
-                    if (colIndex + 1 < cols.length) {
-                        target = cols[colIndex + 1];
-                    }
-                    break;
-
-                case "ArrowLeft":
-                    e.preventDefault();
-
-                    if (colIndex > 0) {
-                        target = cols[colIndex - 1];
-                    }
-                    break;
-
-                case "ArrowDown":
-                    e.preventDefault();
-
-                    if (rowIndex + 1 < rows.length) {
-                        target = rows[rowIndex + 1]
-                            .querySelectorAll(".cell")[colIndex];
-                    }
-                    break;
-
-                case "ArrowUp":
-                    e.preventDefault();
-
-                    if (rowIndex > 0) {
-                        target = rows[rowIndex - 1]
-                            .querySelectorAll(".cell")[colIndex];
-                    }
-                    break;
-            }
-
-            if (target) {
-                target.focus();
-                target.select?.();
-            }
-
-        });
-        document.addEventListener("input", async function (e) {
-
-            if (!e.target.classList.contains("designNo")) return;
-
-            const q = e.target.value.trim();
-
-            if (q.length < 1) return;
-
-            const res = await fetch("/api/style-search?q=" + encodeURIComponent(q));
-            const styles = await res.json();
-
-            const list = document.getElementById("styleList");
-            list.innerHTML = "";
-
-            styles.forEach(style => {
-                list.innerHTML += `<option value="${style}">`;
-            });
-
-        });
+        // =========================
+        // Calculate Net Weight
+        // =========================
         function calculateNetWt(input) {
 
             const row = input.closest("tr");
@@ -457,75 +515,706 @@
             const diaWt = parseFloat(row.querySelector(".diaWt").value) || 0;
             const stoneWt = parseFloat(row.querySelector(".stoneWt").value) || 0;
 
-            // Net Wt = Gross Wt - ((Dia Wt + Stone Wt) / 5)
             const netWt = grossWt - ((diaWt + stoneWt) / 5);
 
             row.querySelector(".netWt").value = netWt.toFixed(3);
+
+        }
+
+    </script>
+<!-- Temporary render data Javascript -->
+<script>
+
+    // =========================
+    // Save Draft Row
+    // =========================
+    function saveDraftRow(row) {
+
+        const data = {
+            tag_no: row.querySelector(".tagNo").value,
+            design_no: row.querySelector(".designNo").value,
+
+            gold_purity: row.cells[2].querySelector("select").value,
+            diamond_clarity: row.cells[3].querySelector("select").value,
+            diamond_color: row.cells[4].querySelector("select").value,
+
+            gold_weight: parseFloat(row.querySelector(".grossWt").value) || 0,
+            diamond_weight: parseFloat(row.querySelector(".diaWt").value) || 0,
+            diamond_pieces: parseInt(row.querySelector(".diaPc").value) || 0,
+
+            dia_pc_2: parseInt(row.dataset.diaPc2) || 0,
+            dia_wt_2: parseFloat(row.dataset.diaWt2) || 0,
+
+            dia_pc_6_5: parseInt(row.dataset.diaPc6_5) || 0,
+            dia_wt_6_5: parseFloat(row.dataset.diaWt6_5) || 0,
+
+            dia_pc_11: parseInt(row.dataset.diaPc11) || 0,
+            dia_wt_11: parseFloat(row.dataset.diaWt11) || 0,
+
+            igi_no: row.dataset.diaIgiNo || "",
+            huid_no: row.dataset.diaHuidNo || "",
+
+            stone_weight: parseFloat(row.querySelector(".stoneWt").value) || 0,
+            stone_pieces: parseInt(row.cells[9].querySelector("input").value) || 0,
+
+            net_weight: parseFloat(row.querySelector(".netWt").value) || 0
+        };
+
+        fetch("/api/tag-draft/save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(result => {
+                console.log("Draft Saved:", result);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+
+    }
+
+
+    // =========================
+    // Load Draft
+    // =========================
+    async function loadDraft() {
+
+        try {
+
+            const res = await fetch("/api/tag-draft");
+            const result = await res.json();
+
+            const tbody = document.getElementById("tagTable");
+
+            tbody.innerHTML = "";
+
+            if (!result.success || result.data.length === 0) {
+
+                addRow();
+                return;
+
+            }
+
+            result.data.forEach(item => {
+
+                addRow();
+
+                const row = tbody.rows[tbody.rows.length - 1];
+
+                row.querySelector(".tagNo").value = item.tag_no || "";
+                row.querySelector(".designNo").value = item.design_no || "";
+
+                row.cells[2].querySelector("select").value = item.gold_purity || "18KT";
+                row.cells[3].querySelector("select").value = item.diamond_clarity || "VVS";
+                row.cells[4].querySelector("select").value = item.diamond_color || "EF";
+
+                row.querySelector(".grossWt").value = item.gold_weight || 0;
+                row.querySelector(".diaWt").value = item.diamond_weight || 0;
+                row.querySelector(".diaPc").value = item.diamond_pieces || 0;
+
+                row.dataset.diaPc2 = item.dia_pc_2 || 0;
+                row.dataset.diaWt2 = item.dia_wt_2 || 0;
+
+                row.dataset.diaPc6_5 = item.dia_pc_6_5 || 0;
+                row.dataset.diaWt6_5 = item.dia_wt_6_5 || 0;
+
+                row.dataset.diaPc11 = item.dia_pc_11 || 0;
+                row.dataset.diaWt11 = item.dia_wt_11 || 0;
+
+                row.dataset.diaIgiNo = item.igi_no || "";
+                row.dataset.diaHuidNo = item.huid_no || "";
+
+                row.querySelector(".stoneWt").value = item.stone_weight || 0;
+                row.cells[9].querySelector("input").value = item.stone_pieces || 0;
+
+                row.querySelector(".netWt").value = item.net_weight || 0;
+
+            });
+
+            // Always keep one empty row for new entry
+            addRow();
+
+        } catch (err) {
+
+            console.error(err);
+
+            addRow();
+
+        }
+
+    }
+
+</script>
+<!-- key board Functions -->
+<script>
+
+    let suppressEnterKeyUp = false;
+
+    function getCellNav(current) {
+
+        const row = current.closest("tr");
+
+        const rows = [...document.querySelectorAll("#tagTable tr")];
+        const rowIndex = rows.indexOf(row);
+
+        const cols = [...row.querySelectorAll(".cell")];
+        const colIndex = cols.indexOf(current);
+
+        return { row, rows, rowIndex, cols, colIndex };
+    }
+
+    function moveToNextCell(current) {
+
+        const { rows, rowIndex, cols, colIndex } = getCellNav(current);
+
+        let target = null;
+
+        // Move to next column
+        if (colIndex < cols.length - 1) {
+            target = cols[colIndex + 1];
+        }
+        // Move to first column of next row
+        else if (rowIndex < rows.length - 1) {
+            target = rows[rowIndex + 1].querySelectorAll(".cell")[0];
+        }
+        // Last cell of last row -> create new row
+        else {
+
+            addRow();   // Replace with your row creation function
+
+            const newRows = [...document.querySelectorAll("#tagTable tr")];
+            const newRow = newRows[newRows.length - 1];
+
+            target = newRow.querySelectorAll(".cell")[0];
+        }
+
+        if (target) {
+
+            // Always suppress a trailing Enter keyup landing on a select,
+            // no matter what triggered this move (outer Enter or dropdown "change")
+            if (target.tagName === "SELECT") {
+                suppressEnterKeyUp = true;
+            }
+
+            target.focus();
+            target.select?.();
+        }
+
+    }
+
+    // =========================
+    // Enter / Arrow navigation for text & number inputs
+    // =========================
+    document.addEventListener("keydown", function (e) {
+
+        if (!e.target.classList.contains("cell")) return;
+
+        const current = e.target;
+        const isSelect = current.tagName === "SELECT";
+
+        const { rows, rowIndex, cols, colIndex } = getCellNav(current);
+
+        let target = null;
+
+        switch (e.key) {
+
+            case "Enter":
+                // For selects, let the native "change" event handle advancing
+                if (isSelect) return;
+
+                e.preventDefault();
+                moveToNextCell(current);
+                return;
+
+            case "ArrowRight":
+                e.preventDefault();
+                if (colIndex < cols.length - 1) {
+                    target = cols[colIndex + 1];
+                }
+                break;
+
+            case "ArrowLeft":
+                e.preventDefault();
+                if (colIndex > 0) {
+                    target = cols[colIndex - 1];
+                }
+                break;
+
+            case "ArrowDown":
+                if (isSelect) return;
+
+                e.preventDefault();
+                if (rowIndex < rows.length - 1) {
+                    target = rows[rowIndex + 1].querySelectorAll(".cell")[colIndex];
+                }
+                break;
+
+            case "ArrowUp":
+                if (isSelect) return;
+
+                e.preventDefault();
+                if (rowIndex > 0) {
+                    target = rows[rowIndex - 1].querySelectorAll(".cell")[colIndex];
+                }
+                break;
+        }
+
+        if (target) {
+            target.focus();
+            target.select?.();
+        }
+
+    });
+
+    // =========================
+    // Suppress the trailing Enter keyup on a newly-focused select
+    // =========================
+    document.addEventListener("keyup", function (e) {
+
+        if (e.key !== "Enter") return;
+        if (!suppressEnterKeyUp) return;
+
+        e.preventDefault();
+        suppressEnterKeyUp = false;
+
+    }, true); // capture phase — runs before the select's own native handling
+
+    // =========================
+    // Auto-advance selects on selection (keyboard or mouse)
+    // =========================
+    document.addEventListener("change", function (e) {
+
+        if (!e.target.classList.contains("cell")) return;
+        if (e.target.tagName !== "SELECT") return;
+
+        moveToNextCell(e.target);
+
+    });
+
+</script>
+
+<!-- Temporary render data Javascript -->
+<script>
+
+    // =========================
+    // Save Draft Row
+    // =========================
+    function saveDraftRow(row) {
+
+        const data = {
+            tag_no: row.querySelector(".tagNo").value,
+            design_no: row.querySelector(".designNo").value,
+
+            gold_purity: row.cells[2].querySelector("select").value,
+            diamond_clarity: row.cells[3].querySelector("select").value,
+            diamond_color: row.cells[4].querySelector("select").value,
+
+            gold_weight: parseFloat(row.querySelector(".grossWt").value) || 0,
+            diamond_weight: parseFloat(row.querySelector(".diaWt").value) || 0,
+            diamond_pieces: parseInt(row.querySelector(".diaPc").value) || 0,
+
+            dia_pc_2: parseInt(row.dataset.diaPc2) || 0,
+            dia_wt_2: parseFloat(row.dataset.diaWt2) || 0,
+
+            dia_pc_6_5: parseInt(row.dataset.diaPc6_5) || 0,
+            dia_wt_6_5: parseFloat(row.dataset.diaWt6_5) || 0,
+
+            dia_pc_11: parseInt(row.dataset.diaPc11) || 0,
+            dia_wt_11: parseFloat(row.dataset.diaWt11) || 0,
+
+            igi_no: row.dataset.diaIgiNo || "",
+            huid_no: row.dataset.diaHuidNo || "",
+
+            stone_weight: parseFloat(row.querySelector(".stoneWt").value) || 0,
+            stone_pieces: parseInt(row.cells[9].querySelector("input").value) || 0,
+
+            net_weight: parseFloat(row.querySelector(".netWt").value) || 0
+        };
+
+        fetch("/api/tag-draft/save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(res => res.json())
+            .then(result => {
+                console.log("Draft Saved:", result);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+
+    }
+
+
+    // =========================
+    // Load Draft
+    // =========================
+    async function loadDraft() {
+
+        try {
+
+            const res = await fetch("/api/tag-draft");
+            const result = await res.json();
+
+            const tbody = document.getElementById("tagTable");
+
+            tbody.innerHTML = "";
+
+            if (!result.success || result.data.length === 0) {
+
+                addRow();
+                return;
+
+            }
+
+            result.data.forEach(item => {
+
+                addRow();
+
+                const row = tbody.rows[tbody.rows.length - 1];
+
+                row.querySelector(".tagNo").value = item.tag_no || "";
+                row.querySelector(".designNo").value = item.design_no || "";
+
+                row.cells[2].querySelector("select").value = item.gold_purity || "18KT";
+                row.cells[3].querySelector("select").value = item.diamond_clarity || "VVS";
+                row.cells[4].querySelector("select").value = item.diamond_color || "EF";
+
+                row.querySelector(".grossWt").value = item.gold_weight || 0;
+                row.querySelector(".diaWt").value = item.diamond_weight || 0;
+                row.querySelector(".diaPc").value = item.diamond_pieces || 0;
+
+                row.dataset.diaPc2 = item.dia_pc_2 || 0;
+                row.dataset.diaWt2 = item.dia_wt_2 || 0;
+
+                row.dataset.diaPc6_5 = item.dia_pc_6_5 || 0;
+                row.dataset.diaWt6_5 = item.dia_wt_6_5 || 0;
+
+                row.dataset.diaPc11 = item.dia_pc_11 || 0;
+                row.dataset.diaWt11 = item.dia_wt_11 || 0;
+
+                row.dataset.diaIgiNo = item.igi_no || "";
+                row.dataset.diaHuidNo = item.huid_no || "";
+
+                row.querySelector(".stoneWt").value = item.stone_weight || 0;
+                row.cells[9].querySelector("input").value = item.stone_pieces || 0;
+
+                row.querySelector(".netWt").value = item.net_weight || 0;
+
+            });
+
+            // Always keep one empty row for new entry
+            addRow();
+
+        } catch (err) {
+
+            console.error(err);
+
+            addRow();
+
+        }
+
+    }
+
+</script>
+
+    <!-- clear data -->
+    <script>
+        function clearDraft() {
+
+            if (!confirm("Are you sure you want to clear all draft data?")) {
+                return;
+            }
+
+            fetch("/api/tag-draft/clear", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    if (data.success) {
+
+                        const tbody = document.getElementById("tagTable");
+
+                        tbody.innerHTML = "";
+
+                        addRow();
+
+                        alert("Draft cleared successfully.");
+
+                    } else {
+
+                        alert(data.message);
+
+                    }
+
+                })
+                .catch(error => {
+
+                    console.log(error);
+
+                    alert("Unable to clear draft.");
+
+                });
+
         }
     </script>
 
-    <!-- send data to print-tag -->
+<!-- Diamond Selection Modal Logic -->
 <script>
-    function printAllTags() {
 
-    const rows = document.querySelectorAll("#tagTable tr");
+    let activeDiaRow = null;
+    let skipDiaModalOnce = false;
 
-    let tags = [];
+    const diamondModalEl = document.getElementById('diamondModal');
+    const diamondModal = new bootstrap.Modal(diamondModalEl);
 
-    rows.forEach(row => {
+    const sizeMap = {
+        "-2.0": "2",
+        "-6.5": "6_5",
+        "-11": "11"
+    };
 
-        tags.push({
-            tag: row.cells[0].querySelector("input").value,
-            design: row.cells[1].querySelector("input").value,
-            purity: row.cells[2].querySelector("select").value,
-            clarity: row.cells[3].querySelector("select").value,
-            color: row.cells[4].querySelector("select").value,
-            gross: row.cells[5].querySelector("input").value,
-            diawt: row.cells[6].querySelector("input").value,
-            diapc: row.cells[7].querySelector("input").value,
-            stonewt: row.cells[8].querySelector("input").value,
-            stonepc: row.cells[9].querySelector("input").value,
-            net: row.cells[10].querySelector("input").value
-        });
+    // =========================
+    // Trigger: click on Diamond Weight cell
+    // =========================
+    document.addEventListener("focusin", function (e) {
+
+        if (!e.target.classList.contains("diaWt")) return;
+
+        if (skipDiaModalOnce) {
+            skipDiaModalOnce = false;
+            return;
+        }
+
+        activeDiaRow = e.target.closest("tr");
+        openDiamondModal();
 
     });
 
-    // Save data for print page
-    localStorage.setItem("printTags", JSON.stringify(tags));
+    // =========================
+    // Trigger: Enter key on Diamond Weight cell
+    // =========================
+    document.addEventListener("keydown", function (e) {
 
-    // Save into database first
-    fetch("/save-print-tags", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            tags: tags
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
+        if (e.key !== "Enter") return;
+        if (!e.target.classList.contains("diaWt")) return;
 
-        if(data.success){
+        e.preventDefault();
 
-            window.open("/print-tag");
+        activeDiaRow = e.target.closest("tr");
+        openDiamondModal();
 
-        }else{
+    });
 
-            alert(data.message);
+    // =========================
+    // Open Modal (auto-render saved values)
+    // =========================
+    function openDiamondModal() {
+
+        document.querySelectorAll("#diamondRowsBody tr").forEach(row => {
+
+            const key = sizeMap[row.dataset.size];
+
+            const pc = activeDiaRow ? (activeDiaRow.dataset["diaPc" + key] || "") : "";
+            const wt = activeDiaRow ? (activeDiaRow.dataset["diaWt" + key] || "") : "";
+
+            row.querySelector(".diaPieces").value   = pc;
+            row.querySelector(".diaRowTotal").value = wt;
+
+        });
+
+        // IGI/HUID are single values per row (not per size)
+        document.getElementById("diaIgiNo").value  = activeDiaRow ? (activeDiaRow.dataset.diaIgiNo  || "") : "";
+        document.getElementById("diaHuidNo").value = activeDiaRow ? (activeDiaRow.dataset.diaHuidNo || "") : "";
+
+        updateDiamondTotals();
+        diamondModal.show();
+
+        diamondModalEl.addEventListener("shown.bs.modal", function focusFirst() {
+            document.querySelector("#diamondRowsBody .diaPieces").focus();
+            diamondModalEl.removeEventListener("shown.bs.modal", focusFirst);
+        });
+
+    }
+
+    // =========================
+    // Recalculate Totals (footer)
+    // =========================
+    function updateDiamondTotals() {
+
+        let totalPc = 0;
+        let totalWt = 0;
+
+        document.querySelectorAll("#diamondRowsBody tr").forEach(row => {
+            totalPc += parseFloat(row.querySelector(".diaPieces").value) || 0;
+            totalWt += parseFloat(row.querySelector(".diaRowTotal").value) || 0;
+        });
+
+        document.getElementById("diaTotalPc").textContent = totalPc;
+        document.getElementById("diaTotalWt").textContent = totalWt.toFixed(3);
+
+    }
+
+    // =========================
+    // Save — write back to main row, close modal
+    // =========================
+    function saveDiamondModal() {
+
+        if (activeDiaRow) {
+
+            const rows = [...document.querySelectorAll("#diamondRowsBody tr")];
+
+            rows.forEach(r => {
+                const size = r.dataset.size;
+                const key = sizeMap[size];
+
+                const pc = parseInt(r.querySelector(".diaPieces").value) || 0;
+                const wt = parseFloat(r.querySelector(".diaRowTotal").value) || 0;
+
+                activeDiaRow.dataset["diaPc" + key] = pc;
+                activeDiaRow.dataset["diaWt" + key] = wt;
+            });
+
+            // Save single IGI/HUID values on the main row
+            activeDiaRow.dataset.diaIgiNo  = document.getElementById("diaIgiNo").value.trim();
+            activeDiaRow.dataset.diaHuidNo = document.getElementById("diaHuidNo").value.trim();
+
+            activeDiaRow.querySelector(".diaWt").value = document.getElementById("diaTotalWt").textContent;
+            activeDiaRow.querySelector(".diaPc").value = document.getElementById("diaTotalPc").textContent;
+
+            calculateNetWt(activeDiaRow.querySelector(".diaWt"));
 
         }
 
-    })
-    .catch(error => {
+        diamondModal.hide();
 
-        console.log(error);
+    }
 
-        alert("Unable to save tags.");
+    // =========================
+    // After modal closes -> move cursor to Stone Weight
+    // =========================
+    diamondModalEl.addEventListener("hidden.bs.modal", function () {
+
+        if (!activeDiaRow) return;
+
+        skipDiaModalOnce = true;
+
+        const stoneWtInput = activeDiaRow.querySelector(".stoneWt");
+
+        if (stoneWtInput) {
+            stoneWtInput.focus();
+            stoneWtInput.select?.();
+        }
 
     });
 
-}
+    // =========================
+    // Modal Keyboard Navigation — now spans size rows, then IGI No, then HUID No, then save
+    // =========================
+    document.addEventListener("keydown", function (e) {
+
+        if (!e.target.classList.contains("diaModalCell")) return;
+        if (e.key !== "Enter") return;
+
+        e.preventDefault();
+
+        // All navigable cells in document order: 3 rows x 2 cells, then IGI No, then HUID No
+        const allCells = [
+            ...document.querySelectorAll("#diamondRowsBody .diaModalCell"),
+            document.getElementById("diaIgiNo"),
+            document.getElementById("diaHuidNo")
+        ];
+
+        const currentIndex = allCells.indexOf(e.target);
+        if (currentIndex === -1) return;
+
+        if (currentIndex < allCells.length - 1) {
+            const target = allCells[currentIndex + 1];
+            target.focus();
+            target.select?.();
+        } else {
+            // Last field (HUID No) -> save and close
+            saveDiamondModal();
+        }
+
+    });
+
+</script>
+
+<script>
+    function printAllTags() {
+
+        const rows = document.querySelectorAll("#tagTable tr");
+
+        let tags = [];
+
+        rows.forEach(row => {
+
+            tags.push({
+                tag: row.cells[0].querySelector("input").value,
+                design: row.cells[1].querySelector("input").value,
+                purity: row.cells[2].querySelector("select").value,
+                clarity: row.cells[3].querySelector("select").value,
+                color: row.cells[4].querySelector("select").value,
+                gross: row.cells[5].querySelector("input").value,
+                diawt: row.cells[6].querySelector("input").value,
+                diapc: row.cells[7].querySelector("input").value,
+                igi: row.dataset.diaIgiNo || "",
+                huid: row.dataset.diaHuidNo || "",
+                stonewt: row.cells[8].querySelector("input").value,
+                stonepc: row.cells[9].querySelector("input").value,
+                net: row.cells[10].querySelector("input").value
+            });
+
+        });
+
+        // Save data for print page
+        localStorage.setItem("printTags", JSON.stringify(tags));
+
+        // Save into database first
+        fetch("/save-print-tags", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                tags: tags
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+
+                if (data.success) {
+
+                    window.open("/print-tag");
+
+                } else {
+
+                    alert(data.message);
+
+                }
+
+            })
+            .catch(error => {
+
+                console.log(error);
+
+                alert("Unable to save tags.");
+
+            });
+
+    }
 </script>
 
 

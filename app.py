@@ -484,6 +484,47 @@ class Order(db.Model):
 
     remarks = db.Column(db.Text)
     
+    
+class TagDraft(db.Model):
+    __tablename__ = "tag_draft"
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(db.Integer, nullable=False)
+
+    tag_no = db.Column(db.String(50))
+    design_no = db.Column(db.String(100))
+
+    gold_purity = db.Column(db.String(20))
+    diamond_clarity = db.Column(db.String(20))
+    diamond_color = db.Column(db.String(20))
+
+    gold_weight = db.Column(db.Float, default=0)
+    diamond_weight = db.Column(db.Float, default=0)
+    diamond_pieces = db.Column(db.Integer, default=0)
+
+    # Diamond size breakdown
+    dia_pc_2 = db.Column(db.Integer, default=0)
+    dia_wt_2 = db.Column(db.Float, default=0)
+
+    dia_pc_6_5 = db.Column(db.Integer, default=0)
+    dia_wt_6_5 = db.Column(db.Float, default=0)
+
+    dia_pc_11 = db.Column(db.Integer, default=0)
+    dia_wt_11 = db.Column(db.Float, default=0)
+
+    # Diamond certificate numbers (per item, not per size)
+    igi_no = db.Column(db.String(50))
+    huid_no = db.Column(db.String(50))
+
+    stone_weight = db.Column(db.Float, default=0)
+    stone_pieces = db.Column(db.Integer, default=0)
+
+    net_weight = db.Column(db.Float, default=0)
+
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 class Tag(db.Model):
     __tablename__ = "tag"
 
@@ -503,12 +544,65 @@ class Tag(db.Model):
     diamond_weight = db.Column(db.Float, default=0)
     diamond_pieces = db.Column(db.Integer, default=0)
 
+    # Diamond size breakdown
+    dia_pc_2 = db.Column(db.Integer, default=0)
+    dia_wt_2 = db.Column(db.Float, default=0)
+
+    dia_pc_6_5 = db.Column(db.Integer, default=0)
+    dia_wt_6_5 = db.Column(db.Float, default=0)
+
+    dia_pc_11 = db.Column(db.Integer, default=0)
+    dia_wt_11 = db.Column(db.Float, default=0)
+
+    # Diamond certificate numbers (per item, not per size)
+    igi_no = db.Column(db.String(50))
+    huid_no = db.Column(db.String(50))
+
     stone_weight = db.Column(db.Float, default=0)
     stone_pieces = db.Column(db.Integer, default=0)
 
     net_weight = db.Column(db.Float, default=0)
 
     printed_date = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    
+@app.route("/api/next-tag-no")
+def get_next_tag_no():
+
+    category = request.args.get("category", "").strip()
+
+    if not category:
+        return jsonify({
+            "success": False,
+            "message": "Category is required"
+        }), 400
+
+    # Get all tags for this category only
+    tags = Tag.query.filter(
+        Tag.tag_no.like(f"{category}-%")
+    ).all()
+
+    next_no = 1
+
+    if tags:
+        numbers = []
+
+        for tag in tags:
+            try:
+                number = int(tag.tag_no.split("-")[-1])
+                numbers.append(number)
+            except ValueError:
+                pass
+
+        if numbers:
+            next_no = max(numbers) + 1
+
+    return jsonify({
+        "success": True,
+        "category": category,
+        "next_no": next_no,
+        "tag_no": f"{category}-{next_no}"
+    })
     
 def send_order_email(order_no, client_code, items):
 
@@ -3150,11 +3244,147 @@ def acc_orders_page():
 
     return render_template("acc_orders.html", orders=orders)
 
-@app.route("/tag_entry")
+@app.route("/tag_entry", methods=["GET"])
 def tag_entry_page():
-    if "role" not in session or session["role"] not in ["account", "admin"]:
+
+    # Check Login
+    if "role" not in session:
         return redirect("/signin")
-    return render_template("tag_entry.html",)
+
+    # Check Permission
+    if session["role"] not in ["admin", "account"]:
+        return redirect("/signin")
+
+    # Selected Category
+    category = request.args.get("category", "SJDNK").strip().upper()
+
+    return render_template(
+        "tag_entry.html",
+        category=category
+    )
+
+@app.route("/api/tag-draft/clear", methods=["POST"])
+def clear_tag_draft():
+
+    user_id = session.get("user_id")
+
+    if not user_id:
+        return jsonify({
+            "success": False,
+            "message": "Please login again."
+        }), 401
+
+    TagDraft.query.filter_by(user_id=user_id).delete()
+
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": "Draft cleared successfully."
+    })
+    
+@app.route("/api/tag-draft/save", methods=["POST"])
+def save_tag_draft():
+
+    data = request.get_json()
+
+    user_id = session["user_id"]
+
+    draft = TagDraft.query.filter_by(
+        user_id=user_id,
+        tag_no=data["tag_no"]
+    ).first()
+
+    if draft:
+
+        draft.design_no = data["design_no"]
+        draft.gold_purity = data["gold_purity"]
+        draft.diamond_clarity = data["diamond_clarity"]
+        draft.diamond_color = data["diamond_color"]
+
+        draft.gold_weight = data["gold_weight"]
+        draft.diamond_weight = data["diamond_weight"]
+        draft.diamond_pieces = data["diamond_pieces"]
+
+        draft.dia_pc_2 = data.get("dia_pc_2", 0)
+        draft.dia_wt_2 = data.get("dia_wt_2", 0)
+
+        draft.dia_pc_6_5 = data.get("dia_pc_6_5", 0)
+        draft.dia_wt_6_5 = data.get("dia_wt_6_5", 0)
+
+        draft.dia_pc_11 = data.get("dia_pc_11", 0)
+        draft.dia_wt_11 = data.get("dia_wt_11", 0)
+
+        draft.igi_no = data.get("igi_no", "")
+        draft.huid_no = data.get("huid_no", "")
+
+        draft.stone_weight = data["stone_weight"]
+        draft.stone_pieces = data["stone_pieces"]
+
+        draft.net_weight = data["net_weight"]
+
+    else:
+
+        draft = TagDraft(
+            user_id=user_id,
+            **data
+        )
+
+        db.session.add(draft)
+
+    db.session.commit()
+
+    return jsonify(success=True)
+
+@app.route("/api/tag-draft", methods=["GET"])
+def get_tag_draft():
+
+    user_id = session.get("user_id")
+
+    drafts = TagDraft.query.filter_by(
+        user_id=user_id
+    ).order_by(TagDraft.id).all()
+
+    result = []
+
+    for d in drafts:
+
+        result.append({
+
+            "tag_no": d.tag_no,
+            "design_no": d.design_no,
+
+            "gold_purity": d.gold_purity,
+            "diamond_clarity": d.diamond_clarity,
+            "diamond_color": d.diamond_color,
+
+            "gold_weight": d.gold_weight,
+            "diamond_weight": d.diamond_weight,
+            "diamond_pieces": d.diamond_pieces,
+
+            "dia_pc_2": d.dia_pc_2,
+            "dia_wt_2": d.dia_wt_2,
+
+            "dia_pc_6_5": d.dia_pc_6_5,
+            "dia_wt_6_5": d.dia_wt_6_5,
+
+            "dia_pc_11": d.dia_pc_11,
+            "dia_wt_11": d.dia_wt_11,
+
+            "igi_no": d.igi_no,
+            "huid_no": d.huid_no,
+
+            "stone_weight": d.stone_weight,
+            "stone_pieces": d.stone_pieces,
+
+            "net_weight": d.net_weight
+
+        })
+
+    return jsonify({
+        "success": True,
+        "data": result
+    })
 
 @app.route("/create_mou")
 def create_mou():
@@ -3236,7 +3466,7 @@ def save_print_tags():
 
         for item in tags:
 
-            print("Saving :", item)
+            
 
             tag = Tag(
 
@@ -3253,6 +3483,9 @@ def save_print_tags():
                 diamond_weight=float(item["diawt"] or 0),
                 diamond_pieces=int(item["diapc"] or 0),
 
+                igi_no=item.get("igi", ""),
+                huid_no=item.get("huid", ""),
+
                 stone_weight=float(item["stonewt"] or 0),
                 stone_pieces=int(item["stonepc"] or 0),
 
@@ -3264,7 +3497,7 @@ def save_print_tags():
 
         db.session.commit()
 
-        print("Saved Successfully")
+        
 
         return jsonify({
             "success": True,
