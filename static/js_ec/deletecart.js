@@ -1,63 +1,50 @@
 function deleteCart(id) {
 
-    Swal.fire({
-        title: "Delete Item?",
-        text: "Do you want to remove this item from the cart?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Delete",
-        cancelButtonText: "Cancel"
-    }).then(function (confirmDelete) {
+    if (!confirm("Do you want to remove this item from the cart?")) {
+        return;
+    }
 
-        if (!confirmDelete.isConfirmed) {
-            return;
-        }
+    var xhr = new XMLHttpRequest();
 
-        fetch("/api/cart/" + id, {
-            method: "DELETE"
-        })
-        .then(function (res) {
-            return res.json();
-        })
-        .then(function (result) {
+    xhr.open("DELETE", "/api/cart/" + id, true);
 
-            if (result.status === "success") {
+    xhr.onreadystatechange = function () {
 
-                Swal.fire({
-                    icon: "success",
-                    title: "Deleted",
-                    text: result.message,
-                    timer: 1500,
-                    showConfirmButton: false
-                }).then(function () {
+        if (xhr.readyState === 4) {
 
-                    loadCart();   // Reload table
+            if (xhr.status === 200) {
 
-                });
+                var result;
+
+                try {
+                    result = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    alert("Invalid server response.");
+                    return;
+                }
+
+                if (result.status === "success") {
+
+                    alert(result.message);
+
+                    loadCart();
+
+                } else {
+
+                    alert(result.message);
+
+                }
 
             } else {
 
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: result.message
-                });
+                alert("Failed to delete item.");
 
             }
 
-        })
-        .catch(function (err) {
+        }
 
-            console.error(err);
+    };
 
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Failed to delete item."
-            });
-
-        });
-
-    });
+    xhr.send(null);
 
 }
